@@ -21,7 +21,7 @@ public class Microchip {
 
     @Override
     public boolean equals(Object obj) {
-        return entityId.equals(obj);
+        return obj instanceof Microchip other && other.getEntityId().equals(this.entityId);
     }
 
     @Override

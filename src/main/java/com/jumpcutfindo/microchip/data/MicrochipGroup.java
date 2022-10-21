@@ -41,4 +41,9 @@ public class MicrochipGroup {
     public boolean contains(Microchip microchip) {
         return this.microchips.contains(microchip);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof MicrochipGroup other && other.getId().equals(this.id);
+    }
 }
