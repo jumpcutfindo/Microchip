@@ -1,6 +1,6 @@
 package com.jumpcutfindo.microchip.client;
 
-import com.jumpcutfindo.microchip.helpers.Looker;
+import com.jumpcutfindo.microchip.helper.Looker;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

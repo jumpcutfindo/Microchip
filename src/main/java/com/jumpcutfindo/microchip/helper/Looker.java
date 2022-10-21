@@ -1,4 +1,4 @@
-package com.jumpcutfindo.microchip.helpers;
+package com.jumpcutfindo.microchip.helper;
 
 import java.util.List;
 

@@ -22,7 +22,7 @@
       "com.jumpcutfindo.microchip.MicrochipMod"
     ],
     "client": [
-      "com.jumpcutfindo.microchip.InputListener"
+      "com.jumpcutfindo.microchip.client.InputListener"
     ]
   },
   "mixins": [
