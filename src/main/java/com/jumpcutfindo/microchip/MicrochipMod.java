@@ -10,6 +10,6 @@ public class MicrochipMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("Microchip is installed and ready to tag everything!");
 	}
 }
