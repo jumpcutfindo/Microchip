@@ -23,10 +23,19 @@
     ],
     "client": [
       "com.jumpcutfindo.microchip.client.InputListener"
+    ],
+    "cardinal-components": [
+      "com.jumpcutfindo.microchip.data.MicrochipsComponentInitializer"
     ]
   },
   "mixins": [
   ],
+
+  "custom": {
+    "cardinal-components": [
+      "microchip:microchips"
+    ]
+  },
 
   "depends": {
     "fabricloader": ">=0.14.6",
