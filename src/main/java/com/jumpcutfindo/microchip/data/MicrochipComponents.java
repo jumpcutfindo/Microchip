@@ -7,7 +7,7 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class MicrochipsComponentInitializer implements EntityComponentInitializer {
+public class MicrochipComponents implements EntityComponentInitializer {
     public static final ComponentKey<Microchips> MICROCHIPS =
             ComponentRegistry.getOrCreate(new Identifier("microchip", "microchips"), Microchips.class);
 

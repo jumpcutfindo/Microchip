@@ -25,7 +25,7 @@
       "com.jumpcutfindo.microchip.client.InputListener"
     ],
     "cardinal-components": [
-      "com.jumpcutfindo.microchip.data.MicrochipsComponentInitializer"
+      "com.jumpcutfindo.microchip.data.MicrochipComponents"
     ]
   },
   "mixins": [
