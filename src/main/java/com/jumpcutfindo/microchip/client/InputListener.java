@@ -1,5 +1,7 @@
 package com.jumpcutfindo.microchip.client;
 
+import com.jumpcutfindo.microchip.data.Microchips;
+import com.jumpcutfindo.microchip.data.Tagger;
 import org.lwjgl.glfw.GLFW;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -36,6 +38,7 @@ public class InputListener implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (tagBinding.wasPressed() && client.player != null) {
                 client.player.sendMessage(new LiteralText("Key for tagging was pressed!"), false);
+                Tagger.tag(client.world, client.player);
             }
             while (guiBinding.wasPressed() && client.player != null) {
                 client.player.sendMessage(new LiteralText("Key for opening interface was pressed!"), false);
