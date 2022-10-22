@@ -12,10 +12,22 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.nbt.NbtCompound;
 
 public class Microchips implements Component {
+    private UUID defaultGroupId;
     private List<MicrochipGroup> groups;
-
     public Microchips() {
         this.groups = new ArrayList<>();
+
+        MicrochipGroup defaultGroup = new MicrochipGroup("No category");
+        this.groups.add(defaultGroup);
+        this.defaultGroupId = defaultGroup.getId();
+    }
+
+    public UUID getDefaultGroupId() {
+        return defaultGroupId;
+    }
+
+    private void setDefaultGroupId(UUID id) {
+        this.defaultGroupId = id;
     }
 
     public List<MicrochipGroup> getGroups() {
@@ -33,6 +45,24 @@ public class Microchips implements Component {
 
     public boolean deleteGroup(UUID id) {
         return groups.removeIf(group -> group.getId().equals(id));
+    }
+
+    public boolean addToGroup(UUID groupId, Microchip microchip) {
+        for (MicrochipGroup group : this.groups) {
+            if (group.getId().equals(groupId)) {
+                return group.add(microchip);
+            }
+        }
+        return false;
+    }
+
+    public boolean removeFromGroup(UUID groupId, Microchip microchip) {
+        for (MicrochipGroup group : this.groups) {
+            if (group.getId().equals(groupId)) {
+                return group.remove(microchip);
+            }
+        }
+        return false;
     }
 
     @Override
@@ -54,6 +84,7 @@ public class Microchips implements Component {
         Type groupsType = new TypeToken<List<MicrochipGroup>>(){}.getType();
         List<MicrochipGroup> groups = gson.fromJson(cpd.getString("groups"), groupsType);
 
+        microchips.setDefaultGroupId(cpd.getUuid("defaultGroup"));
         microchips.setGroups(groups);
     }
 
@@ -61,6 +92,7 @@ public class Microchips implements Component {
         Gson gson = new Gson();
 
         NbtCompound cpd = new NbtCompound();
+        cpd.putUuid("defaultGroup", microchips.getDefaultGroupId());
         cpd.putString("groups", gson.toJson(microchips.getGroups()));
 
         return cpd;
