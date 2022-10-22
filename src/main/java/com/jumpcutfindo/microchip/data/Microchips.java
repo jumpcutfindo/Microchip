@@ -18,6 +18,14 @@ public class Microchips implements Component {
         this.groups = new ArrayList<>();
     }
 
+    public List<MicrochipGroup> getGroups() {
+        return groups;
+    }
+
+    private void setGroups(List<MicrochipGroup> groups) {
+        this.groups = groups;
+    }
+
     public boolean createGroup(String name) {
         MicrochipGroup group = new MicrochipGroup(name);
         return groups.add(group);
@@ -32,17 +40,29 @@ public class Microchips implements Component {
         Gson gson = new Gson();
 
         NbtCompound cpd = tag.getCompound("microchips");
-        Type groupsType = new TypeToken<List<MicrochipGroup>>(){}.getType();
-        this.groups = gson.fromJson(cpd.getString("groups"), groupsType);
+        Microchips.fromNbt(cpd, this);
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
+        NbtCompound cpd = Microchips.toNbt(this);
+        tag.put("microchips", cpd);
+    }
+
+    public static void fromNbt(NbtCompound cpd, Microchips microchips) {
+        Gson gson = new Gson();
+        Type groupsType = new TypeToken<List<MicrochipGroup>>(){}.getType();
+        List<MicrochipGroup> groups = gson.fromJson(cpd.getString("groups"), groupsType);
+
+        microchips.setGroups(groups);
+    }
+
+    public static NbtCompound toNbt(Microchips microchips) {
         Gson gson = new Gson();
 
         NbtCompound cpd = new NbtCompound();
-        cpd.putString("groups", gson.toJson(groups));
+        cpd.putString("groups", gson.toJson(microchips.getGroups()));
 
-        tag.put("microchips", cpd);
+        return cpd;
     }
 }
