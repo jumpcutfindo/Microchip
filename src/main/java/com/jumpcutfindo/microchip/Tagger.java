@@ -29,7 +29,7 @@ public class Tagger {
             return added;
         }
     }
-    private static Microchips getMicrochips(PlayerEntity player) {
+    public static Microchips getMicrochips(PlayerEntity player) {
         return MicrochipComponents.MICROCHIPS.get(player);
     }
 }
