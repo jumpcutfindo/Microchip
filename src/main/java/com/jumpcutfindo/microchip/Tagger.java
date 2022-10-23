@@ -1,6 +1,9 @@
-package com.jumpcutfindo.microchip.data;
+package com.jumpcutfindo.microchip;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.data.MicrochipComponents;
+import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Looker;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;

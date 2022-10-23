@@ -1,7 +1,6 @@
 package com.jumpcutfindo.microchip.client;
 
-import com.jumpcutfindo.microchip.data.Microchips;
-import com.jumpcutfindo.microchip.data.Tagger;
+import com.jumpcutfindo.microchip.Tagger;
 import org.lwjgl.glfw.GLFW;
 
 import net.fabricmc.api.ClientModInitializer;
