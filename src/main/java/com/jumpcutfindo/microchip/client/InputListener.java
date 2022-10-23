@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.client;
 
 import com.jumpcutfindo.microchip.Tagger;
+import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import org.lwjgl.glfw.GLFW;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -39,7 +40,7 @@ public class InputListener implements ClientModInitializer {
                 Tagger.tag(client.world, client.player);
             }
             while (guiBinding.wasPressed() && client.player != null) {
-                client.player.sendMessage(new LiteralText("Key for opening interface was pressed!"), false);
+                client.setScreen(new MicrochipsMenuScreen(client.player));
             }
         });
     }
