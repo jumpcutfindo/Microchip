@@ -37,7 +37,6 @@ public class InputListener implements ClientModInitializer {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (tagBinding.wasPressed() && client.player != null) {
-                client.player.sendMessage(new LiteralText("Key for tagging was pressed!"), false);
                 Tagger.tag(client.world, client.player);
             }
             while (guiBinding.wasPressed() && client.player != null) {
