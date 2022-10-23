@@ -26,6 +26,10 @@ public class MicrochipGroup {
         return displayName;
     }
 
+    public Collection<Microchip> getMicrochips() {
+        return this.microchips;
+    }
+
     public boolean add(Microchip microchip) {
         LOGGER.info(String.format("Adding Microchip(%s) to group(%s)", microchip, displayName));
         return this.microchips.add(microchip);
