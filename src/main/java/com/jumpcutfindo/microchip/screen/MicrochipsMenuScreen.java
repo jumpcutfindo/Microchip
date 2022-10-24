@@ -31,7 +31,7 @@ public class MicrochipsMenuScreen extends Screen {
         this.player = player;
 
         this.microchipGroupList = new MicrochipGroupListView(this, this.getMicrochips());
-        this.microchipsList = new MicrochipsListView(this, null);
+        this.microchipsList = new MicrochipsListView(this, this.getMicrochips().getGroups().get(0));
 
         this.titleX = 7;
         this.titleY = 9;
@@ -52,7 +52,9 @@ public class MicrochipsMenuScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        this.drawBackground(matrices, delta, mouseX, mouseY);
         this.microchipGroupList.render(matrices, this.x, this.y, mouseX, mouseY);
+        this.microchipsList.render(matrices, this.x + this.microchipGroupList.getTextureWidth(), this.y, mouseX, mouseY);
     }
 
 
@@ -69,6 +71,10 @@ public class MicrochipsMenuScreen extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
+    }
+
+    public PlayerEntity getPlayer() {
+        return player;
     }
 
     protected TextRenderer getTextRenderer() {

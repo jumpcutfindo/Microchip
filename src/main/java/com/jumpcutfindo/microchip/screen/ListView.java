@@ -9,13 +9,13 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public class ListView {
-    private final Screen screen;
+    protected final MicrochipsMenuScreen screen;
     private final Identifier texture;
     protected final int textureU, textureV, textureWidth, textureHeight;
     protected final int listX, listY, scrollbarX, scrollbarY;
     protected final List<ListItem> listItems;
 
-    public ListView(Screen screen, Identifier texture, int textureU, int textureV, int textureWidth, int textureHeight, int listX, int listY, int scrollbarX, int scrollbarY, List<ListItem> listItems) {
+    public ListView(MicrochipsMenuScreen screen, Identifier texture, int textureU, int textureV, int textureWidth, int textureHeight, int listX, int listY, int scrollbarX, int scrollbarY, List<ListItem> listItems) {
         this.screen = screen;
         this.texture = texture;
         this.textureU = textureU;
@@ -46,9 +46,10 @@ public class ListView {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.texture);
 
+        if (this.listItems.size() == 0) return;
+
         int offsetY = 0;
-        ListItem item = this.listItems.get(0);
-        for (int i = 0; i < 10; i++) {
+        for (ListItem item : listItems) {
             item.render(matrices, x, y + offsetY, mouseX, mouseY);
             offsetY += item.getHeight();
         }

@@ -31,7 +31,7 @@ public abstract class ListItem {
         this.renderContent(matrices, x, y, mouseX, mouseY);
     }
 
-    private void renderBackground(MatrixStack matrices, int x, int y) {
+    public void renderBackground(MatrixStack matrices, int x, int y) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.texture);

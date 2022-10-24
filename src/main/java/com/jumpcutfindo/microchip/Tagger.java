@@ -9,8 +9,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
+
+import javax.swing.*;
+import java.util.List;
+import java.util.UUID;
 
 public class Tagger {
     public static final Logger LOGGER = MicrochipMod.LOGGER;
@@ -29,6 +35,13 @@ public class Tagger {
             return added;
         }
     }
+
+    public static LivingEntity getEntity(World world, Vec3d pos, UUID uuid) {
+        List<LivingEntity> entities = world.getEntitiesByClass(LivingEntity.class, Box.from(pos).expand(256.0d), entity -> entity.getUuid().equals(uuid));
+        if (entities.size() == 0) return null;
+        else return entities.get(0);
+    }
+
     public static Microchips getMicrochips(PlayerEntity player) {
         return MicrochipComponents.MICROCHIPS.get(player);
     }
