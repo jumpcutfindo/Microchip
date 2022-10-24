@@ -24,14 +24,14 @@ public class MicrochipsMenuScreen extends Screen {
     private int x, y;
     private PlayerEntity player;
 
-    private final MicrochipGroupList groupList;
-    private final MicrochipItemsList itemsList;
+    private final MicrochipGroupListView microchipGroupList;
+    private final MicrochipsListView microchipsList;
     public MicrochipsMenuScreen(PlayerEntity player) {
         super(new TranslatableText("microchip.menuTitle"));
         this.player = player;
 
-        this.groupList = new MicrochipGroupList(this, this.getMicrochips());
-        this.itemsList = new MicrochipItemsList(this);
+        this.microchipGroupList = new MicrochipGroupListView(this, this.getMicrochips());
+        this.microchipsList = new MicrochipsListView(this, null);
 
         this.titleX = 7;
         this.titleY = 9;
@@ -41,8 +41,8 @@ public class MicrochipsMenuScreen extends Screen {
     protected void init() {
         super.init();
 
-        this.x = (this.width - (this.groupList.getWidth() + this.itemsList.getWidth())) / 2;
-        this.y = (this.height - this.groupList.getHeight()) / 2;
+        this.x = (this.width - (this.microchipGroupList.getTextureWidth() + this.microchipsList.getTextureWidth())) / 2;
+        this.y = (this.height - this.microchipGroupList.getTextureHeight()) / 2;
     }
 
     @Override
@@ -52,8 +52,7 @@ public class MicrochipsMenuScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.drawBackground(matrices, delta, mouseX, mouseY);
-        this.drawForeground(matrices, mouseX, mouseY);
+        this.microchipGroupList.render(matrices, this.x, this.y, mouseX, mouseY);
     }
 
 
@@ -64,17 +63,12 @@ public class MicrochipsMenuScreen extends Screen {
     private void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         // Draw title
         this.textRenderer.draw(matrices, this.title, (float) (this.x + this.titleX), (float) (this.y + this.titleY), 0x404040);
-
-        this.groupList.drawForeground(matrices, this.x, this.y, mouseX, mouseY);
     }
 
     private void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
-
-        this.groupList.drawBackground(matrices, x, y);
-        this.itemsList.drawBackground(matrices, x + this.groupList.getWidth(), y);
     }
 
     protected TextRenderer getTextRenderer() {
