@@ -16,6 +16,9 @@ public class MicrochipGroupListView extends ListView {
     private final TranslatableText title;
     private final int titleX, titleY;
 
+    private final int addButtonX, addButtonY, deleteButtonX, deleteButtonY;
+    private final int buttonWidth, buttonHeight;
+
     public MicrochipGroupListView(MicrochipsMenuScreen screen, Microchips microchips) {
         super(screen, TEXTURE, 0, 0, 160, 178,
                 8, 26, 138, 25, new ArrayList<>());
@@ -24,6 +27,15 @@ public class MicrochipGroupListView extends ListView {
         this.title = new TranslatableText("microchip.gui.groupTitle");
         this.titleX = 7;
         this.titleY = 9;
+
+        this.addButtonX = 96;
+        this.addButtonY = 6;
+
+        this.deleteButtonX = 126;
+        this.deleteButtonY = 6;
+
+        this.buttonWidth = 26;
+        this.buttonHeight = 16;
 
         // Create items for list view
         microchips.getGroups().forEach(group -> this.listItems.add(new MicrochipGroupListItem(screen, group)));
@@ -36,32 +48,47 @@ public class MicrochipGroupListView extends ListView {
         this.drawButtons(matrices, x, y, mouseX, mouseY);
     }
 
+    @Override
+    public boolean handleClick(int x, int y, int mouseX, int mouseY, int button) {
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + addButtonX, y + addButtonY, buttonWidth, buttonHeight)) {
+            // Add clicked
+            return false;
+        }
+
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteButtonX, y + deleteButtonY, buttonWidth, buttonHeight)) {
+            // Delete clicked
+            return false;
+        }
+
+        return false;
+    }
+
     private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
-        this.drawAddButton(matrices, x + 96, y + 6, mouseX, mouseY);
-        this.drawDeleteButton(matrices, x + 126, y + 6, mouseX, mouseY);
+        this.drawAddButton(matrices, x + addButtonX, y + addButtonY, mouseX, mouseY);
+        this.drawDeleteButton(matrices, x + deleteButtonX, y + deleteButtonY, mouseX, mouseY);
     }
 
     private void drawAddButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, 26, 16)) {
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
             // Hovered
-            this.screen.drawTexture(matrices, x, y , 186, 15, 26, 16);
+            this.screen.drawTexture(matrices, x, y , 186, 15, buttonWidth, buttonHeight);
         } else {
             // Default
-            this.screen.drawTexture(matrices, x, y, 160, 15, 26, 16);
+            this.screen.drawTexture(matrices, x, y, 160, 15, buttonWidth, buttonHeight);
         }
     }
 
     private void drawDeleteButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, 26, 16)) {
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
             // Hovered
-            this.screen.drawTexture(matrices, x, y, 186, 47, 26, 16);
+            this.screen.drawTexture(matrices, x, y, 186, 47, buttonWidth, buttonHeight);
         } else {
             // Default
-            this.screen.drawTexture(matrices, x, y, 160, 47, 26, 16);
+            this.screen.drawTexture(matrices, x, y, 160, 47, buttonWidth, buttonHeight);
         }
     }
 }

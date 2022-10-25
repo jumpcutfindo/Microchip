@@ -1,8 +1,7 @@
 package com.jumpcutfindo.microchip.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.Screen;
+
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -39,4 +38,6 @@ public abstract class ListItem {
     }
 
     public abstract void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY);
+
+    public abstract void onClick(int mouseX, int mouseY);
 }

@@ -32,6 +32,11 @@ public class MicrochipListItem extends ListItem {
     }
 
     @Override
+    public void onClick(int mouseX, int mouseY) {
+
+    }
+
+    @Override
     public void renderBackground(MatrixStack matrices, int x, int y) {
         this.drawEntity(x, y);
         super.renderBackground(matrices, x, y);

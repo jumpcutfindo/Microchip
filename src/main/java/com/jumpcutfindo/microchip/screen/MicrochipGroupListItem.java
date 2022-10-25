@@ -1,10 +1,9 @@
 package com.jumpcutfindo.microchip.screen;
 
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
-import net.minecraft.client.gui.screen.Screen;
+
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.util.Identifier;
 
 public class MicrochipGroupListItem extends ListItem {
     private final MicrochipGroup microchipGroup;
@@ -12,6 +11,11 @@ public class MicrochipGroupListItem extends ListItem {
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
         super(screen, MicrochipGroupListView.TEXTURE, 0, 178, 124, 18);
         this.microchipGroup = microchipGroup;
+    }
+
+    @Override
+    public void onClick(int mouseX, int mouseY) {
+
     }
 
     @Override

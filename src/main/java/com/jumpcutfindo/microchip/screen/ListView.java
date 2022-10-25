@@ -1,14 +1,14 @@
 package com.jumpcutfindo.microchip.screen;
 
+import java.util.List;
+
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.Screen;
+
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-import java.util.List;
-
-public class ListView {
+public abstract class ListView {
     protected final MicrochipsMenuScreen screen;
     private final Identifier texture;
     protected final int textureU, textureV, textureWidth, textureHeight;
@@ -62,4 +62,6 @@ public class ListView {
     public int getTextureHeight() {
         return textureHeight;
     }
+
+    public abstract boolean handleClick(int x, int y, int mouseX, int mouseY, int button);
 }

@@ -1,15 +1,13 @@
 package com.jumpcutfindo.microchip.screen;
 
+import java.util.ArrayList;
+
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
-import net.minecraft.client.gui.screen.Screen;
+
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MicrochipsListView extends ListView {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_list.png");
@@ -40,5 +38,10 @@ public class MicrochipsListView extends ListView {
         super.render(matrices, x, y, mouseX, mouseY);
 
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
+    }
+
+    @Override
+    public boolean handleClick(int x, int y, int mouseX, int mouseY, int button) {
+        return false;
     }
 }

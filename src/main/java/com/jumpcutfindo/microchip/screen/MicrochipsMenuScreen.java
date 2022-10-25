@@ -44,25 +44,22 @@ public class MicrochipsMenuScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.drawBackground(matrices, delta, mouseX, mouseY);
+        this.drawBackgroundGradient(matrices, delta, mouseX, mouseY);
         this.microchipGroupList.render(matrices, this.x, this.y, mouseX, mouseY);
         this.microchipsList.render(matrices, this.x + this.microchipGroupList.getTextureWidth(), this.y, mouseX, mouseY);
     }
 
-
-    private void drawGroup(MatrixStack matrices, int x, int y) {
-
-    }
-
-    private void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        // Draw title
-        this.textRenderer.draw(matrices, this.title, (float) (this.x + this.titleX), (float) (this.y + this.titleY), 0x404040);
-    }
-
-    private void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    private void drawBackgroundGradient(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.microchipGroupList.handleClick(this.x, this.y, (int) mouseX, (int) mouseY, button);
+
+        return false;
     }
 
     public PlayerEntity getPlayer() {
