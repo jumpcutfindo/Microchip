@@ -1,22 +1,14 @@
 package com.jumpcutfindo.microchip.screen;
 
-import com.jumpcutfindo.microchip.MicrochipMod;
-import com.jumpcutfindo.microchip.Tagger;
-import com.jumpcutfindo.microchip.data.MicrochipGroup;
+import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MicrochipsMenuScreen extends Screen {
 

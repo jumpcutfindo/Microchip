@@ -28,7 +28,7 @@ public class ServerNetworker implements ModInitializer {
             if (entityId == null) return;
 
             List<LivingEntity> entityList = player.world.getEntitiesByClass(LivingEntity.class, Box.from(player.getPos()).expand(256), entity -> entity.getUuid().equals(entityId));
-            if (entityList.size() > 0) entityList.get(0).addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 20, 1), player);
+            if (entityList.size() > 0) entityList.get(0).addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 40, 1), player);
             })
         );
     }

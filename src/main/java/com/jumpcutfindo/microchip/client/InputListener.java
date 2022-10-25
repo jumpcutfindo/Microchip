@@ -1,8 +1,10 @@
 package com.jumpcutfindo.microchip.client;
 
-import com.jumpcutfindo.microchip.Tagger;
-import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import org.lwjgl.glfw.GLFW;
+
+import com.jumpcutfindo.microchip.helper.TagResult;
+import com.jumpcutfindo.microchip.helper.Tagger;
+import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -11,7 +13,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 
 
 @Environment(EnvType.CLIENT)
@@ -37,7 +39,13 @@ public class InputListener implements ClientModInitializer {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (tagBinding.wasPressed() && client.player != null) {
-                Tagger.tag(client.world, client.player);
+                TagResult result = Tagger.tag(client.world, client.player);
+
+                switch (result) {
+                case ADDED -> client.player.sendMessage(new TranslatableText("microchip.action.tag.added"), false);
+                case DUPLICATE -> client.player.sendMessage(new TranslatableText("microchip.action.tag.duplicate"), false);
+                case NOTHING -> client.player.sendMessage(new TranslatableText("microchip.action.tag.nothing"), false);
+                }
             }
             while (guiBinding.wasPressed() && client.player != null) {
                 client.setScreen(new MicrochipsMenuScreen(client.player));
