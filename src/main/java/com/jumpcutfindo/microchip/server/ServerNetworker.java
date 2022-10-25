@@ -56,6 +56,7 @@ public class ServerNetworker implements ModInitializer {
 
     private static void onCreateGroup() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_CREATE_GROUP_ID, ((server, player, handler, buf, responseSender) -> {
+            Microchips microchips = Tagger.getMicrochips(player);
         }));
     }
 

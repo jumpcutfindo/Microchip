@@ -52,7 +52,8 @@ public class MicrochipGroupListView extends ListView {
     public boolean handleClick(int x, int y, int mouseX, int mouseY, int button) {
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + addButtonX, y + addButtonY, buttonWidth, buttonHeight)) {
             // Add clicked
-            return false;
+            this.screen.setActiveWindow(new MicrochipCreateGroupWindow(this.screen));
+            return true;
         }
 
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteButtonX, y + deleteButtonY, buttonWidth, buttonHeight)) {

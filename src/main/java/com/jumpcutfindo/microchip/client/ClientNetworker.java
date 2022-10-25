@@ -30,7 +30,7 @@ public class ClientNetworker {
     }
 
     public static void sendCreateGroupPacket() {
-
+        ClientPlayNetworking.send(NetworkConstants.PACKET_CREATE_GROUP_ID, PacketByteBufs.create());
     }
 
     public static void sendDeleteGroupPacket(UUID groupId) {
