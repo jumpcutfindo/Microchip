@@ -76,4 +76,9 @@ public class MicrochipsMenuScreen extends Screen {
     private Microchips getMicrochips() {
         return Tagger.getMicrochips(this.player);
     }
+
+    protected static boolean isWithin(int x, int y, int textureX, int textureY, int textureWidth, int textureHeight) {
+        return x >= textureX && x < textureX + textureWidth
+                && y >= textureY && y < textureY + textureHeight;
+    }
 }

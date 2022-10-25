@@ -1,10 +1,9 @@
 package com.jumpcutfindo.microchip.screen;
 
-import com.jumpcutfindo.microchip.Tagger;
+import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -27,7 +26,7 @@ public class MicrochipListItem extends ListItem {
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (this.entity != null) {
-            screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), (float) (x + 38), (float) (y + 9), 0xFFFFFF);
+            screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), (float) (x + 38), (float) (y + 8), 0xFFFFFF);
             screen.getTextRenderer().draw(matrices, this.entity.getType().getName(), (float) (x + 38), (float) (y + 21), 0x404040);
         }
     }

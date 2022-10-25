@@ -16,6 +16,6 @@ public class MicrochipGroupListItem extends ListItem {
 
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(this.microchipGroup.getDisplayName()), (float) (x + 4), (float) (y + 4), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(this.microchipGroup.getDisplayName()), (float) (x + 4), (float) (y + 5), 0xFFFFFF);
     }
 }
