@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.helper;
 
 import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,6 +36,12 @@ public class Looker {
             }
         }
 
+        return null;
+    }
+
+    public static LivingEntity getEntityByUuid(World world, PlayerEntity player, UUID entityId) {
+        List<LivingEntity> entityList = world.getEntitiesByClass(LivingEntity.class, Box.from(player.getPos()).expand(256), entity -> entity.getUuid().equals(entityId));
+        if (entityList.size() > 0) return entityList.get(0);
         return null;
     }
 

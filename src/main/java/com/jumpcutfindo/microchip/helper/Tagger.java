@@ -32,7 +32,10 @@ public class Tagger {
 
             if (!added) return TagResult.DUPLICATE;
 
-            if (world.isClient()) ClientNetworker.sendGlowPacket(entity);
+            if (world.isClient()) {
+                ClientNetworker.sendAddEntityToGroupPacket(microchips.getDefaultGroupId(), entity.getUuid());
+                ClientNetworker.sendGlowPacket(entity);
+            }
             return TagResult.ADDED;
         }
     }
