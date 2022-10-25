@@ -19,7 +19,8 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.jumpcutfindo.microchip.MicrochipMod"
+      "com.jumpcutfindo.microchip.MicrochipMod",
+      "com.jumpcutfindo.microchip.server.ServerNetworker"
     ],
     "client": [
       "com.jumpcutfindo.microchip.client.InputListener"

@@ -1,22 +1,21 @@
 package com.jumpcutfindo.microchip;
 
-import com.jumpcutfindo.microchip.MicrochipMod;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+
+import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipComponents;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Looker;
+
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.slf4j.Logger;
-
-import javax.swing.*;
-import java.util.List;
-import java.util.UUID;
 
 public class Tagger {
     public static final Logger LOGGER = MicrochipMod.LOGGER;
@@ -31,7 +30,8 @@ public class Tagger {
             Microchips microchips = getMicrochips(player);
 
             boolean added = microchips.addToGroup(microchips.getDefaultGroupId(), new Microchip(entity.getUuid()));
-            if (added) entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 2, 1), player);
+
+            if (world.isClient()) ClientNetworker.sendGlowPacket(entity);
             return added;
         }
     }
