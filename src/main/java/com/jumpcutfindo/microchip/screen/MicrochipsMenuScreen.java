@@ -56,7 +56,8 @@ public class MicrochipsMenuScreen extends Screen {
         if (this.activeWindow != null) {
             int windowX = (this.width - this.activeWindow.getWidth()) / 2;
             int windowY = (this.height - this.activeWindow.getHeight()) / 2;
-            this.activeWindow.render(matrices, windowX, windowY, mouseX, mouseY);
+            this.activeWindow.setPos(windowX, windowY);
+            this.activeWindow.render(matrices, mouseX, mouseY);
         }
     }
 
@@ -98,8 +99,17 @@ public class MicrochipsMenuScreen extends Screen {
         return Tagger.getMicrochips(this.player);
     }
 
+
+    protected boolean isBlockedByWindow(int x, int y) {
+        if (this.activeWindow == null) return false;
+        else {
+            return isWithin(x, y, this.activeWindow.getX(), this.activeWindow.getY(), this.activeWindow.getWidth(), this.activeWindow.getHeight());
+        }
+    }
+
     protected static boolean isWithin(int x, int y, int textureX, int textureY, int textureWidth, int textureHeight) {
         return x >= textureX && x < textureX + textureWidth
                 && y >= textureY && y < textureY + textureHeight;
     }
+
 }

@@ -17,7 +17,7 @@ public class MicrochipCreateGroupWindow extends Window {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices, int x, int y) {
+    public void renderBackground(MatrixStack matrices) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -26,7 +26,7 @@ public class MicrochipCreateGroupWindow extends Window {
     }
 
     @Override
-    public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
         this.screen.getTextRenderer().drawWithShadow(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0xFFFFFF);
         this.screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.createGroup.title"), (float) (x + this.titleX), (float) (y + 36), 0x404040);
     }

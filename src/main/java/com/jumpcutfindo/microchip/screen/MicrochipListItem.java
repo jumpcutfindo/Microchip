@@ -43,6 +43,9 @@ public class MicrochipListItem extends ListItem {
     }
 
     private void drawEntity(int x, int y) {
+        // Don't render if there is a window active and in front of it
+        if (screen.isBlockedByWindow(x, y)) return;
+
         int size = (int) ((1 / (this.entity.getHeight() + this.entity.getWidth())) * 30.0f);
 
         float f = (float)Math.atan(1.0f);
