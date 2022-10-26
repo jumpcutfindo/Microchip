@@ -26,8 +26,15 @@ public class MicrochipListItem extends ListItem {
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (this.entity != null) {
-            screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), (float) (x + 38), (float) (y + 8), 0xFFFFFF);
-            screen.getTextRenderer().draw(matrices, this.entity.getType().getName(), (float) (x + 38), (float) (y + 21), 0x404040);
+            int displayNameX = x + 38;
+            int displayNameY = y + 8;
+            if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
+
+            int entityNameX = x + 38;
+            int entityNameY = y + 21;
+            if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) screen.getTextRenderer().draw(matrices, this.entity.getType().getName(), (float) entityNameX, (float) entityNameY, 0x404040);
+
+            this.drawEntity(x, y);
         }
     }
 
@@ -38,13 +45,12 @@ public class MicrochipListItem extends ListItem {
 
     @Override
     public void renderBackground(MatrixStack matrices, int x, int y) {
-        this.drawEntity(x, y);
         super.renderBackground(matrices, x, y);
     }
 
     private void drawEntity(int x, int y) {
         // Don't render if there is a window active and in front of it
-        if (screen.isBlockedByWindow(x, y)) return;
+        if (screen.isBlockedByWindow(x + 15, y + 15)) return;
 
         int size = (int) ((1 / (this.entity.getHeight() + this.entity.getWidth())) * 30.0f);
 

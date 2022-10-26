@@ -1,7 +1,10 @@
 package com.jumpcutfindo.microchip.screen;
 
+import java.util.List;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -49,6 +52,16 @@ public abstract class Window {
 
     public abstract void renderBackground(MatrixStack matrices);
     public abstract void renderContent(MatrixStack matrices, int mouseX, int mouseY);
+
+    public abstract void tick();
+
+    public abstract boolean handleClick(int mouseX, int mouseY, int button);
+
+    public abstract boolean handleKeyPress(int keyCode, int scanCode, int modifiers);
+
+    public abstract boolean handleCharTyped(char chr, int modifiers);
+
+    public abstract List<ClickableWidget> getWidgets();
 
     private void renderBackgroundGradient(MatrixStack matrices, int x, int y) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

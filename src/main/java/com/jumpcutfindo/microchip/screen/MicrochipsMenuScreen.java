@@ -69,6 +69,9 @@ public class MicrochipsMenuScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.activeWindow != null) {
+            return this.activeWindow.handleClick((int) mouseX, (int) mouseY, button);
+        }
         this.microchipGroupList.handleClick(this.x, this.y, (int) mouseX, (int) mouseY, button);
 
         return false;
@@ -80,11 +83,34 @@ public class MicrochipsMenuScreen extends Screen {
             this.activeWindow = null;
             return true;
         }
+
+        if (this.activeWindow != null) {
+           return this.activeWindow.handleKeyPress(keyCode, scanCode, modifiers);
+        }
+
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        if (this.activeWindow != null) {
+            return this.activeWindow.handleCharTyped(chr, modifiers);
+        }
+
+        return super.charTyped(chr, modifiers);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.activeWindow != null) this.activeWindow.tick();
+    }
+
     public void setActiveWindow(Window window) {
+        this.clearChildren();
+
         this.activeWindow = window;
+        this.activeWindow.getWidgets().forEach(this::addSelectableChild);
     }
 
     public PlayerEntity getPlayer() {
