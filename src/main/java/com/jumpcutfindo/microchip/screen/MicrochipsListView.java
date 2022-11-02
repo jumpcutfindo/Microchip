@@ -1,6 +1,8 @@
 package com.jumpcutfindo.microchip.screen;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
@@ -17,7 +19,11 @@ public class MicrochipsListView extends ListView {
     private final LiteralText title;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
         super(screen, TEXTURE, 0, 0, 216, 178,
-                8, 26, 195, 27, new ArrayList<>());
+                8, 26, 195, 26,
+                createItems(screen, microchipGroup),
+                4);
+
+        this.group = microchipGroup;
 
         // Set various variables
         if (microchipGroup != null)  {
@@ -27,10 +33,6 @@ public class MicrochipsListView extends ListView {
         }
         this.titleX = 7;
         this.titleY = 9;
-
-        // Create list items for the contents of that group
-        this.group = microchipGroup;
-        if (this.group != null) this.group.getMicrochips().forEach(microchip -> this.listItems.add(new MicrochipListItem(screen, microchip)));
     }
 
     @Override
@@ -40,8 +42,9 @@ public class MicrochipsListView extends ListView {
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
     }
 
-    @Override
-    public boolean handleClick(int x, int y, int mouseX, int mouseY, int button) {
-        return false;
+    private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
+        if (microchipGroup == null) return new ArrayList<>();
+
+        return microchipGroup.getMicrochips().stream().map(microchip -> new MicrochipListItem(screen, microchip)).collect(Collectors.toList());
     }
 }

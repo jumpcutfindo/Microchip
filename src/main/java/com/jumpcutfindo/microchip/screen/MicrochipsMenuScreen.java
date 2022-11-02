@@ -72,9 +72,42 @@ public class MicrochipsMenuScreen extends Screen {
         if (this.activeWindow != null) {
             return this.activeWindow.handleClick((int) mouseX, (int) mouseY, button);
         }
-        this.microchipGroupList.handleClick(this.x, this.y, (int) mouseX, (int) mouseY, button);
 
-        return false;
+        if (isMouseInGroupList(mouseX, mouseY)) {
+            return this.microchipGroupList.mouseClicked(getGroupListX(), getListY(), (int) mouseX, (int) mouseY, button);
+        }
+
+        if (isMouseInMicrochipList(mouseX, mouseY)) {
+            return this.microchipsList.mouseClicked(getMicrochipListX(), getListY(), (int) mouseX, (int) mouseY, button);
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (isMouseInGroupList(mouseX, mouseY)) {
+            return this.microchipGroupList.mouseDragged(getGroupListX(), getListY(), mouseX, mouseY, button, deltaX, deltaY);
+        }
+
+        if (isMouseInMicrochipList(mouseX, mouseY)) {
+            return this.microchipsList.mouseDragged(getMicrochipListX(), getListY(), mouseX, mouseY, button, deltaX, deltaY);
+        }
+
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if (isMouseInGroupList(mouseX, mouseY)) {
+            return this.microchipGroupList.mouseScrolled(getGroupListX(), getListY(), mouseX, mouseY, amount);
+        }
+
+        if (isMouseInMicrochipList(mouseX, mouseY)) {
+            return this.microchipsList.mouseScrolled(getMicrochipListX(), getListY(), mouseX, mouseY, amount);
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override
@@ -108,8 +141,10 @@ public class MicrochipsMenuScreen extends Screen {
 
     public void setActiveWindow(Window window) {
         this.clearChildren();
-
         this.activeWindow = window;
+
+        if (window == null) return;
+
         this.activeWindow.getWidgets().forEach(this::addSelectableChild);
     }
 
@@ -133,7 +168,28 @@ public class MicrochipsMenuScreen extends Screen {
         }
     }
 
-    protected static boolean isWithin(int x, int y, int textureX, int textureY, int textureWidth, int textureHeight) {
+    protected int getGroupListX() {
+        return this.x;
+    }
+
+    protected int getMicrochipListX() {
+        return this.x + this.microchipGroupList.getTextureWidth();
+    }
+
+    protected int getListY() {
+        return this.y;
+    }
+
+    protected boolean isMouseInGroupList(double mouseX, double mouseY) {
+        return isWithin(mouseX, mouseY, getGroupListX(), getListY(), this.microchipGroupList.getTextureWidth(), this.microchipGroupList.getTextureHeight());
+    }
+
+    protected boolean isMouseInMicrochipList(double mouseX, double mouseY) {
+        return isWithin(mouseX, mouseY, getMicrochipListX(), getListY(), this.microchipsList.getTextureWidth(), this.microchipsList.getTextureHeight());
+    }
+
+
+    protected static boolean isWithin(double x, double y, int textureX, int textureY, int textureWidth, int textureHeight) {
         return x >= textureX && x < textureX + textureWidth
                 && y >= textureY && y < textureY + textureHeight;
     }

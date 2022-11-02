@@ -1,0 +1,12 @@
+{
+    "microchip.action.tag.added": "Tagged the entity with a microchip!",
+    "microchip.action.tag.duplicate": "The entity has already been tagged!",
+    "microchip.action.tag.nothing": "Can't tag what you can't see!",
+
+    "microchip.menu.title": "Microchips",
+
+    "microchip.menu.createGroup.windowTitle": "Create a group",
+    "microchip.menu.createGroup.title": "Name",
+    "microchip.menu.createGroup.colorTitle": "Color",
+    "microchip.menu.createGroup.submitButton": "Create"
+}

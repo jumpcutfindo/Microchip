@@ -21,7 +21,7 @@ public class MicrochipGroupListView extends ListView {
 
     public MicrochipGroupListView(MicrochipsMenuScreen screen, Microchips microchips) {
         super(screen, TEXTURE, 0, 0, 160, 178,
-                8, 26, 138, 25, new ArrayList<>());
+                8, 26, 138, 25, new ArrayList<>(), 8);
 
         // Set various variables
         this.title = new TranslatableText("microchip.gui.groupTitle");
@@ -49,7 +49,7 @@ public class MicrochipGroupListView extends ListView {
     }
 
     @Override
-    public boolean handleClick(int x, int y, int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int x, int y, double mouseX, double mouseY, int button) {
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + addButtonX, y + addButtonY, buttonWidth, buttonHeight)) {
             // Add clicked
             this.screen.setActiveWindow(new MicrochipCreateGroupWindow(this.screen));
@@ -61,7 +61,7 @@ public class MicrochipGroupListView extends ListView {
             return false;
         }
 
-        return false;
+        return super.mouseClicked(x, y, mouseX, mouseY, button);
     }
 
     private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
