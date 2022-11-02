@@ -10,13 +10,19 @@ public class MicrochipGroup {
     public static Logger LOGGER = MicrochipMod.LOGGER;
     private UUID id;
     private String displayName;
+    private GroupColor color;
     private Set<Microchip> microchips;
 
-    public MicrochipGroup(String displayName) {
+    public MicrochipGroup(String displayName, GroupColor color) {
         this.id = UUID.randomUUID();
         this.displayName = displayName;
         this.microchips = new HashSet<>();
+        this.color = color;
     }
+    public MicrochipGroup(String displayName) {
+        this(displayName, GroupColor.GRAY);
+    }
+
 
     public UUID getId() {
         return id;
@@ -24,6 +30,10 @@ public class MicrochipGroup {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public GroupColor getColor() {
+        return color;
     }
 
     public Collection<Microchip> getMicrochips() {

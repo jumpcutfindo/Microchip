@@ -1,8 +1,10 @@
 package com.jumpcutfindo.microchip.screen;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.data.GroupColor;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -17,6 +19,8 @@ public class MicrochipCreateGroupWindow extends Window {
     public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
     private TextFieldWidget groupNameField;
     private ButtonWidget submitButton;
+
+    private List<ColorButton> colorButtons;
     protected MicrochipCreateGroupWindow(MicrochipsMenuScreen screen) {
         super(screen, new TranslatableText("microchip.menu.createGroup.windowTitle"));
         this.width = 138;
@@ -30,6 +34,11 @@ public class MicrochipCreateGroupWindow extends Window {
             // TODO: Add submit action
             this.screen.setActiveWindow(null);
         });
+
+        this.colorButtons = new ArrayList<>();
+        for (int i = 0; i < GroupColor.values().length; i++) {
+            colorButtons.add(new ColorButton(0, 0, screen, GroupColor.values()[i]));
+        }
     }
 
     @Override
@@ -62,8 +71,11 @@ public class MicrochipCreateGroupWindow extends Window {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
-        for (int i = 0; i < 7; i++) {
-            this.screen.drawTexture(matrices, x + 7 + i * 14, y + 74, 138 + i * 10, 0, 10, 10);
+        for (int i = 0; i < colorButtons.size(); i++) {
+            ColorButton colorButton = colorButtons.get(i);
+            colorButton.x = x + 7 + i * 14;
+            colorButton.y = y + 74;
+            colorButton.render(matrices, mouseX, mouseY, 0);
         }
 
         this.submitButton.x = x + 67;
@@ -73,6 +85,10 @@ public class MicrochipCreateGroupWindow extends Window {
 
     @Override
     public boolean handleClick(int mouseX, int mouseY, int button) {
+        for (ColorButton colorButton : colorButtons) {
+            if (colorButton.mouseClicked(mouseX, mouseY, button)) return true;
+        }
+
         return this.groupNameField.mouseClicked(mouseX, mouseY, button)
             || this.submitButton.mouseClicked(mouseX, mouseY, button);
     }
