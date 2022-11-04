@@ -32,9 +32,15 @@ public class ColorButton {
             }
         }
     }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderTexture(0, TEXTURE);
         this.screen.drawTexture(matrices, x, y, u, v, this.width, this.height);
+        if (this.isSelected) this.screen.drawTexture(matrices, x, y + 12, u, v + 10, this.width, this.height);
     }
 
 

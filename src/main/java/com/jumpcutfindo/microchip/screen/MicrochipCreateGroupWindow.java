@@ -21,6 +21,8 @@ public class MicrochipCreateGroupWindow extends Window {
     private ButtonWidget submitButton;
 
     private List<ColorButton> colorButtons;
+    private ColorButton selectedColor;
+
     protected MicrochipCreateGroupWindow(MicrochipsMenuScreen screen) {
         super(screen, new TranslatableText("microchip.menu.createGroup.windowTitle"));
         this.width = 138;
@@ -52,7 +54,7 @@ public class MicrochipCreateGroupWindow extends Window {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        this.screen.getTextRenderer().drawWithShadow(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0xFFFFFF);
+        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
 
         // Group title entry
         this.screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.createGroup.title"), (float) (x + this.titleX), (float) (y + 25), 0x404040);
@@ -86,7 +88,15 @@ public class MicrochipCreateGroupWindow extends Window {
     @Override
     public boolean handleClick(int mouseX, int mouseY, int button) {
         for (ColorButton colorButton : colorButtons) {
-            if (colorButton.mouseClicked(mouseX, mouseY, button)) return true;
+            if (colorButton.mouseClicked(mouseX, mouseY, button)) {
+                for (ColorButton btn : colorButtons) {
+                    btn.setSelected(false);
+                }
+                colorButton.setSelected(true);
+                this.selectedColor = colorButton;
+
+                return true;
+            }
         }
 
         return this.groupNameField.mouseClicked(mouseX, mouseY, button)
