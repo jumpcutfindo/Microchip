@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.client;
 import java.util.UUID;
 
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
+import com.jumpcutfindo.microchip.data.GroupColor;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -29,7 +30,7 @@ public class ClientNetworker {
 
     }
 
-    public static void sendCreateGroupPacket() {
+    public static void sendCreateGroupPacket(String groupName, GroupColor color) {
         ClientPlayNetworking.send(NetworkConstants.PACKET_CREATE_GROUP_ID, PacketByteBufs.create());
     }
 

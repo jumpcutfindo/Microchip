@@ -33,7 +33,7 @@ public class MicrochipCreateGroupWindow extends Window {
         this.groupNameField.setEditableColor(16777215);
 
         this.submitButton = new ButtonWidget(0, 0, 64, 20, new TranslatableText("microchip.menu.createGroup.submitButton"), (widget) -> {
-            // TODO: Add submit action
+            this.createGroup();
             this.screen.setActiveWindow(null);
         });
 
@@ -41,6 +41,7 @@ public class MicrochipCreateGroupWindow extends Window {
         for (int i = 0; i < GroupColor.values().length; i++) {
             colorButtons.add(new ColorButton(0, 0, screen, GroupColor.values()[i]));
         }
+        this.selectedColor = colorButtons.get(colorButtons.size() - 1);
     }
 
     @Override
@@ -80,9 +81,11 @@ public class MicrochipCreateGroupWindow extends Window {
             colorButton.render(matrices, mouseX, mouseY, 0);
         }
 
+        // Button rendering
         this.submitButton.x = x + 67;
         this.submitButton.y = y + 95;
         this.submitButton.renderButton(matrices, mouseX, mouseY, 0);
+        this.submitButton.active = this.isValidInput();
     }
 
     @Override
@@ -121,5 +124,13 @@ public class MicrochipCreateGroupWindow extends Window {
     @Override
     public void tick() {
         this.groupNameField.tick();
+    }
+
+    private boolean isValidInput() {
+        return !this.groupNameField.getText().equals("");
+    }
+
+    private void createGroup() {
+        System.out.println("Create group!");
     }
 }
