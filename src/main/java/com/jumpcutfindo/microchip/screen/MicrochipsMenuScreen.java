@@ -19,6 +19,7 @@ public class MicrochipsMenuScreen extends Screen {
     private int x, y;
     private Microchips microchips;
     private int groupCount, chipCount;
+    private int selectedGroup;
 
     private MicrochipGroupListView microchipGroupList;
     private MicrochipsListView microchipsList;
@@ -29,6 +30,8 @@ public class MicrochipsMenuScreen extends Screen {
         this.microchips = Tagger.getMicrochips(player);
         this.groupCount = this.microchips.getGroupCount();
         this.chipCount = this.microchips.getChipCount();
+
+        this.selectedGroup = 0;
 
         this.titleX = 7;
         this.titleY = 9;
@@ -152,6 +155,11 @@ public class MicrochipsMenuScreen extends Screen {
         this.activeWindow.getWidgets().forEach(this::addSelectableChild);
     }
 
+    public void setSelectedGroup(int index) {
+        this.selectedGroup = index;
+        this.refreshScreen();
+    }
+
     public PlayerEntity getPlayer() {
         return client.player;
     }
@@ -173,7 +181,7 @@ public class MicrochipsMenuScreen extends Screen {
         this.chipCount = this.microchips.getChipCount();
 
         this.microchipGroupList = new MicrochipGroupListView(this, this.microchips);
-        this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(0));
+        this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(this.selectedGroup));
     }
 
 

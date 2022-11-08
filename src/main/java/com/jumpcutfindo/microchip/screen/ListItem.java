@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 public abstract class ListItem {
     protected MicrochipsMenuScreen screen;
     private Identifier texture;
-    private int u, v, width, height;
+    protected int u, v, width, height;
 
     public ListItem(MicrochipsMenuScreen screen, Identifier texture, int u, int v, int width, int height) {
         this.screen = screen;
@@ -39,5 +39,5 @@ public abstract class ListItem {
 
     public abstract void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY);
 
-    public abstract void onClick(int mouseX, int mouseY);
+    public abstract boolean onClick(int x, int y, double mouseX, double mouseY);
 }

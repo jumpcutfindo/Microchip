@@ -102,6 +102,17 @@ public abstract class ListView {
             this.scrolling = this.hasScrollbar();
             return true;
         }
+
+        int offsetY = 0;
+        for (int i = step; i < step + maxItems; i++) {
+            if (i >= this.listItems.size()) break;
+
+            ListItem item = this.listItems.get(i);
+            if (item.onClick(x + listX, y + listY + offsetY, mouseX, mouseY)) return true;
+
+            offsetY += item.getHeight();
+        }
+
         return false;
     }
 

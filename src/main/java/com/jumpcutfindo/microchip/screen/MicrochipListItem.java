@@ -39,8 +39,9 @@ public class MicrochipListItem extends ListItem {
     }
 
     @Override
-    public void onClick(int mouseX, int mouseY) {
-
+    public boolean onClick(int x, int y, double mouseX, double mouseY) {
+        // TODO: Implement
+        return false;
     }
 
     @Override
