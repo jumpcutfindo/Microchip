@@ -15,7 +15,7 @@ public abstract class ListView {
     private final Identifier texture;
     protected final int textureU, textureV, textureWidth, textureHeight;
     protected final int listX, listY;
-    protected final int scrollbarWidth, scrollbarHeight, scrollbarX, scrollbarY;
+    protected final int scrollbarWidth, scrollbarHeight, scrollbarU, scrollbarV, scrollbarX, scrollbarY;
     protected final int maxItems;
 
     private int step;
@@ -31,7 +31,7 @@ public abstract class ListView {
             MicrochipsMenuScreen screen,
             Identifier texture, int textureU, int textureV, int textureWidth, int textureHeight,
             int listX, int listY,
-            int scrollbarX, int scrollbarY,
+            int scrollbarU, int scrollbarV, int scrollbarX, int scrollbarY,
             List<ListItem> listItems, int maxItems) {
         this.screen = screen;
 
@@ -46,6 +46,8 @@ public abstract class ListView {
 
         this.scrollbarWidth = 14;
         this.scrollbarHeight = 144;
+        this.scrollbarU = scrollbarU;
+        this.scrollbarV = scrollbarV;
         this.scrollbarX = scrollbarX;
         this.scrollbarY = scrollbarY;
 
@@ -92,7 +94,7 @@ public abstract class ListView {
         if (!this.hasScrollbar()) return;
 
         RenderSystem.setShaderTexture(0, this.texture);
-        screen.drawTexture(matrices, x, y, 216, 0, 13, 15);
+        screen.drawTexture(matrices, x, y, scrollbarU, scrollbarV, 13, 15);
     }
 
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY, int button) {

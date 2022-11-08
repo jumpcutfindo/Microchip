@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.screen;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.Microchips;
@@ -20,8 +21,11 @@ public class MicrochipGroupListView extends ListView {
     private final int buttonWidth, buttonHeight;
 
     public MicrochipGroupListView(MicrochipsMenuScreen screen, Microchips microchips) {
-        super(screen, TEXTURE, 0, 0, 160, 178,
-                8, 26, 138, 25, new ArrayList<>(), 8);
+        super(screen,
+                TEXTURE, 0, 0, 160, 178,
+                8, 26,
+                160, 0, 139, 26,
+                createItems(screen, microchips), 8);
 
         // Set various variables
         this.title = new TranslatableText("microchip.menu.groupTitle");
@@ -36,9 +40,6 @@ public class MicrochipGroupListView extends ListView {
 
         this.buttonWidth = 26;
         this.buttonHeight = 16;
-
-        // Create items for list view
-        microchips.getGroups().forEach(group -> this.listItems.add(new MicrochipGroupListItem(screen, group)));
     }
     @Override
     public void render(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
@@ -91,5 +92,9 @@ public class MicrochipGroupListView extends ListView {
             // Default
             this.screen.drawTexture(matrices, x, y, 160, 47, buttonWidth, buttonHeight);
         }
+    }
+
+    private static List<ListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {
+        return microchips.getGroups().stream().map(group -> new MicrochipGroupListItem(screen, group)).collect(Collectors.toList());
     }
 }

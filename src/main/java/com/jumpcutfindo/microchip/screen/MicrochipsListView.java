@@ -18,10 +18,11 @@ public class MicrochipsListView extends ListView {
     private final int titleX, titleY;
     private final LiteralText title;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
-        super(screen, TEXTURE, 0, 0, 216, 178,
-                8, 26, 195, 26,
-                createItems(screen, microchipGroup),
-                4);
+        super(screen,
+                TEXTURE, 0, 0, 216, 178,
+                8, 26,
+                216, 0, 195, 26,
+                createItems(screen, microchipGroup), 4);
 
         this.group = microchipGroup;
 
