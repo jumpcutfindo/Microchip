@@ -10,7 +10,6 @@ import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.Tagger;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -77,6 +76,6 @@ public class ServerNetworker implements ModInitializer {
     }
 
     public static void sendScreenRefresh(ServerPlayerEntity player) {
-        ServerPlayNetworking.send(player, NetworkConstants.PACKET_REFRESH_SCREEN, PacketByteBufs.create());
+        // ServerPlayNetworking.send(player, NetworkConstants.PACKET_REFRESH_SCREEN, PacketByteBufs.create());
     }
 }

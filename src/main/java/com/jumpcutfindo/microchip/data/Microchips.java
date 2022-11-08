@@ -14,6 +14,8 @@ import net.minecraft.nbt.NbtCompound;
 public class Microchips implements Component {
     private UUID defaultGroupId;
     private List<MicrochipGroup> groups;
+
+    private int groupCount, chipCount = 1;
     public Microchips() {
         this.groups = new ArrayList<>();
 
@@ -40,16 +42,27 @@ public class Microchips implements Component {
 
     public boolean createGroup(String name, GroupColor color) {
         MicrochipGroup group = new MicrochipGroup(name, color);
+        groupCount++;
         return groups.add(group);
     }
 
     public boolean deleteGroup(UUID id) {
+        groupCount--;
         return groups.removeIf(group -> group.getId().equals(id));
+    }
+
+    public int getChipCount() {
+        return chipCount;
+    }
+
+    public int getGroupCount() {
+        return groupCount;
     }
 
     public boolean addToGroup(UUID groupId, Microchip microchip) {
         for (MicrochipGroup group : this.groups) {
             if (group.getId().equals(groupId)) {
+                chipCount++;
                 return group.add(microchip);
             }
         }
@@ -59,6 +72,7 @@ public class Microchips implements Component {
     public boolean removeFromGroup(UUID groupId, Microchip microchip) {
         for (MicrochipGroup group : this.groups) {
             if (group.getId().equals(groupId)) {
+                chipCount--;
                 return group.remove(microchip);
             }
         }
@@ -86,6 +100,9 @@ public class Microchips implements Component {
 
         microchips.setDefaultGroupId(cpd.getUuid("defaultGroup"));
         microchips.setGroups(groups);
+
+        microchips.groupCount = groups.size();
+        microchips.chipCount = groups.stream().mapToInt(group -> group.getMicrochips().size()).sum();
     }
 
     public static NbtCompound toNbt(Microchips microchips) {

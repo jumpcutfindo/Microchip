@@ -17,7 +17,8 @@ public class MicrochipsMenuScreen extends Screen {
 
     private final int titleX, titleY;
     private int x, y;
-    private PlayerEntity player;
+    private Microchips microchips;
+    private int groupCount, chipCount;
 
     private MicrochipGroupListView microchipGroupList;
     private MicrochipsListView microchipsList;
@@ -25,7 +26,9 @@ public class MicrochipsMenuScreen extends Screen {
     private Window activeWindow;
     public MicrochipsMenuScreen(PlayerEntity player) {
         super(new TranslatableText("microchip.menu.title"));
-        this.player = player;
+        this.microchips = Tagger.getMicrochips(player);
+        this.groupCount = this.microchips.getGroupCount();
+        this.chipCount = this.microchips.getChipCount();
 
         this.titleX = 7;
         this.titleY = 9;
@@ -48,6 +51,8 @@ public class MicrochipsMenuScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (hasUpdates()) refreshScreen();
+
         this.drawBackgroundGradient(matrices);
         this.microchipGroupList.render(matrices, this.x, this.y, mouseX, mouseY);
         this.microchipsList.render(matrices, this.x + this.microchipGroupList.getTextureWidth(), this.y, mouseX, mouseY);
@@ -148,21 +153,27 @@ public class MicrochipsMenuScreen extends Screen {
     }
 
     public PlayerEntity getPlayer() {
-        return player;
+        return client.player;
     }
 
     protected TextRenderer getTextRenderer() {
         return this.textRenderer;
     }
 
-    private Microchips getMicrochips() {
-        return Tagger.getMicrochips(this.player);
+    private boolean hasUpdates() {
+
+        Microchips clientMicrochips = Tagger.getMicrochips(client.player);
+        return this.groupCount != clientMicrochips.getGroupCount()
+                || this.chipCount != clientMicrochips.getChipCount();
     }
 
     public void refreshScreen() {
-        if (client.player != null) this.player = client.player;
-        this.microchipGroupList = new MicrochipGroupListView(this, this.getMicrochips());
-        this.microchipsList = new MicrochipsListView(this, this.getMicrochips().getGroups().get(0));
+        this.microchips = Tagger.getMicrochips(client.player);
+        this.groupCount = this.microchips.getGroupCount();
+        this.chipCount = this.microchips.getChipCount();
+
+        this.microchipGroupList = new MicrochipGroupListView(this, this.microchips);
+        this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(0));
     }
 
 
