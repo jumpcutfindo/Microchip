@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -131,6 +132,6 @@ public class MicrochipCreateGroupWindow extends Window {
     }
 
     private void createGroup() {
-        System.out.println("Create group!");
+        ClientNetworker.sendCreateGroupPacket(this.groupNameField.getText(), this.selectedColor.getColor());
     }
 }

@@ -17,8 +17,8 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
     }
 
     @Override
-    public boolean createGroup(String name) {
-        boolean flag = super.createGroup(name);
+    public boolean createGroup(String name, GroupColor color) {
+        boolean flag = super.createGroup(name, color);
         MicrochipComponents.MICROCHIPS.sync(this.owner);
         return flag;
     }

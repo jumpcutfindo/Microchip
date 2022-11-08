@@ -38,8 +38,8 @@ public class Microchips implements Component {
         this.groups = groups;
     }
 
-    public boolean createGroup(String name) {
-        MicrochipGroup group = new MicrochipGroup(name);
+    public boolean createGroup(String name, GroupColor color) {
+        MicrochipGroup group = new MicrochipGroup(name, color);
         return groups.add(group);
     }
 

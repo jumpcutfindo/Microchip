@@ -31,7 +31,11 @@ public class ClientNetworker {
     }
 
     public static void sendCreateGroupPacket(String groupName, GroupColor color) {
-        ClientPlayNetworking.send(NetworkConstants.PACKET_CREATE_GROUP_ID, PacketByteBufs.create());
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeString(groupName);
+        buffer.writeInt(color.ordinal());
+
+        ClientPlayNetworking.send(NetworkConstants.PACKET_CREATE_GROUP_ID, buffer);
     }
 
     public static void sendDeleteGroupPacket(UUID groupId) {

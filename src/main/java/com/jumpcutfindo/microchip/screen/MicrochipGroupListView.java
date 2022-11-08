@@ -24,7 +24,7 @@ public class MicrochipGroupListView extends ListView {
                 8, 26, 138, 25, new ArrayList<>(), 8);
 
         // Set various variables
-        this.title = new TranslatableText("microchip.gui.groupTitle");
+        this.title = new TranslatableText("microchip.menu.groupTitle");
         this.titleX = 7;
         this.titleY = 9;
 

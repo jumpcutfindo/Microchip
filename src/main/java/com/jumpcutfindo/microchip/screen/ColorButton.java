@@ -15,10 +15,13 @@ public class ColorButton {
     int x, y;
     private int u, v;
 
+    private GroupColor color;
+
     private boolean isSelected;
 
     public ColorButton(int x, int y, MicrochipsMenuScreen screen, GroupColor color) {
         this.screen = screen;
+        this.color = color;
 
         this.width = 10;
         this.height = 10;
@@ -31,6 +34,10 @@ public class ColorButton {
                 break;
             }
         }
+    }
+
+    public GroupColor getColor() {
+        return color;
     }
 
     public void setSelected(boolean selected) {

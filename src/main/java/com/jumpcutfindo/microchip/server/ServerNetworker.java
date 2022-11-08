@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.server;
 import java.util.UUID;
 
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
+import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Looker;
@@ -56,7 +57,11 @@ public class ServerNetworker implements ModInitializer {
 
     private static void onCreateGroup() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_CREATE_GROUP_ID, ((server, player, handler, buf, responseSender) -> {
+            String groupName = buf.readString();
+            GroupColor color = GroupColor.values()[buf.readInt()];
+
             Microchips microchips = Tagger.getMicrochips(player);
+            microchips.createGroup(groupName, color);
         }));
     }
 

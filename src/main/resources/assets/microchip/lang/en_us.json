@@ -3,7 +3,7 @@
     "microchip.action.tag.duplicate": "The entity has already been tagged!",
     "microchip.action.tag.nothing": "Can't tag what you can't see!",
 
-    "microchip.menu.title": "Microchips",
+    "microchip.menu.groupTitle": "Microchips",
 
     "microchip.menu.createGroup.windowTitle": "Create a group",
     "microchip.menu.createGroup.title": "Name",
