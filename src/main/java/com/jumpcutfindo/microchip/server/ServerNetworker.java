@@ -10,10 +10,12 @@ import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.Tagger;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ServerNetworker implements ModInitializer {
     @Override
@@ -47,6 +49,8 @@ public class ServerNetworker implements ModInitializer {
 
             Microchips microchips = Tagger.getMicrochips(player);
             microchips.addToGroup(groupId, new Microchip(entityId));
+
+            sendScreenRefresh(player);
         }));
     }
 
@@ -62,11 +66,17 @@ public class ServerNetworker implements ModInitializer {
 
             Microchips microchips = Tagger.getMicrochips(player);
             microchips.createGroup(groupName, color);
+
+            sendScreenRefresh(player);
         }));
     }
 
     private static void onDeleteGroup() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_DELETE_GROUP_ID, ((server, player, handler, buf, responseSender) -> {
         }));
+    }
+
+    public static void sendScreenRefresh(ServerPlayerEntity player) {
+        ServerPlayNetworking.send(player, NetworkConstants.PACKET_REFRESH_SCREEN, PacketByteBufs.create());
     }
 }

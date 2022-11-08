@@ -23,7 +23,8 @@
       "com.jumpcutfindo.microchip.server.ServerNetworker"
     ],
     "client": [
-      "com.jumpcutfindo.microchip.client.InputListener"
+      "com.jumpcutfindo.microchip.client.InputListener",
+      "com.jumpcutfindo.microchip.client.ClientNetworker"
     ],
     "cardinal-components": [
       "com.jumpcutfindo.microchip.data.MicrochipComponents"

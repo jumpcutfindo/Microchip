@@ -19,16 +19,13 @@ public class MicrochipsMenuScreen extends Screen {
     private int x, y;
     private PlayerEntity player;
 
-    private final MicrochipGroupListView microchipGroupList;
-    private final MicrochipsListView microchipsList;
+    private MicrochipGroupListView microchipGroupList;
+    private MicrochipsListView microchipsList;
 
     private Window activeWindow;
     public MicrochipsMenuScreen(PlayerEntity player) {
         super(new TranslatableText("microchip.menu.title"));
         this.player = player;
-
-        this.microchipGroupList = new MicrochipGroupListView(this, this.getMicrochips());
-        this.microchipsList = new MicrochipsListView(this, this.getMicrochips().getGroups().get(0));
 
         this.titleX = 7;
         this.titleY = 9;
@@ -37,6 +34,8 @@ public class MicrochipsMenuScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+
+        this.refreshScreen();
 
         this.x = (this.width - (this.microchipGroupList.getTextureWidth() + this.microchipsList.getTextureWidth())) / 2;
         this.y = (this.height - this.microchipGroupList.getTextureHeight()) / 2;
@@ -160,6 +159,12 @@ public class MicrochipsMenuScreen extends Screen {
         return Tagger.getMicrochips(this.player);
     }
 
+    public void refreshScreen() {
+        if (client.player != null) this.player = client.player;
+        this.microchipGroupList = new MicrochipGroupListView(this, this.getMicrochips());
+        this.microchipsList = new MicrochipsListView(this, this.getMicrochips().getGroups().get(0));
+    }
+
 
     protected boolean isBlockedByWindow(int x, int y) {
         if (this.activeWindow == null) return false;
@@ -187,7 +192,6 @@ public class MicrochipsMenuScreen extends Screen {
     protected boolean isMouseInMicrochipList(double mouseX, double mouseY) {
         return isWithin(mouseX, mouseY, getMicrochipListX(), getListY(), this.microchipsList.getTextureWidth(), this.microchipsList.getTextureHeight());
     }
-
 
     protected static boolean isWithin(double x, double y, int textureX, int textureY, int textureWidth, int textureHeight) {
         return x >= textureX && x < textureX + textureWidth

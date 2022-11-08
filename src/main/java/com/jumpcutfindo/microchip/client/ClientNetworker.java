@@ -4,13 +4,29 @@ import java.util.UUID;
 
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 
-public class ClientNetworker {
+public class ClientNetworker implements ClientModInitializer {
+
+    @Override
+    public void onInitializeClient() {
+        onScreenRefresh();
+    }
+
+    private static void onScreenRefresh() {
+        ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REFRESH_SCREEN, (client, handler, buf, responseSender) -> {
+            if (client.currentScreen instanceof MicrochipsMenuScreen screen) {
+                screen.refreshScreen();
+            }
+        });
+    }
+
     public static void sendGlowPacket(LivingEntity entity) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(entity.getUuid());
