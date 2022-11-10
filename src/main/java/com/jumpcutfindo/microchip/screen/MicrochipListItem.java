@@ -17,7 +17,7 @@ public class MicrochipListItem extends ListItem {
     private final Microchip microchip;
     private final LivingEntity entity;
     public MicrochipListItem(MicrochipsMenuScreen screen, Microchip microchip) {
-        super(screen, MicrochipsListView.TEXTURE, 0, 178, 180, 36);
+        super(screen, MicrochipsListView.TEXTURE, 0, 178, 0, 178, 0, 178, 180, 36);
         this.microchip = microchip;
 
         this.entity = this.getEntity();
@@ -42,11 +42,6 @@ public class MicrochipListItem extends ListItem {
     public boolean onClick(int x, int y, double mouseX, double mouseY) {
         // TODO: Implement
         return false;
-    }
-
-    @Override
-    public void renderBackground(MatrixStack matrices, int x, int y) {
-        super.renderBackground(matrices, x, y);
     }
 
     private void drawEntity(int x, int y) {

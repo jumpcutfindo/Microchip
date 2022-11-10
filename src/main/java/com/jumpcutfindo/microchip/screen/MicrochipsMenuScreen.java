@@ -41,7 +41,7 @@ public class MicrochipsMenuScreen extends Screen {
     protected void init() {
         super.init();
 
-        this.refreshScreen();
+        this.refreshScreen(RefreshType.BOTH);
 
         this.x = (this.width - (this.microchipGroupList.getTextureWidth() + this.microchipsList.getTextureWidth())) / 2;
         this.y = (this.height - this.microchipGroupList.getTextureHeight()) / 2;
@@ -54,7 +54,7 @@ public class MicrochipsMenuScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (hasUpdates()) refreshScreen();
+        if (hasUpdates()) refreshScreen(RefreshType.BOTH);
 
         this.drawBackgroundGradient(matrices);
         this.microchipGroupList.render(matrices, this.x, this.y, mouseX, mouseY);
@@ -157,7 +157,8 @@ public class MicrochipsMenuScreen extends Screen {
 
     public void setSelectedGroup(int index) {
         this.selectedGroup = index;
-        this.refreshScreen();
+        // Only refresh microchips since the selection changed
+        this.refreshScreen(RefreshType.MICROCHIPS);
     }
 
     public PlayerEntity getPlayer() {
@@ -175,17 +176,29 @@ public class MicrochipsMenuScreen extends Screen {
                 || this.chipCount != clientMicrochips.getChipCount();
     }
 
-    public void refreshScreen() {
+    public void refreshScreen(RefreshType refreshType) {
         this.microchips = Tagger.getMicrochips(client.player);
         this.groupCount = this.microchips.getGroupCount();
         this.chipCount = this.microchips.getChipCount();
 
-        this.microchipGroupList = new MicrochipGroupListView(this, this.microchips);
+        switch (refreshType) {
+        case GROUP -> refreshGroups();
+        case MICROCHIPS -> refreshMicrochips();
+        case BOTH -> {
+            refreshGroups();
+            refreshMicrochips();
+        }
+        }
+    }
 
+    private void refreshGroups() {
+        this.microchipGroupList = new MicrochipGroupListView(this, this.microchips);
+    }
+
+    private void refreshMicrochips() {
         int index = Math.min(this.microchips.getGroupCount() - 1, this.selectedGroup);
         this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(index));
     }
-
 
     protected boolean isBlockedByWindow(int x, int y) {
         if (this.activeWindow == null) return false;
@@ -219,4 +232,7 @@ public class MicrochipsMenuScreen extends Screen {
                 && y >= textureY && y < textureY + textureHeight;
     }
 
+    public enum RefreshType {
+        GROUP, MICROCHIPS, BOTH;
+    }
 }

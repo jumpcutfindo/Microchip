@@ -42,7 +42,7 @@ public class MicrochipGroup {
     }
 
     public GroupColor getColor() {
-        return color;
+        return color == null ? GroupColor.GRAY : color;
     }
 
     public Collection<Microchip> getMicrochips() {

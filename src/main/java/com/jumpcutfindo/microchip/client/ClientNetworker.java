@@ -22,7 +22,7 @@ public class ClientNetworker implements ClientModInitializer {
     private static void onScreenRefresh() {
         ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REFRESH_SCREEN, (client, handler, buf, responseSender) -> {
             if (client.currentScreen instanceof MicrochipsMenuScreen screen) {
-                screen.refreshScreen();
+                screen.refreshScreen(MicrochipsMenuScreen.RefreshType.BOTH);
             }
         });
     }

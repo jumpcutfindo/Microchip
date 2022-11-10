@@ -108,7 +108,11 @@ public abstract class ListView {
             if (i >= this.listItems.size()) break;
 
             ListItem item = this.listItems.get(i);
-            if (item.onClick(x + listX, y + listY + offsetY, mouseX, mouseY)) return true;
+            if (item.onClick(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+                this.resetSelection();
+                item.setSelected(true);
+                return true;
+            }
 
             offsetY += item.getHeight();
         }
@@ -154,5 +158,9 @@ public abstract class ListView {
 
     public int getTextureHeight() {
         return textureHeight;
+    }
+
+    private void resetSelection() {
+        for (ListItem item : listItems) item.setSelected(false);
     }
 }
