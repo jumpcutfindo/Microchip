@@ -17,7 +17,7 @@ public class MicrochipGroupListView extends ListView {
     private final TranslatableText title;
     private final int titleX, titleY;
 
-    private final int addButtonX, addButtonY, deleteButtonX, deleteButtonY;
+    private final int addButtonX, addButtonY;
     private final int buttonWidth, buttonHeight;
 
     public MicrochipGroupListView(MicrochipsMenuScreen screen, Microchips microchips) {
@@ -32,11 +32,8 @@ public class MicrochipGroupListView extends ListView {
         this.titleX = 7;
         this.titleY = 9;
 
-        this.addButtonX = 96;
+        this.addButtonX = 126;
         this.addButtonY = 6;
-
-        this.deleteButtonX = 126;
-        this.deleteButtonY = 6;
 
         this.buttonWidth = 26;
         this.buttonHeight = 16;
@@ -57,11 +54,6 @@ public class MicrochipGroupListView extends ListView {
             return true;
         }
 
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteButtonX, y + deleteButtonY, buttonWidth, buttonHeight)) {
-            // Delete clicked
-            return false;
-        }
-
         return super.mouseClicked(x, y, mouseX, mouseY, button);
     }
 
@@ -71,7 +63,6 @@ public class MicrochipGroupListView extends ListView {
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         this.drawAddButton(matrices, x + addButtonX, y + addButtonY, mouseX, mouseY);
-        this.drawDeleteButton(matrices, x + deleteButtonX, y + deleteButtonY, mouseX, mouseY);
     }
 
     private void drawAddButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
