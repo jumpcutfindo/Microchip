@@ -181,7 +181,9 @@ public class MicrochipsMenuScreen extends Screen {
         this.chipCount = this.microchips.getChipCount();
 
         this.microchipGroupList = new MicrochipGroupListView(this, this.microchips);
-        this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(this.selectedGroup));
+
+        int index = Math.min(this.microchips.getGroupCount() - 1, this.selectedGroup);
+        this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(index));
     }
 
 

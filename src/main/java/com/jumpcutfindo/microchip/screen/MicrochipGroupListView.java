@@ -75,16 +75,6 @@ public class MicrochipGroupListView extends ListView {
         }
     }
 
-    private void drawDeleteButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
-            // Hovered
-            this.screen.drawTexture(matrices, x, y, 186, 47, buttonWidth, buttonHeight);
-        } else {
-            // Default
-            this.screen.drawTexture(matrices, x, y, 160, 47, buttonWidth, buttonHeight);
-        }
-    }
-
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {
         return microchips.getGroups().stream().map(group -> new MicrochipGroupListItem(screen, group, microchips.getGroups().indexOf(group))).collect(Collectors.toList());
     }

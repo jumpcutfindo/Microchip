@@ -13,6 +13,8 @@ public class MicrochipGroup {
     private GroupColor color;
     private Set<Microchip> microchips;
 
+    private boolean isDefault;
+
     public MicrochipGroup(String displayName, GroupColor color) {
         this.id = UUID.randomUUID();
         this.displayName = displayName;
@@ -23,6 +25,13 @@ public class MicrochipGroup {
         this(displayName, GroupColor.GRAY);
     }
 
+    protected void setDefault() {
+        this.isDefault = true;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
 
     public UUID getId() {
         return id;

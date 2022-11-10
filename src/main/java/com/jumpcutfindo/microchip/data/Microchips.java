@@ -20,6 +20,7 @@ public class Microchips implements Component {
         this.groups = new ArrayList<>();
 
         MicrochipGroup defaultGroup = new MicrochipGroup("No category");
+        defaultGroup.setDefault();
         this.groups.add(defaultGroup);
         this.defaultGroupId = defaultGroup.getId();
     }

@@ -55,6 +55,9 @@ public class ClientNetworker implements ClientModInitializer {
     }
 
     public static void sendDeleteGroupPacket(UUID groupId) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeUuid(groupId);
 
+        ClientPlayNetworking.send(NetworkConstants.PACKET_DELETE_GROUP_ID, buffer);
     }
 }
