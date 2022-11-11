@@ -50,6 +50,8 @@ public class MicrochipsListView extends ListView {
 
     @Override
     public void render(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        if (this.group == null) return;
+
         super.render(matrices, x, y, mouseX, mouseY);
 
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
@@ -77,7 +79,7 @@ public class MicrochipsListView extends ListView {
 
     @Override
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY, int button) {
-        if (group.isDefault()) return false;
+        if (group == null || group.isDefault()) return false;
 
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteGroupButtonX, y + deleteGroupButtonY, buttonWidth, buttonHeight)) {
             // Delete clicked

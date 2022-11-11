@@ -197,7 +197,14 @@ public class MicrochipsMenuScreen extends Screen {
 
     private void refreshMicrochips() {
         int index = Math.min(this.microchips.getGroupCount() - 1, this.selectedGroup);
-        this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(index));
+        index = Math.max(0, index);
+        this.selectedGroup = index;
+
+        if (this.microchips.getGroups().size() == 0) {
+            this.microchipsList = new MicrochipsListView(this, null);
+        } else {
+            this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(index));
+        }
     }
 
     protected boolean isBlockedByWindow(int x, int y) {
