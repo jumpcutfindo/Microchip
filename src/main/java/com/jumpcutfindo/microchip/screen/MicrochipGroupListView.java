@@ -76,6 +76,6 @@ public class MicrochipGroupListView extends ListView {
     }
 
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {
-        return microchips.getGroups().stream().map(group -> new MicrochipGroupListItem(screen, group, microchips.getGroups().indexOf(group))).collect(Collectors.toList());
+        return microchips.getAllGroups().stream().map(group -> new MicrochipGroupListItem(screen, group, microchips.getAllGroups().indexOf(group))).collect(Collectors.toList());
     }
 }

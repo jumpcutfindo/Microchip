@@ -12,44 +12,69 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.nbt.NbtCompound;
 
 public class Microchips implements Component {
-    private UUID defaultGroupId;
-    private List<MicrochipGroup> groups;
+    private MicrochipGroup defaultGroup;
+    private List<MicrochipGroup> userGroups;
 
-    private int groupCount, chipCount = 1;
+    private int groupCount = 1, chipCount = 0;
     public Microchips() {
-        this.groups = new ArrayList<>();
-
-        MicrochipGroup defaultGroup = new MicrochipGroup("No category");
-        defaultGroup.setDefault();
-        this.groups.add(defaultGroup);
-        this.defaultGroupId = defaultGroup.getId();
+        checkAndCreateDefaultGroup();
+        checkAndCreateUserGroups();
     }
 
-    public UUID getDefaultGroupId() {
-        return defaultGroupId;
+    private void checkAndCreateDefaultGroup() {
+        if (this.defaultGroup == null) {
+            MicrochipGroup defaultGroup = new MicrochipGroup("No category");
+            defaultGroup.setDefault();
+            this.defaultGroup = defaultGroup;
+        }
     }
 
-    private void setDefaultGroupId(UUID id) {
-        this.defaultGroupId = id;
+    private void checkAndCreateUserGroups() {
+        if (this.userGroups == null) {
+            this.userGroups = new ArrayList<>();
+        }
     }
 
-    public List<MicrochipGroup> getGroups() {
+    public List<MicrochipGroup> getAllGroups() {
+        List<MicrochipGroup> groups = new ArrayList<>();
+        groups.add(this.defaultGroup);
+        groups.addAll(this.userGroups);
         return groups;
     }
 
-    private void setGroups(List<MicrochipGroup> groups) {
-        this.groups = groups;
+    public List<MicrochipGroup> getUserGroups() {
+        return userGroups;
+    }
+
+    public MicrochipGroup getDefaultGroup() {
+        return defaultGroup;
+    }
+
+    private void setUserGroups(List<MicrochipGroup> groups) {
+        this.userGroups = groups;
+        checkAndCreateUserGroups();
+        updateGroupCount();
+    }
+
+    private void setDefaultGroup(MicrochipGroup group) {
+        this.defaultGroup = group;
+        checkAndCreateDefaultGroup();
+        updateGroupCount();
+    }
+
+    private void updateGroupCount() {
+        this.groupCount = 1 + (this.userGroups == null ? 0 : this.userGroups.size());
     }
 
     public boolean createGroup(String name, GroupColor color) {
         MicrochipGroup group = new MicrochipGroup(name, color);
         groupCount++;
-        return groups.add(group);
+        return userGroups.add(group);
     }
 
     public boolean deleteGroup(UUID id) {
         groupCount--;
-        return groups.removeIf(group -> group.getId().equals(id));
+        return userGroups.removeIf(group -> group.getId().equals(id));
     }
 
     public int getChipCount() {
@@ -61,7 +86,12 @@ public class Microchips implements Component {
     }
 
     public boolean addToGroup(UUID groupId, Microchip microchip) {
-        for (MicrochipGroup group : this.groups) {
+        if (groupId.equals(defaultGroup.getId())) {
+            chipCount++;
+            return defaultGroup.add(microchip);
+        }
+
+        for (MicrochipGroup group : this.userGroups) {
             if (group.getId().equals(groupId)) {
                 chipCount++;
                 return group.add(microchip);
@@ -71,7 +101,12 @@ public class Microchips implements Component {
     }
 
     public boolean removeFromGroup(UUID groupId, Microchip microchip) {
-        for (MicrochipGroup group : this.groups) {
+        if (groupId.equals(defaultGroup.getId())) {
+            chipCount--;
+            return defaultGroup.remove(microchip);
+        }
+
+        for (MicrochipGroup group : this.userGroups) {
             if (group.getId().equals(groupId)) {
                 chipCount--;
                 return group.remove(microchip);
@@ -96,22 +131,21 @@ public class Microchips implements Component {
 
     public static void fromNbt(NbtCompound cpd, Microchips microchips) {
         Gson gson = new Gson();
+
+        MicrochipGroup defaultGroup = gson.fromJson(cpd.getString("defaultGroup"), MicrochipGroup.class);
+        microchips.setDefaultGroup(defaultGroup);
+
         Type groupsType = new TypeToken<List<MicrochipGroup>>(){}.getType();
-        List<MicrochipGroup> groups = gson.fromJson(cpd.getString("groups"), groupsType);
-
-        microchips.setDefaultGroupId(cpd.getUuid("defaultGroup"));
-        microchips.setGroups(groups);
-
-        microchips.groupCount = groups.size();
-        microchips.chipCount = groups.stream().mapToInt(group -> group.getMicrochips().size()).sum();
+        List<MicrochipGroup> groups = gson.fromJson(cpd.getString("userGroups"), groupsType);
+        microchips.setUserGroups(groups);
     }
 
     public static NbtCompound toNbt(Microchips microchips) {
         Gson gson = new Gson();
 
         NbtCompound cpd = new NbtCompound();
-        cpd.putUuid("defaultGroup", microchips.getDefaultGroupId());
-        cpd.putString("groups", gson.toJson(microchips.getGroups()));
+        cpd.putString("defaultGroup", gson.toJson(microchips.getDefaultGroup()));
+        cpd.putString("userGroups", gson.toJson(microchips.getUserGroups()));
 
         return cpd;
     }

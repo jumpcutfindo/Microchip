@@ -28,12 +28,12 @@ public class Tagger {
             LOGGER.info("Found an entity to tag!");
             Microchips microchips = getMicrochips(player);
 
-            boolean added = microchips.addToGroup(microchips.getDefaultGroupId(), new Microchip(entity.getUuid()));
+            boolean added = microchips.addToGroup(microchips.getDefaultGroup().getId(), new Microchip(entity.getUuid()));
 
             if (!added) return TagResult.DUPLICATE;
 
             if (world.isClient()) {
-                ClientNetworker.sendAddEntityToGroupPacket(microchips.getDefaultGroupId(), entity.getUuid());
+                ClientNetworker.sendAddEntityToGroupPacket(microchips.getDefaultGroup().getId(), entity.getUuid());
                 ClientNetworker.sendGlowPacket(entity);
             }
             return TagResult.ADDED;

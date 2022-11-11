@@ -200,10 +200,10 @@ public class MicrochipsMenuScreen extends Screen {
         index = Math.max(0, index);
         this.selectedGroup = index;
 
-        if (this.microchips.getGroups().size() == 0) {
+        if (this.microchips.getAllGroups().size() == 0) {
             this.microchipsList = new MicrochipsListView(this, null);
         } else {
-            this.microchipsList = new MicrochipsListView(this, this.microchips.getGroups().get(index));
+            this.microchipsList = new MicrochipsListView(this, this.microchips.getAllGroups().get(index));
         }
     }
 
