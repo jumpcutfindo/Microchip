@@ -40,9 +40,14 @@ public class MicrochipCreateGroupWindow extends Window {
 
         this.colorButtons = new ArrayList<>();
         for (int i = 0; i < GroupColor.values().length; i++) {
-            colorButtons.add(new ColorButton(0, 0, screen, GroupColor.values()[i]));
+            ColorButton button = new ColorButton(0, 0, screen, GroupColor.values()[i]);
+            colorButtons.add(button);
+
+            if (GroupColor.values()[i] == GroupColor.getDefault()){
+                this.selectedColor = button;
+                button.setSelected(true);
+            }
         }
-        this.selectedColor = colorButtons.get(colorButtons.size() - 1);
     }
 
     @Override

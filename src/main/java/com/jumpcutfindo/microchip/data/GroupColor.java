@@ -34,4 +34,10 @@ public enum GroupColor {
     public int getBezelColor() {
         return bezelColor;
     }
+
+    public static GroupColor getDefault() {
+        return GRAY;
+    }
+
+
 }

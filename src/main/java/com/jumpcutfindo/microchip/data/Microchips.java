@@ -12,6 +12,7 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.nbt.NbtCompound;
 
 public class Microchips implements Component {
+    private static final String DEFAULT_GROUP_NAME = "Uncategorised";
     private MicrochipGroup defaultGroup;
     private List<MicrochipGroup> userGroups;
 
@@ -23,7 +24,7 @@ public class Microchips implements Component {
 
     private void checkAndCreateDefaultGroup() {
         if (this.defaultGroup == null) {
-            MicrochipGroup defaultGroup = new MicrochipGroup("No category");
+            MicrochipGroup defaultGroup = new MicrochipGroup(DEFAULT_GROUP_NAME);
             defaultGroup.setDefault();
             this.defaultGroup = defaultGroup;
         }
