@@ -38,8 +38,8 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
     }
 
     @Override
-    public boolean removeFromGroup(UUID groupId, Microchip microchip) {
-        boolean flag = super.removeFromGroup(groupId, microchip);
+    public boolean removeFromGroup(UUID groupId, UUID entityId) {
+        boolean flag = super.removeFromGroup(groupId, entityId);
         MicrochipComponents.MICROCHIPS.sync(this.owner);
         return flag;
     }

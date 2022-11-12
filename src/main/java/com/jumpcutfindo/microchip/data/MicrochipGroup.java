@@ -54,9 +54,9 @@ public class MicrochipGroup {
         return this.microchips.add(microchip);
     }
 
-    public boolean remove(Microchip microchip) {
-        LOGGER.info(String.format("Removing Microchip(%s) from group(%s)", microchip, displayName));
-        return this.microchips.remove(microchip);
+    public boolean remove(UUID microchipId) {
+        LOGGER.info(String.format("Removing Microchip(%s) from group(%s)", microchipId, displayName));
+        return this.microchips.removeIf(mc -> mc.getEntityId().equals(microchipId));
     }
 
     public boolean contains(Microchip microchip) {

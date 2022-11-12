@@ -170,7 +170,6 @@ public class MicrochipsMenuScreen extends Screen {
     }
 
     private boolean hasUpdates() {
-
         Microchips clientMicrochips = Tagger.getMicrochips(client.player);
         return this.groupCount != clientMicrochips.getGroupCount()
                 || this.chipCount != clientMicrochips.getChipCount();

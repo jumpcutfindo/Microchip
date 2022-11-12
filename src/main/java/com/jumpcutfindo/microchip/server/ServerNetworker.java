@@ -45,7 +45,7 @@ public class ServerNetworker implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_ADD_ENTITY_TO_GROUP_ID, ((server, player, handler, buf, responseSender) -> {
             UUID groupId = buf.readUuid();
             UUID entityId = buf.readUuid();
-            if (entityId == null || groupId == null) return;
+            if (groupId == null || entityId == null) return;
 
             Microchips microchips = Tagger.getMicrochips(player);
             microchips.addToGroup(groupId, new Microchip(entityId));
@@ -56,6 +56,15 @@ public class ServerNetworker implements ModInitializer {
 
     private static void onRemoveEntityFromGroup() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REMOVE_ENTITY_FROM_GROUP_ID, ((server, player, handler, buf, responseSender) -> {
+            UUID groupId = buf.readUuid();
+            UUID microchipId = buf.readUuid();
+
+            if (groupId == null || microchipId == null) return;
+
+            Microchips microchips = Tagger.getMicrochips(player);
+            microchips.removeFromGroup(groupId, microchipId);
+
+            sendScreenRefresh(player);
         }));
     }
 

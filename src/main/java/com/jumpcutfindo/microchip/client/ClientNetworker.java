@@ -43,7 +43,11 @@ public class ClientNetworker implements ClientModInitializer {
 
 
     public static void sendRemoveEntityFromGroupPacket(UUID groupId, UUID entityId) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeUuid(groupId);
+        buffer.writeUuid(entityId);
 
+        ClientPlayNetworking.send(NetworkConstants.PACKET_REMOVE_ENTITY_FROM_GROUP_ID, buffer);
     }
 
     public static void sendCreateGroupPacket(String groupName, GroupColor color) {

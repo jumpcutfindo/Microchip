@@ -79,9 +79,10 @@ public class MicrochipsListView extends ListView {
 
     @Override
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY, int button) {
-        if (group == null || group.isDefault()) return false;
+        if (group == null) return false;
 
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteGroupButtonX, y + deleteGroupButtonY, buttonWidth, buttonHeight)) {
+            if (group.isDefault()) return false;
             // Delete clicked
             ClientNetworker.sendDeleteGroupPacket(this.group.getId());
             return true;
@@ -93,6 +94,6 @@ public class MicrochipsListView extends ListView {
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
         if (microchipGroup == null) return new ArrayList<>();
 
-        return microchipGroup.getMicrochips().stream().map(microchip -> new MicrochipListItem(screen, microchip)).collect(Collectors.toList());
+        return microchipGroup.getMicrochips().stream().map(microchip -> new MicrochipListItem(screen, microchipGroup, microchip)).collect(Collectors.toList());
     }
 }

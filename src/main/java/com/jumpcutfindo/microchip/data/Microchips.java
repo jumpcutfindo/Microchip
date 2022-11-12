@@ -67,6 +67,10 @@ public class Microchips implements Component {
         this.groupCount = 1 + (this.userGroups == null ? 0 : this.userGroups.size());
     }
 
+    private void updateChipCount() {
+        this.chipCount = this.defaultGroup.getMicrochips().size() + this.userGroups.stream().mapToInt(group -> group.getMicrochips().size()).sum();
+    }
+
     public boolean createGroup(String name, GroupColor color) {
         MicrochipGroup group = new MicrochipGroup(name, color);
         groupCount++;
@@ -101,16 +105,16 @@ public class Microchips implements Component {
         return false;
     }
 
-    public boolean removeFromGroup(UUID groupId, Microchip microchip) {
+    public boolean removeFromGroup(UUID groupId, UUID entityId) {
         if (groupId.equals(defaultGroup.getId())) {
             chipCount--;
-            return defaultGroup.remove(microchip);
+            return defaultGroup.remove(entityId);
         }
 
         for (MicrochipGroup group : this.userGroups) {
             if (group.getId().equals(groupId)) {
                 chipCount--;
-                return group.remove(microchip);
+                return group.remove(entityId);
             }
         }
         return false;
@@ -139,6 +143,8 @@ public class Microchips implements Component {
         Type groupsType = new TypeToken<List<MicrochipGroup>>(){}.getType();
         List<MicrochipGroup> groups = gson.fromJson(cpd.getString("userGroups"), groupsType);
         microchips.setUserGroups(groups);
+
+        microchips.updateChipCount();
     }
 
     public static NbtCompound toNbt(Microchips microchips) {

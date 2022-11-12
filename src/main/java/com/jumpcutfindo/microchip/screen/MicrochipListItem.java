@@ -1,10 +1,13 @@
 package com.jumpcutfindo.microchip.screen;
 
+import com.jumpcutfindo.microchip.client.ClientNetworker;
+import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
@@ -14,10 +17,12 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
 public class MicrochipListItem extends ListItem {
+    private final MicrochipGroup group;
     private final Microchip microchip;
     private final LivingEntity entity;
-    public MicrochipListItem(MicrochipsMenuScreen screen, Microchip microchip) {
+    public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip) {
         super(screen, MicrochipsListView.TEXTURE, 0, 178, 0, 178, 0, 178, 180, 36);
+        this.group = group;
         this.microchip = microchip;
 
         this.entity = this.getEntity();
@@ -36,12 +41,32 @@ public class MicrochipListItem extends ListItem {
 
             this.drawEntity(x, y);
         }
+
+        drawButton(matrices, x + 174, y + 3, mouseX, mouseY);
     }
 
     @Override
     public boolean onClick(int x, int y, double mouseX, double mouseY) {
-        // TODO: Implement
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 174, y + 3, 4, 4)) {
+            // Delete pressed
+            ClientNetworker.sendRemoveEntityFromGroupPacket(this.group.getId(), this.microchip.getEntityId());
+        }
         return false;
+    }
+
+    private void drawButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
+
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, 4, 4)) {
+            // Hovered
+            screen.drawTexture(matrices, x, y, 184, 178, 4, 4);
+        } else {
+            // Normal
+            screen.drawTexture(matrices, x, y, 180, 178, 4, 4);
+        }
+
     }
 
     private void drawEntity(int x, int y) {
