@@ -1,4 +1,4 @@
-package com.jumpcutfindo.microchip.screen;
+package com.jumpcutfindo.microchip.screen.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
+import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.render.GameRenderer;

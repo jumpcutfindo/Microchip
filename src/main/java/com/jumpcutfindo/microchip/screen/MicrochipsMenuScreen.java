@@ -4,6 +4,9 @@ import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Tagger;
+import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
+import com.jumpcutfindo.microchip.screen.list.MicrochipsListView;
+import com.jumpcutfindo.microchip.screen.window.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.font.TextRenderer;
@@ -68,7 +71,7 @@ public class MicrochipsMenuScreen extends Screen {
         }
     }
 
-    protected void drawBackgroundGradient(MatrixStack matrices) {
+    public void drawBackgroundGradient(MatrixStack matrices) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
@@ -165,7 +168,7 @@ public class MicrochipsMenuScreen extends Screen {
         return client.player;
     }
 
-    protected TextRenderer getTextRenderer() {
+    public TextRenderer getTextRenderer() {
         return this.textRenderer;
     }
 
@@ -206,7 +209,7 @@ public class MicrochipsMenuScreen extends Screen {
         }
     }
 
-    protected boolean isBlockedByWindow(int x, int y) {
+    public boolean isBlockedByWindow(int x, int y) {
         if (this.activeWindow == null) return false;
         else {
             return isWithin(x, y, this.activeWindow.getX(), this.activeWindow.getY(), this.activeWindow.getWidth(), this.activeWindow.getHeight());
@@ -233,7 +236,7 @@ public class MicrochipsMenuScreen extends Screen {
         return isWithin(mouseX, mouseY, getMicrochipListX(), getListY(), this.microchipsList.getTextureWidth(), this.microchipsList.getTextureHeight());
     }
 
-    protected static boolean isWithin(double x, double y, int textureX, int textureY, int textureWidth, int textureHeight) {
+    public static boolean isWithin(double x, double y, int textureX, int textureY, int textureWidth, int textureHeight) {
         return x >= textureX && x < textureX + textureWidth
                 && y >= textureY && y < textureY + textureHeight;
     }

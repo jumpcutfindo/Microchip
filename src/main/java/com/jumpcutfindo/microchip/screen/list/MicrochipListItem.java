@@ -1,9 +1,10 @@
-package com.jumpcutfindo.microchip.screen;
+package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.DiffuseLighting;
@@ -42,12 +43,12 @@ public class MicrochipListItem extends ListItem {
             this.drawEntity(x, y);
         }
 
-        drawButton(matrices, x + 174, y + 3, mouseX, mouseY);
+        drawButton(matrices, x + 173, y + 3, mouseX, mouseY);
     }
 
     @Override
     public boolean onClick(int x, int y, double mouseX, double mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 174, y + 3, 4, 4)) {
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 173, y + 3, 4, 4)) {
             // Delete pressed
             ClientNetworker.sendRemoveEntityFromGroupPacket(this.group.getId(), this.microchip.getEntityId());
         }

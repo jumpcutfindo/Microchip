@@ -1,7 +1,8 @@
-package com.jumpcutfindo.microchip.screen;
+package com.jumpcutfindo.microchip.screen.component;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,7 +13,8 @@ public class ColorButton {
     private final MicrochipsMenuScreen screen;
     private final int width, height;
 
-    int x, y;
+    public int x;
+    public int y;
     private int u, v;
 
     private GroupColor color;

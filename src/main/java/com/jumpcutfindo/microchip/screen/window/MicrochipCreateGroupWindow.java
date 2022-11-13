@@ -1,4 +1,4 @@
-package com.jumpcutfindo.microchip.screen;
+package com.jumpcutfindo.microchip.screen.window;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.List;
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.component.ColorButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -24,7 +26,7 @@ public class MicrochipCreateGroupWindow extends Window {
     private List<ColorButton> colorButtons;
     private ColorButton selectedColor;
 
-    protected MicrochipCreateGroupWindow(MicrochipsMenuScreen screen) {
+    public MicrochipCreateGroupWindow(MicrochipsMenuScreen screen) {
         super(screen, new TranslatableText("microchip.menu.createGroup.windowTitle"));
         this.width = 138;
         this.height = 121;

@@ -1,7 +1,8 @@
-package com.jumpcutfindo.microchip.screen;
+package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
+import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
