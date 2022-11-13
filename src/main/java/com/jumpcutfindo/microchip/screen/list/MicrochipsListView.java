@@ -28,7 +28,8 @@ public class MicrochipsListView extends ListView {
                 TEXTURE, 0, 0, 216, 178,
                 8, 26,
                 216, 0, 195, 26,
-                createItems(screen, microchipGroup), 4);
+                createItems(screen, microchipGroup), 4,
+                false);
 
         this.group = microchipGroup;
 

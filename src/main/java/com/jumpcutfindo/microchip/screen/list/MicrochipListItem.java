@@ -1,11 +1,11 @@
 package com.jumpcutfindo.microchip.screen.list;
 
-import com.jumpcutfindo.microchip.client.ClientNetworker;
+import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.Tagger;
-import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
@@ -43,14 +43,14 @@ public class MicrochipListItem extends ListItem {
             this.drawEntity(x, y);
         }
 
-        drawButton(matrices, x + 173, y + 3, mouseX, mouseY);
+        drawButton(matrices, x + 172, y + 3, mouseX, mouseY);
     }
 
     @Override
-    public boolean onClick(int x, int y, double mouseX, double mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 173, y + 3, 4, 4)) {
+    public boolean onSelect(int x, int y, double mouseX, double mouseY) {
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5)) {
             // Delete pressed
-            ClientNetworker.sendRemoveEntityFromGroupPacket(this.group.getId(), this.microchip.getEntityId());
+            return true;
         }
         return false;
     }
@@ -60,14 +60,8 @@ public class MicrochipListItem extends ListItem {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
 
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, 4, 4)) {
-            // Hovered
-            screen.drawTexture(matrices, x, y, 184, 178, 4, 4);
-        } else {
-            // Normal
-            screen.drawTexture(matrices, x, y, 180, 178, 4, 4);
-        }
-
+        if (this.isSelected()) screen.drawTexture(matrices, x, y, 185, 178, 5, 5);
+        else screen.drawTexture(matrices, x, y, 180, 178, 5, 5);
     }
 
     private void drawEntity(int x, int y) {

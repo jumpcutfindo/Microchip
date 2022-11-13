@@ -19,21 +19,27 @@ public abstract class ListView {
     protected final int scrollbarWidth, scrollbarHeight, scrollbarU, scrollbarV, scrollbarX, scrollbarY;
     protected final int maxItems;
 
+    private final boolean isSingleSelect;
+
     private int step;
     private final int maxSteps;
     private final float stepAmount;
 
     private float scrollPosition; // Range from 0.0 to 1.0
     private boolean scrolling;
+
     protected final List<ListItem> listItems;
     protected List<ListItem> visibleItems;
+
+    private List<ListItem> selectedItems;
 
     public ListView(
             MicrochipsMenuScreen screen,
             Identifier texture, int textureU, int textureV, int textureWidth, int textureHeight,
             int listX, int listY,
             int scrollbarU, int scrollbarV, int scrollbarX, int scrollbarY,
-            List<ListItem> listItems, int maxItems) {
+            List<ListItem> listItems, int maxItems,
+            boolean isSingleSelect) {
         this.screen = screen;
 
         this.texture = texture;
@@ -58,6 +64,9 @@ public abstract class ListView {
 
         this.maxSteps = listItems.size() - maxItems;
         this.stepAmount = (float) (this.scrollbarHeight - 15) / (float) (this.maxSteps);
+
+        this.isSingleSelect = isSingleSelect;
+        this.selectedItems = new ArrayList<>();
     }
 
     public void render(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
@@ -109,9 +118,19 @@ public abstract class ListView {
             if (i >= this.listItems.size()) break;
 
             ListItem item = this.listItems.get(i);
-            if (item.onClick(x + listX, y + listY + offsetY, mouseX, mouseY)) {
-                this.resetSelection();
-                item.setSelected(true);
+            if (item.onSelect(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+                if (isSingleSelect) {
+                    this.resetSelection();
+                    item.setSelected(true);
+                } else {
+                    if (item.isSelected()) {
+                        this.selectedItems.remove(item);
+                        item.setSelected(false);
+                    } else {
+                        this.selectedItems.add(item);
+                        item.setSelected(true);
+                    }
+                }
                 return true;
             }
 

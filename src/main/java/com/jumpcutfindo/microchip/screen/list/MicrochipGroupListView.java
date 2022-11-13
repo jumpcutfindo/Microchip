@@ -27,7 +27,8 @@ public class MicrochipGroupListView extends ListView {
                 TEXTURE, 0, 0, 160, 178,
                 8, 26,
                 160, 0, 139, 26,
-                createItems(screen, microchips), 8);
+                createItems(screen, microchips), 8,
+                true);
 
         // Set various variables
         this.title = new TranslatableText("microchip.menu.groupTitle");
