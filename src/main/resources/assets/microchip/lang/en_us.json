@@ -5,6 +5,12 @@
 
     "microchip.menu.groupTitle": "Microchips",
 
+    "microchip.menu.createGroup.tooltip": "Create Group...",
+    "microchip.menu.deleteGroup.tooltip": "Delete Group",
+    "microchip.menu.editGroup.tooltip": "Edit Group...",
+    "microchip.menu.deleteMicrochips.tooltip": "Delete Microchips",
+    "microchip.menu.moveMicrochips.tooltip": "Move Microchips...",
+
     "microchip.menu.createGroup.windowTitle": "Create a group",
     "microchip.menu.createGroup.title": "Name",
     "microchip.menu.createGroup.colorTitle": "Color",

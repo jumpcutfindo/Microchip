@@ -13,6 +13,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 public class MicrochipsListView extends ListView {
@@ -21,8 +22,13 @@ public class MicrochipsListView extends ListView {
 
     private final int titleX, titleY;
     private final int buttonWidth, buttonHeight;
-    private final int deleteGroupButtonX, deleteGroupButtonY;
+    private final int editGroupX, editGroupY;
+    private final int deleteGroupX, deleteGroupY;
+    private final int deleteMicrochipsX, deleteMicrochipsY;
+    private final int moveMicrochipsX, moveMicrochipsY;
     private final LiteralText title;
+
+    private Runnable renderTooltip;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
         super(screen,
                 TEXTURE, 0, 0, 216, 178,
@@ -43,39 +49,116 @@ public class MicrochipsListView extends ListView {
         this.titleX = 7;
         this.titleY = 9;
 
-        this.deleteGroupButtonX = 182;
-        this.deleteGroupButtonY = 6;
+        this.editGroupX = 154;
+        this.editGroupY = 6;
+
+        this.deleteGroupX = 182;
+        this.deleteGroupY = 6;
+
+        this.moveMicrochipsX = 154;
+        this.moveMicrochipsY = 6;
+
+        this.deleteMicrochipsX = 182;
+        this.deleteMicrochipsY = 6;
 
         this.buttonWidth = 26;
         this.buttonHeight = 16;
     }
 
     @Override
-    public void render(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        if (this.group == null) return;
-
-        super.render(matrices, x, y, mouseX, mouseY);
+    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        super.renderBackground(matrices, x, y, mouseX, mouseY);
 
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
-        this.drawButtons(matrices, x, y, mouseX, mouseY);
     }
+
+    @Override
+    public void renderItems(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        super.renderItems(matrices, x, y, mouseX, mouseY);
+        this.drawButtons(matrices, x, y, mouseX, mouseY);
+
+        // Render tooltip on top of everything else
+        if (this.renderTooltip != null) this.renderTooltip.run();
+        this.renderTooltip = null;
+    }
+
     private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
-        this.drawDeleteButton(matrices, x + deleteGroupButtonX, y + deleteGroupButtonY, mouseX, mouseY);
+        // Swap the buttons depending on whether any items were selected
+        if (this.isAnySelected()) {
+            this.drawMoveItemsButton(matrices, x + moveMicrochipsX, y + moveMicrochipsY, mouseX, mouseY);
+            this.drawDeleteItemsButton(matrices, x + deleteMicrochipsX, y + deleteMicrochipsY, mouseX, mouseY);
+        } else {
+            this.drawEditGroupButton(matrices, x + editGroupX, y + editGroupY, mouseX, mouseY);
+            this.drawDeleteGroupButton(matrices, x + deleteGroupX, y + deleteGroupY, mouseX, mouseY);
+        }
     }
 
-    private void drawDeleteButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        if (group.isDefault()) return;
+    private void drawEditGroupButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
             // Hovered
-            this.screen.drawTexture(matrices, x, y , 216, 31, buttonWidth, buttonHeight);
+            this.screen.drawTexture(matrices, x, y, 26, 32, buttonWidth, buttonHeight);
+            this.renderTooltip = () -> this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.editGroup.tooltip"), mouseX, mouseY);
         } else {
             // Default
-            this.screen.drawTexture(matrices, x, y, 216, 15, buttonWidth, buttonHeight);
+            this.screen.drawTexture(matrices, x, y, 0, 32, buttonWidth, buttonHeight);
+        }
+    }
+
+    private void drawDeleteGroupButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
+        if (group.isDefault()) {
+            // Disabled
+            this.screen.drawTexture(matrices, x, y, 78, 16, buttonWidth, buttonHeight);
+            return;
+        };
+
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
+            // Hovered
+            this.screen.drawTexture(matrices, x, y, 26, 16, buttonWidth, buttonHeight);
+            this.renderTooltip = () -> this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.deleteGroup.tooltip"), mouseX, mouseY);
+        } else {
+            // Default
+            this.screen.drawTexture(matrices, x, y, 0, 16, buttonWidth, buttonHeight);
+        }
+    }
+
+    private void drawDeleteItemsButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
+        if (this.isAnySelected()) {
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
+                // Hovered
+                this.screen.drawTexture(matrices, x, y, 130, 0, buttonWidth, buttonHeight);
+                this.renderTooltip = () -> this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"), mouseX, mouseY);
+            } else {
+                // Normal
+                this.screen.drawTexture(matrices, x, y, 104, 0, buttonWidth, buttonHeight);
+            }
+        } else {
+            // Inactive
+            this.screen.drawTexture(matrices, x, y, 182, 0, buttonWidth, buttonHeight);
+        }
+    }
+
+    private void drawMoveItemsButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
+        if (this.isAnySelected()) {
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
+                // Hovered
+                this.screen.drawTexture(matrices, x, y, 130, 16, buttonWidth, buttonHeight);
+                this.renderTooltip = () -> this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.moveMicrochips.tooltip"), mouseX, mouseY);
+            } else {
+                // Normal
+                this.screen.drawTexture(matrices, x, y, 104, 16, buttonWidth, buttonHeight);
+            }
+        } else {
+            // Inactive
+            this.screen.drawTexture(matrices, x, y, 182, 16, buttonWidth, buttonHeight);
         }
     }
 
@@ -83,12 +166,18 @@ public class MicrochipsListView extends ListView {
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY, int button) {
         if (group == null) return false;
 
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteGroupButtonX, y + deleteGroupButtonY, buttonWidth, buttonHeight)) {
-            if (group.isDefault()) return false;
-            // Delete clicked
-            ClientNetworker.sendDeleteGroupPacket(this.group.getId());
-            return true;
+        if (!this.isAnySelected()) {
+            // Delete Group
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteGroupX, y + deleteGroupY, buttonWidth, buttonHeight)) {
+                if (group.isDefault()) return false;
+                // Delete clicked
+                ClientNetworker.sendDeleteGroupPacket(this.group.getId());
+                return true;
+            }
+        } else {
+
         }
+
 
         return super.mouseClicked(x, y, mouseX, mouseY, button);
     }

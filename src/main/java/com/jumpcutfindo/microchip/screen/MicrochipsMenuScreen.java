@@ -2,6 +2,7 @@ package com.jumpcutfindo.microchip.screen;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
@@ -15,8 +16,10 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 
 public class MicrochipsMenuScreen extends Screen {
+    public static final Identifier BUTTONS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
 
     private final int titleX, titleY;
     private int x, y;
@@ -60,8 +63,11 @@ public class MicrochipsMenuScreen extends Screen {
         if (hasUpdates()) refreshScreen(RefreshType.BOTH);
 
         this.drawBackgroundGradient(matrices);
-        this.microchipGroupList.render(matrices, this.x, this.y, mouseX, mouseY);
-        this.microchipsList.render(matrices, this.x + this.microchipGroupList.getTextureWidth(), this.y, mouseX, mouseY);
+        this.microchipGroupList.renderBackground(matrices, this.x, this.y, mouseX, mouseY);
+        this.microchipsList.renderBackground(matrices, this.x + this.microchipGroupList.getTextureWidth(), this.y, mouseX, mouseY);
+
+        this.microchipGroupList.renderItems(matrices, this.x, this.y, mouseX, mouseY);
+        this.microchipsList.renderItems(matrices, this.x + this.microchipGroupList.getTextureWidth(), this.y, mouseX, mouseY);
 
         if (this.activeWindow != null) {
             int windowX = (this.width - this.activeWindow.getWidth()) / 2;

@@ -6,8 +6,12 @@ import java.util.List;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -31,7 +35,7 @@ public abstract class ListView {
     protected final List<ListItem> listItems;
     protected List<ListItem> visibleItems;
 
-    private List<ListItem> selectedItems;
+    private final List<ListItem> selectedItems;
 
     public ListView(
             MicrochipsMenuScreen screen,
@@ -69,21 +73,15 @@ public abstract class ListView {
         this.selectedItems = new ArrayList<>();
     }
 
-    public void render(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        this.renderBackground(matrices, x, y);
-        this.renderItems(matrices, x + listX, y + listY, mouseX, mouseY);
-
-        this.renderScrollbar(matrices, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), mouseX, mouseY);
-    }
-
-    private void renderBackground(MatrixStack matrices, int x, int y) {
+    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.texture);
         screen.drawTexture(matrices, x, y, this.textureU, this.textureV, this.textureWidth, this.textureHeight);
+        this.renderScrollbar(matrices, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), mouseX, mouseY);
     }
 
-    private void renderItems(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderItems(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.texture);
@@ -95,7 +93,7 @@ public abstract class ListView {
             if (i >= this.listItems.size()) break;
 
             ListItem item = this.listItems.get(i);
-            item.render(matrices, x, y + offsetY, mouseX, mouseY);
+            item.render(matrices, x + listX, y + listY + offsetY, mouseX, mouseY);
             offsetY += item.getHeight();
         }
     }
@@ -104,7 +102,7 @@ public abstract class ListView {
         if (!this.hasScrollbar()) return;
 
         RenderSystem.setShaderTexture(0, this.texture);
-        screen.drawTexture(matrices, x, y, scrollbarU, scrollbarV, 13, 15);
+        screen.drawTexture(matrices, x + scrollbarX, y + scrollbarY, scrollbarU, scrollbarV, 13, 15);
     }
 
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY, int button) {
@@ -119,6 +117,7 @@ public abstract class ListView {
 
             ListItem item = this.listItems.get(i);
             if (item.onSelect(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+                this.playDownSound(MinecraftClient.getInstance().getSoundManager());
                 if (isSingleSelect) {
                     this.resetSelection();
                     item.setSelected(true);
@@ -180,7 +179,19 @@ public abstract class ListView {
         return textureHeight;
     }
 
+    public boolean isAnySelected() {
+       return selectedItems.size() > 0;
+    }
+
+    public List<ListItem> getSelectedItems() {
+        return selectedItems;
+    }
+
     private void resetSelection() {
         for (ListItem item : listItems) item.setSelected(false);
+    }
+
+    public void playDownSound(SoundManager soundManager) {
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 }

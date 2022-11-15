@@ -41,11 +41,17 @@ public class MicrochipGroupListView extends ListView {
         this.buttonWidth = 26;
         this.buttonHeight = 16;
     }
+
     @Override
-    public void render(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        super.render(matrices, x, y, mouseX, mouseY);
+    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        super.renderBackground(matrices, x, y, mouseX, mouseY);
 
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
+    }
+
+    @Override
+    public void renderItems(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        super.renderItems(matrices, x, y, mouseX, mouseY);
         this.drawButtons(matrices, x, y, mouseX, mouseY);
     }
 
@@ -63,18 +69,19 @@ public class MicrochipGroupListView extends ListView {
     private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
-        this.drawAddButton(matrices, x + addButtonX, y + addButtonY, mouseX, mouseY);
+        this.drawCreateGroupButton(matrices, x + addButtonX, y + addButtonY, mouseX, mouseY);
     }
 
-    private void drawAddButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    private void drawCreateGroupButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
             // Hovered
-            this.screen.drawTexture(matrices, x, y , 186, 15, buttonWidth, buttonHeight);
+            this.screen.drawTexture(matrices, x, y , 26, 0, buttonWidth, buttonHeight);
+            this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.createGroup.tooltip"), mouseX, mouseY);
         } else {
             // Default
-            this.screen.drawTexture(matrices, x, y, 160, 15, buttonWidth, buttonHeight);
+            this.screen.drawTexture(matrices, x, y, 0, 0, buttonWidth, buttonHeight);
         }
     }
 

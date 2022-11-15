@@ -5,7 +5,11 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 public class ColorButton {
@@ -56,9 +60,14 @@ public class ColorButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, width, height)) {
             this.isSelected = !this.isSelected;
+            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
             return true;
         }
 
         return false;
+    }
+
+    private void playDownSound(SoundManager soundManager) {
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 }

@@ -48,11 +48,7 @@ public class MicrochipListItem extends ListItem {
 
     @Override
     public boolean onSelect(int x, int y, double mouseX, double mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5)) {
-            // Delete pressed
-            return true;
-        }
-        return false;
+        return MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5);
     }
 
     private void drawButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
