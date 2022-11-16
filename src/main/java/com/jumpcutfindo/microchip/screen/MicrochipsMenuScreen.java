@@ -47,10 +47,10 @@ public class MicrochipsMenuScreen extends Screen {
     protected void init() {
         super.init();
 
-        this.refreshScreen(RefreshType.BOTH);
+        this.x = (this.width - (160 + 216)) / 2;
+        this.y = (this.height - 178) / 2;
 
-        this.x = (this.width - (this.microchipGroupList.getTextureWidth() + this.microchipsList.getTextureWidth())) / 2;
-        this.y = (this.height - this.microchipGroupList.getTextureHeight()) / 2;
+        this.refreshScreen(RefreshType.BOTH);
     }
 
     @Override
@@ -63,11 +63,11 @@ public class MicrochipsMenuScreen extends Screen {
         if (hasUpdates()) refreshScreen(RefreshType.BOTH);
 
         this.drawBackgroundGradient(matrices);
-        this.microchipGroupList.renderBackground(matrices, this.x, this.y, mouseX, mouseY);
-        this.microchipsList.renderBackground(matrices, this.x + this.microchipGroupList.getTextureWidth(), this.y, mouseX, mouseY);
+        this.microchipGroupList.renderBackground(matrices, mouseX, mouseY);
+        this.microchipsList.renderBackground(matrices, mouseX, mouseY);
 
-        this.microchipGroupList.renderItems(matrices, this.x, this.y, mouseX, mouseY);
-        this.microchipsList.renderItems(matrices, this.x + this.microchipGroupList.getTextureWidth(), this.y, mouseX, mouseY);
+        this.microchipGroupList.renderItems(matrices, mouseX, mouseY);
+        this.microchipsList.renderItems(matrices, mouseX, mouseY);
 
         if (this.activeWindow != null) {
             int windowX = (this.width - this.activeWindow.getWidth()) / 2;
@@ -90,11 +90,11 @@ public class MicrochipsMenuScreen extends Screen {
         }
 
         if (isMouseInGroupList(mouseX, mouseY)) {
-            return this.microchipGroupList.mouseClicked(getGroupListX(), getListY(), (int) mouseX, (int) mouseY, button);
+            return this.microchipGroupList.mouseClicked((int) mouseX, (int) mouseY, button);
         }
 
         if (isMouseInMicrochipList(mouseX, mouseY)) {
-            return this.microchipsList.mouseClicked(getMicrochipListX(), getListY(), (int) mouseX, (int) mouseY, button);
+            return this.microchipsList.mouseClicked((int) mouseX, (int) mouseY, button);
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
@@ -103,11 +103,11 @@ public class MicrochipsMenuScreen extends Screen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (isMouseInGroupList(mouseX, mouseY)) {
-            return this.microchipGroupList.mouseDragged(getGroupListX(), getListY(), mouseX, mouseY, button, deltaX, deltaY);
+            return this.microchipGroupList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
 
         if (isMouseInMicrochipList(mouseX, mouseY)) {
-            return this.microchipsList.mouseDragged(getMicrochipListX(), getListY(), mouseX, mouseY, button, deltaX, deltaY);
+            return this.microchipsList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
 
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -116,11 +116,11 @@ public class MicrochipsMenuScreen extends Screen {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (isMouseInGroupList(mouseX, mouseY)) {
-            return this.microchipGroupList.mouseScrolled(getGroupListX(), getListY(), mouseX, mouseY, amount);
+            return this.microchipGroupList.mouseScrolled(mouseX, mouseY, amount);
         }
 
         if (isMouseInMicrochipList(mouseX, mouseY)) {
-            return this.microchipsList.mouseScrolled(getMicrochipListX(), getListY(), mouseX, mouseY, amount);
+            return this.microchipsList.mouseScrolled(mouseX, mouseY, amount);
         }
 
         return super.mouseScrolled(mouseX, mouseY, amount);
@@ -200,7 +200,7 @@ public class MicrochipsMenuScreen extends Screen {
     }
 
     private void refreshGroups() {
-        this.microchipGroupList = new MicrochipGroupListView(this, this.microchips);
+        this.microchipGroupList = new MicrochipGroupListView(this, this.microchips, x, y);
     }
 
     private void refreshMicrochips() {
@@ -209,9 +209,9 @@ public class MicrochipsMenuScreen extends Screen {
         this.selectedGroup = index;
 
         if (this.microchips.getAllGroups().size() == 0) {
-            this.microchipsList = new MicrochipsListView(this, null);
+            this.microchipsList = new MicrochipsListView(this, null, x + this.microchipGroupList.getTextureWidth(), y);
         } else {
-            this.microchipsList = new MicrochipsListView(this, this.microchips.getAllGroups().get(index));
+            this.microchipsList = new MicrochipsListView(this, this.microchips.getAllGroups().get(index), x + this.microchipGroupList.getTextureWidth(), y);
         }
     }
 

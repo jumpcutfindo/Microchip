@@ -17,6 +17,8 @@ import net.minecraft.util.math.MathHelper;
 
 public abstract class ListView {
     protected final MicrochipsMenuScreen screen;
+
+    public final int x, y;
     private final Identifier texture;
     protected final int textureU, textureV, textureWidth, textureHeight;
     protected final int listX, listY;
@@ -39,12 +41,16 @@ public abstract class ListView {
 
     public ListView(
             MicrochipsMenuScreen screen,
+            int x, int y,
             Identifier texture, int textureU, int textureV, int textureWidth, int textureHeight,
             int listX, int listY,
             int scrollbarU, int scrollbarV, int scrollbarX, int scrollbarY,
             List<ListItem> listItems, int maxItems,
             boolean isSingleSelect) {
         this.screen = screen;
+
+        this.x = x;
+        this.y = y;
 
         this.texture = texture;
         this.textureU = textureU;
@@ -73,14 +79,14 @@ public abstract class ListView {
         this.selectedItems = new ArrayList<>();
     }
 
-    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, this.texture);
         screen.drawTexture(matrices, x, y, this.textureU, this.textureV, this.textureWidth, this.textureHeight);
-        this.renderScrollbar(matrices, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), mouseX, mouseY);
+        this.renderScrollbar(matrices, mouseX, mouseY);
     }
 
-    public void renderItems(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderItems(MatrixStack matrices, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.texture);
@@ -97,15 +103,15 @@ public abstract class ListView {
         }
     }
 
-    private void renderScrollbar(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    private void renderScrollbar(MatrixStack matrices, int mouseX, int mouseY) {
         if (!this.hasScrollbar()) return;
 
         RenderSystem.setShaderTexture(0, this.texture);
-        screen.drawTexture(matrices, x + scrollbarX, y + scrollbarY, scrollbarU, scrollbarV, 13, 15);
+        screen.drawTexture(matrices, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15);
     }
 
-    public boolean mouseClicked(int x, int y, double mouseX, double mouseY, int button) {
-        if (this.isClickInScrollbar(x, y, (int) mouseX, (int) mouseY)) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.isClickInScrollbar((int) mouseX, (int) mouseY)) {
             this.scrolling = this.hasScrollbar();
             return true;
         }
@@ -138,7 +144,7 @@ public abstract class ListView {
         return false;
     }
 
-    public boolean mouseDragged(int x, int y, double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.scrolling) {
             this.scrollPosition += deltaY / (this.scrollbarHeight - 15);
             this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0f, 1.0f);
@@ -149,7 +155,7 @@ public abstract class ListView {
         }
     }
 
-    public boolean mouseScrolled(int x, int y, double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (!this.hasScrollbar()) {
             return false;
         } else {
@@ -161,7 +167,7 @@ public abstract class ListView {
         }
     }
 
-    public boolean isClickInScrollbar(int x, int y, int mouseX, int mouseY) {
+    public boolean isClickInScrollbar(int mouseX, int mouseY) {
         return mouseX >= x + scrollbarX && mouseX < x + scrollbarX + scrollbarWidth
                 && mouseY >= y + scrollbarY && mouseY < y + scrollbarY + scrollbarHeight;
     }

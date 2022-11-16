@@ -33,8 +33,9 @@ public class MicrochipsListView extends ListView {
     private final Color primaryColor;
 
     private Runnable renderTooltip;
-    public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
+    public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int x, int y) {
         super(screen,
+                x, y,
                 TEXTURE, 0, 0, 216, 178,
                 8, 26,
                 216, 0, 195, 26,
@@ -72,7 +73,7 @@ public class MicrochipsListView extends ListView {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
         if (this.group.getColor() != GroupColor.GRAY) {
             float r = (float) primaryColor.getRed() / 255.0f;
             float g = (float) primaryColor.getGreen() / 255.0f;
@@ -81,23 +82,23 @@ public class MicrochipsListView extends ListView {
             RenderSystem.setShaderColor(r, g, b, 0.1f);
         }
 
-        super.renderBackground(matrices, x, y, mouseX, mouseY);
+        super.renderBackground(matrices, mouseX, mouseY);
 
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
     }
 
     @Override
-    public void renderItems(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        super.renderItems(matrices, x, y, mouseX, mouseY);
-        this.drawButtons(matrices, x, y, mouseX, mouseY);
+    public void renderItems(MatrixStack matrices, int mouseX, int mouseY) {
+        super.renderItems(matrices, mouseX, mouseY);
+        this.drawButtons(matrices, mouseX, mouseY);
 
         // Render tooltip on top of everything else
         if (this.renderTooltip != null) this.renderTooltip.run();
         this.renderTooltip = null;
     }
 
-    private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    private void drawButtons(MatrixStack matrices, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
@@ -178,7 +179,7 @@ public class MicrochipsListView extends ListView {
     }
 
     @Override
-    public boolean mouseClicked(int x, int y, double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (group == null) return false;
 
         if (!this.isAnySelected()) {
@@ -206,7 +207,7 @@ public class MicrochipsListView extends ListView {
         }
 
 
-        return super.mouseClicked(x, y, mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
