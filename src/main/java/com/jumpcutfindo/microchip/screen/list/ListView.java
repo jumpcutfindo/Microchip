@@ -110,8 +110,8 @@ public abstract class ListView {
         screen.drawTexture(matrices, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15);
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isClickInScrollbar((int) mouseX, (int) mouseY)) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        if (this.isClickInScrollbar(mouseX, mouseY)) {
             this.scrolling = this.hasScrollbar();
             return true;
         }

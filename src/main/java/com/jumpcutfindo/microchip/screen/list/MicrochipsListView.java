@@ -10,6 +10,7 @@ import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.render.GameRenderer;
@@ -23,16 +24,10 @@ public class MicrochipsListView extends ListView {
     private final MicrochipGroup group;
 
     private final int titleX, titleY;
-    private final int buttonWidth, buttonHeight;
-    private final int editGroupX, editGroupY;
-    private final int deleteGroupX, deleteGroupY;
-    private final int deleteMicrochipsX, deleteMicrochipsY;
-    private final int moveMicrochipsX, moveMicrochipsY;
+    private final IconButton editGroupButton, deleteGroupButton, moveMicrochipsButton, deleteMicrochipsButton;
     private final LiteralText title;
 
     private final Color primaryColor;
-
-    private Runnable renderTooltip;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int x, int y) {
         super(screen,
                 x, y,
@@ -54,20 +49,12 @@ public class MicrochipsListView extends ListView {
         this.titleX = 7;
         this.titleY = 9;
 
-        this.editGroupX = 154;
-        this.editGroupY = 6;
+        this.editGroupButton = new IconButton(screen, x + 154, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
+        this.deleteGroupButton = new IconButton(screen, x + 182, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
+        if (group.isDefault()) this.deleteGroupButton.setDisabled(true);
 
-        this.deleteGroupX = 182;
-        this.deleteGroupY = 6;
-
-        this.moveMicrochipsX = 154;
-        this.moveMicrochipsY = 6;
-
-        this.deleteMicrochipsX = 182;
-        this.deleteMicrochipsY = 6;
-
-        this.buttonWidth = 26;
-        this.buttonHeight = 16;
+        this.moveMicrochipsButton = new IconButton(screen, x + 154, y + 6, 104, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
+        this.deleteMicrochipsButton = new IconButton(screen, x + 182, y + 6, 104, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
 
         this.primaryColor = new Color(this.group.getColor().getPrimaryColor());
     }
@@ -92,10 +79,6 @@ public class MicrochipsListView extends ListView {
     public void renderItems(MatrixStack matrices, int mouseX, int mouseY) {
         super.renderItems(matrices, mouseX, mouseY);
         this.drawButtons(matrices, mouseX, mouseY);
-
-        // Render tooltip on top of everything else
-        if (this.renderTooltip != null) this.renderTooltip.run();
-        this.renderTooltip = null;
     }
 
     private void drawButtons(MatrixStack matrices, int mouseX, int mouseY) {
@@ -105,109 +88,44 @@ public class MicrochipsListView extends ListView {
 
         // Swap the buttons depending on whether any items were selected
         if (this.isAnySelected()) {
-            this.drawMoveItemsButton(matrices, x + moveMicrochipsX, y + moveMicrochipsY, mouseX, mouseY);
-            this.drawDeleteItemsButton(matrices, x + deleteMicrochipsX, y + deleteMicrochipsY, mouseX, mouseY);
+            this.moveMicrochipsButton.render(matrices, mouseX, mouseY, 0);
+            this.deleteMicrochipsButton.render(matrices, mouseX, mouseY, 0);
         } else {
-            this.drawEditGroupButton(matrices, x + editGroupX, y + editGroupY, mouseX, mouseY);
-            this.drawDeleteGroupButton(matrices, x + deleteGroupX, y + deleteGroupY, mouseX, mouseY);
+            this.editGroupButton.render(matrices, mouseX, mouseY, 0);
+            this.deleteGroupButton.render(matrices, mouseX, mouseY, 0);
         }
     }
 
-    private void drawEditGroupButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
+    private void onEditGroup() {
 
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
-            // Hovered
-            this.screen.drawTexture(matrices, x, y, 26, 32, buttonWidth, buttonHeight);
-            this.renderTooltip = () -> this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.editGroup.tooltip"), mouseX, mouseY);
-        } else {
-            // Default
-            this.screen.drawTexture(matrices, x, y, 0, 32, buttonWidth, buttonHeight);
-        }
     }
 
-    private void drawDeleteGroupButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
-        if (group.isDefault()) {
-            // Disabled
-            this.screen.drawTexture(matrices, x, y, 78, 16, buttonWidth, buttonHeight);
-            return;
-        };
-
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
-            // Hovered
-            this.screen.drawTexture(matrices, x, y, 26, 16, buttonWidth, buttonHeight);
-            this.renderTooltip = () -> this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.deleteGroup.tooltip"), mouseX, mouseY);
-        } else {
-            // Default
-            this.screen.drawTexture(matrices, x, y, 0, 16, buttonWidth, buttonHeight);
-        }
+    private void onDeleteGroup() {
+        if (group.isDefault()) return;
+        ClientNetworker.sendDeleteGroupPacket(this.group.getId());
     }
 
-    private void drawDeleteItemsButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
-        if (this.isAnySelected()) {
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
-                // Hovered
-                this.screen.drawTexture(matrices, x, y, 130, 0, buttonWidth, buttonHeight);
-                this.renderTooltip = () -> this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"), mouseX, mouseY);
-            } else {
-                // Normal
-                this.screen.drawTexture(matrices, x, y, 104, 0, buttonWidth, buttonHeight);
-            }
-        } else {
-            // Inactive
-            this.screen.drawTexture(matrices, x, y, 182, 0, buttonWidth, buttonHeight);
-        }
+    private void onMoveMicrochips() {
+
     }
 
-    private void drawMoveItemsButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
-        if (this.isAnySelected()) {
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, buttonWidth, buttonHeight)) {
-                // Hovered
-                this.screen.drawTexture(matrices, x, y, 130, 16, buttonWidth, buttonHeight);
-                this.renderTooltip = () -> this.screen.renderTooltip(matrices, new TranslatableText("microchip.menu.moveMicrochips.tooltip"), mouseX, mouseY);
-            } else {
-                // Normal
-                this.screen.drawTexture(matrices, x, y, 104, 16, buttonWidth, buttonHeight);
-            }
-        } else {
-            // Inactive
-            this.screen.drawTexture(matrices, x, y, 182, 16, buttonWidth, buttonHeight);
-        }
+    private void onDeleteMicrochips() {
+
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (group == null) return false;
 
-        if (!this.isAnySelected()) {
-            // Delete Group
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteGroupX, y + deleteGroupY, buttonWidth, buttonHeight)) {
-                if (group.isDefault()) return false;
-                ClientNetworker.sendDeleteGroupPacket(this.group.getId());
-                return true;
-            }
+        if (super.mouseClicked(mouseX, mouseY, button)) return true;
 
-            // Edit Group
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + editGroupX, y + editGroupY, buttonWidth, buttonHeight)) {
-                // TODO: Implement opening of edit window
-            }
+        if (this.isAnySelected()) {
+            return this.moveMicrochipsButton.mouseClicked(mouseX, mouseY, button)
+                    || this.deleteMicrochipsButton.mouseClicked(mouseX, mouseY, button);
         } else {
-            // Move Microchips
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + moveMicrochipsX, y + moveMicrochipsY, buttonWidth, buttonHeight)) {
-                // TODO: Implement opening of moving window
-            }
-
-            // Delete Microchips
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteMicrochipsX, y + deleteMicrochipsY, buttonWidth, buttonHeight)) {
-                // TODO: Send delete microchips packet
-            }
+            return this.editGroupButton.mouseClicked(mouseX, mouseY, button)
+                    || this.deleteGroupButton.mouseClicked( mouseX, mouseY, button);
         }
-
-
-        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {

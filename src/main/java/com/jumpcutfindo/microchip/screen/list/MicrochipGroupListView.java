@@ -53,7 +53,7 @@ public class MicrochipGroupListView extends ListView {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (this.createGroupButton.mouseClicked((int) mouseX, (int) mouseY, button)) return true;
 
         return super.mouseClicked(mouseX, mouseY, button);
