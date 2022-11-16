@@ -1,11 +1,13 @@
 package com.jumpcutfindo.microchip.screen.list;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.ClientNetworker;
+import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -27,6 +29,8 @@ public class MicrochipsListView extends ListView {
     private final int deleteMicrochipsX, deleteMicrochipsY;
     private final int moveMicrochipsX, moveMicrochipsY;
     private final LiteralText title;
+
+    private final Color primaryColor;
 
     private Runnable renderTooltip;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
@@ -63,12 +67,23 @@ public class MicrochipsListView extends ListView {
 
         this.buttonWidth = 26;
         this.buttonHeight = 16;
+
+        this.primaryColor = new Color(this.group.getColor().getPrimaryColor());
     }
 
     @Override
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        if (this.group.getColor() != GroupColor.GRAY) {
+            float r = (float) primaryColor.getRed() / 255.0f;
+            float g = (float) primaryColor.getGreen() / 255.0f;
+            float b = (float) primaryColor.getBlue() / 255.0f;
+
+            RenderSystem.setShaderColor(r, g, b, 0.1f);
+        }
+
         super.renderBackground(matrices, x, y, mouseX, mouseY);
 
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
     }
 
@@ -170,12 +185,24 @@ public class MicrochipsListView extends ListView {
             // Delete Group
             if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteGroupX, y + deleteGroupY, buttonWidth, buttonHeight)) {
                 if (group.isDefault()) return false;
-                // Delete clicked
                 ClientNetworker.sendDeleteGroupPacket(this.group.getId());
                 return true;
             }
-        } else {
 
+            // Edit Group
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + editGroupX, y + editGroupY, buttonWidth, buttonHeight)) {
+                // TODO: Implement opening of edit window
+            }
+        } else {
+            // Move Microchips
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + moveMicrochipsX, y + moveMicrochipsY, buttonWidth, buttonHeight)) {
+                // TODO: Implement opening of moving window
+            }
+
+            // Delete Microchips
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + deleteMicrochipsX, y + deleteMicrochipsY, buttonWidth, buttonHeight)) {
+                // TODO: Send delete microchips packet
+            }
         }
 
 
