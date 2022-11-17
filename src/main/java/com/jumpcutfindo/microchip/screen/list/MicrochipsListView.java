@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen.list;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
@@ -110,7 +111,9 @@ public class MicrochipsListView extends ListView {
     }
 
     private void onDeleteMicrochips() {
-
+        if (!this.isAnySelected()) return;
+        List<UUID> microchipIds = this.getSelectedItems().stream().map(item -> ((MicrochipListItem) item).getMicrochip().getEntityId()).toList();
+        ClientNetworker.sendRemoveEntitiesFromGroupPacket(this.group.getId(), microchipIds);
     }
 
     @Override

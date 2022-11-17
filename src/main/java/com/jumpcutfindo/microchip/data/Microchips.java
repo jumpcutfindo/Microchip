@@ -105,16 +105,16 @@ public class Microchips implements Component {
         return false;
     }
 
-    public boolean removeFromGroup(UUID groupId, UUID entityId) {
+    public boolean removeFromGroup(UUID groupId, List<UUID> entityIds) {
         if (groupId.equals(defaultGroup.getId())) {
             chipCount--;
-            return defaultGroup.remove(entityId);
+            return defaultGroup.remove(entityIds);
         }
 
         for (MicrochipGroup group : this.userGroups) {
             if (group.getId().equals(groupId)) {
                 chipCount--;
-                return group.remove(entityId);
+                return group.remove(entityIds);
             }
         }
         return false;

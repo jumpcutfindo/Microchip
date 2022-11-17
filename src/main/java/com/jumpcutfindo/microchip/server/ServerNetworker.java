@@ -1,10 +1,15 @@
 package com.jumpcutfindo.microchip.server;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.Tagger;
@@ -26,7 +31,7 @@ public class ServerNetworker implements ModInitializer {
     private static void initializeListeners() {
         onGlowEntityPacket();
         onAddEntityToGroup();
-        onRemoveEntityFromGroup();
+        onRemoveEntitiesFromGroup();
         onCreateGroup();
         onDeleteGroup();
     }
@@ -54,15 +59,19 @@ public class ServerNetworker implements ModInitializer {
         }));
     }
 
-    private static void onRemoveEntityFromGroup() {
+    private static void onRemoveEntitiesFromGroup() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REMOVE_ENTITY_FROM_GROUP_ID, ((server, player, handler, buf, responseSender) -> {
             UUID groupId = buf.readUuid();
-            UUID microchipId = buf.readUuid();
+            String entityIdsSerialised = buf.readString();
 
-            if (groupId == null || microchipId == null) return;
+            Gson gson = new Gson();
+            Type idsType = new TypeToken<List<UUID>>(){}.getType();
+            List<UUID> entityIds = gson.fromJson(entityIdsSerialised, idsType);
+
+            if (groupId == null || entityIds == null) return;
 
             Microchips microchips = Tagger.getMicrochips(player);
-            microchips.removeFromGroup(groupId, microchipId);
+            microchips.removeFromGroup(groupId, entityIds);
 
             sendScreenRefresh(player);
         }));

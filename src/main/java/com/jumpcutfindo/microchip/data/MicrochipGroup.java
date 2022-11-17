@@ -59,6 +59,12 @@ public class MicrochipGroup {
         return this.microchips.removeIf(mc -> mc.getEntityId().equals(microchipId));
     }
 
+    public boolean remove(List<UUID> microchipIds) {
+        boolean flag = true;
+        for (UUID uuid : microchipIds) flag &= this.remove(uuid);
+        return flag;
+    }
+
     public boolean contains(Microchip microchip) {
         return this.microchips.contains(microchip);
     }

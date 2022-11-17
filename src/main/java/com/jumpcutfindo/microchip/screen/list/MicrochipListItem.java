@@ -29,6 +29,10 @@ public class MicrochipListItem extends ListItem {
         this.entity = this.getEntity();
     }
 
+    public Microchip getMicrochip() {
+        return microchip;
+    }
+
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (this.entity != null) {

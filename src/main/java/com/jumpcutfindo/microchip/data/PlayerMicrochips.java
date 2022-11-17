@@ -1,5 +1,6 @@
 package com.jumpcutfindo.microchip.data;
 
+import java.util.List;
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
@@ -38,8 +39,8 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
     }
 
     @Override
-    public boolean removeFromGroup(UUID groupId, UUID entityId) {
-        boolean flag = super.removeFromGroup(groupId, entityId);
+    public boolean removeFromGroup(UUID groupId, List<UUID> entityIds) {
+        boolean flag = super.removeFromGroup(groupId, entityIds);
         MicrochipComponents.MICROCHIPS.sync(this.owner);
         return flag;
     }

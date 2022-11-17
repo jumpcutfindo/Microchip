@@ -1,7 +1,9 @@
 package com.jumpcutfindo.microchip.client;
 
+import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.Gson;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
@@ -42,10 +44,13 @@ public class ClientNetworker implements ClientModInitializer {
     }
 
 
-    public static void sendRemoveEntityFromGroupPacket(UUID groupId, UUID entityId) {
+    public static void sendRemoveEntitiesFromGroupPacket(UUID groupId, List<UUID> entityIds) {
+        Gson gson = new Gson();
+        String entityIdsSerialized = gson.toJson(entityIds);
+
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(groupId);
-        buffer.writeUuid(entityId);
+        buffer.writeString(entityIdsSerialized);
 
         ClientPlayNetworking.send(NetworkConstants.PACKET_REMOVE_ENTITY_FROM_GROUP_ID, buffer);
     }
