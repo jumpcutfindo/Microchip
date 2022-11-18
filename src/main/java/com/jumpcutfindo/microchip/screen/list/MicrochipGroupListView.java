@@ -69,6 +69,7 @@ public class MicrochipGroupListView extends ListView {
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
         this.createGroupButton.render(matrices, mouseX, mouseY, 0);
+        this.createGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
     }
 
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {
