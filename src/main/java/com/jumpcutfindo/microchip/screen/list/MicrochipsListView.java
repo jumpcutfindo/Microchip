@@ -64,17 +64,19 @@ public class MicrochipsListView extends ListView {
     @Override
     public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
         if (this.group.getColor() != GroupColor.GRAY) {
-            float r = (float) primaryColor.getRed() / 255.0f;
-            float g = (float) primaryColor.getGreen() / 255.0f;
-            float b = (float) primaryColor.getBlue() / 255.0f;
+            Color color = primaryColor;
+            float r = (float) color.getRed() / 204.0f;
+            float g = (float) color.getGreen() / 204.0f;
+            float b = (float) color.getBlue() / 204.0f;
+            float a = 0.1f;
 
-            RenderSystem.setShaderColor(r, g, b, 0.1f);
+            RenderSystem.setShaderColor(r, g, b, 0.0f);
         }
 
         super.renderBackground(matrices, mouseX, mouseY);
 
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
+        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.group.getColor().getPrimaryColor());
     }
 
     @Override

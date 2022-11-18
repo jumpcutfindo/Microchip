@@ -93,6 +93,8 @@ public abstract class ListView {
 
         if (this.listItems.size() == 0) return;
 
+        this.step = (int) (this.scrollPosition * this.maxSteps);
+
         int offsetY = 0;
         for (int i = step; i < step + maxItems; i++) {
             if (i >= this.listItems.size()) break;
@@ -148,7 +150,6 @@ public abstract class ListView {
         if (this.scrolling) {
             this.scrollPosition += deltaY / (this.scrollbarHeight - 15);
             this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0f, 1.0f);
-            this.step = (int) (this.scrollPosition * this.maxSteps);
             return true;
         } else {
             return false;
