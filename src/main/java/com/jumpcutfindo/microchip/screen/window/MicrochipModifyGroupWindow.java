@@ -6,6 +6,7 @@ import java.util.List;
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.ColorButton;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -18,38 +19,72 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class MicrochipCreateGroupWindow extends Window {
+public class MicrochipModifyGroupWindow extends Window {
     public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
+    private final MicrochipGroup group;
     private TextFieldWidget groupNameField;
     private ButtonWidget submitButton;
 
     private List<ColorButton> colorButtons;
     private ColorButton selectedColor;
 
-    public MicrochipCreateGroupWindow(MicrochipsMenuScreen screen) {
-        super(screen, new TranslatableText("microchip.menu.createGroup.windowTitle"));
+    public MicrochipModifyGroupWindow(MicrochipsMenuScreen screen, MicrochipGroup group) {
+        super(screen, getTitle(group));
+        this.group = group;
+
         this.width = 138;
         this.height = 121;
 
+        // Create text field
         this.groupNameField = new TextFieldWidget(screen.getTextRenderer(), 0, 0, 124, 18, new TranslatableText("microchip.menu.createGroup.textWidget"));
         this.groupNameField.setMaxLength(20);
         this.groupNameField.setEditableColor(16777215);
+        if (isEdit()) this.groupNameField.setText(group.getDisplayName());
 
-        this.submitButton = new ButtonWidget(0, 0, 64, 20, new TranslatableText("microchip.menu.createGroup.submitButton"), (widget) -> {
-            this.createGroup();
-            this.screen.setActiveWindow(null);
-        });
+        // Create buttons
+        if (isEdit()) {
+            this.submitButton = new ButtonWidget(0, 0, 64, 20, new TranslatableText("microchip.menu.editGroup.submitButton"), (widget) -> {
+                this.updateGroup(group);
+                this.screen.setActiveWindow(null);
+            });
+        } else {
+            this.submitButton = new ButtonWidget(0, 0, 64, 20, new TranslatableText("microchip.menu.createGroup.submitButton"), (widget) -> {
+                this.createGroup();
+                this.screen.setActiveWindow(null);
+            });
+        }
 
+        // Create color buttons
         this.colorButtons = new ArrayList<>();
         for (int i = 0; i < GroupColor.values().length; i++) {
             ColorButton button = new ColorButton(0, 0, screen, GroupColor.values()[i]);
             colorButtons.add(button);
 
-            if (GroupColor.values()[i] == GroupColor.getDefault()){
+            if (isEdit() && GroupColor.values()[i] == group.getColor()){
+                this.selectedColor = button;
+                button.setSelected(true);
+            } else if (!isEdit() && GroupColor.values()[i] == GroupColor.getDefault()) {
                 this.selectedColor = button;
                 button.setSelected(true);
             }
         }
+    }
+
+    private boolean isEdit() {
+        return this.group != null;
+    }
+
+    public static MicrochipModifyGroupWindow createEditWindow(MicrochipsMenuScreen screen, MicrochipGroup group) {
+        return new MicrochipModifyGroupWindow(screen, group);
+    }
+
+    public static MicrochipModifyGroupWindow createCreateWindow(MicrochipsMenuScreen screen) {
+        return new MicrochipModifyGroupWindow(screen, null);
+    }
+
+    private static TranslatableText getTitle(MicrochipGroup group) {
+        if (group == null) return new TranslatableText("microchip.menu.createGroup.windowTitle");
+        return new TranslatableText("microchip.menu.editGroup.windowTitle");
     }
 
     @Override
@@ -140,5 +175,9 @@ public class MicrochipCreateGroupWindow extends Window {
 
     private void createGroup() {
         ClientNetworker.sendCreateGroupPacket(this.groupNameField.getText(), this.selectedColor.getColor());
+    }
+
+    private void updateGroup(MicrochipGroup group) {
+        ClientNetworker.sendUpdateGroupPacket(group, this.groupNameField.getText(), this.selectedColor.getColor());
     }
 }

@@ -12,6 +12,7 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.IconButton;
+import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.render.GameRenderer;
@@ -98,7 +99,7 @@ public class MicrochipsListView extends ListView {
     }
 
     private void onEditGroup() {
-
+        this.screen.setActiveWindow(MicrochipModifyGroupWindow.createEditWindow(this.screen, this.group));
     }
 
     private void onDeleteGroup() {

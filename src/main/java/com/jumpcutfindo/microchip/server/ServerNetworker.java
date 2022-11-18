@@ -33,6 +33,7 @@ public class ServerNetworker implements ModInitializer {
         onAddEntityToGroup();
         onRemoveEntitiesFromGroup();
         onCreateGroup();
+        onUpdateGroup();
         onDeleteGroup();
     }
 
@@ -85,6 +86,17 @@ public class ServerNetworker implements ModInitializer {
             Microchips microchips = Tagger.getMicrochips(player);
             microchips.createGroup(groupName, color);
         }));
+    }
+
+    private static void onUpdateGroup() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_UPDATE_GROUP_ID, (server, player, handler, buf, responseSender) -> {
+            UUID groupId = buf.readUuid();
+            String groupName = buf.readString();
+            GroupColor color = GroupColor.values()[buf.readInt()];
+
+            Microchips microchips = Tagger.getMicrochips(player);
+            microchips.updateGroup(groupId, groupName, color);
+        });
     }
 
     private static void onDeleteGroup() {

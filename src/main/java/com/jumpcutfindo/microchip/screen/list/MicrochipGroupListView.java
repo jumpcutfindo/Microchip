@@ -7,7 +7,7 @@ import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.IconButton;
-import com.jumpcutfindo.microchip.screen.window.MicrochipCreateGroupWindow;
+import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.render.GameRenderer;
@@ -60,7 +60,7 @@ public class MicrochipGroupListView extends ListView {
     }
 
     private void onCreateGroup() {
-        this.screen.setActiveWindow(new MicrochipCreateGroupWindow(this.screen));
+        this.screen.setActiveWindow(MicrochipModifyGroupWindow.createCreateWindow(this.screen));
     }
 
     private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {

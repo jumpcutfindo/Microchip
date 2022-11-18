@@ -14,5 +14,8 @@
     "microchip.menu.createGroup.windowTitle": "Create a group",
     "microchip.menu.createGroup.title": "Name",
     "microchip.menu.createGroup.colorTitle": "Color",
-    "microchip.menu.createGroup.submitButton": "Create"
+    "microchip.menu.createGroup.submitButton": "Create",
+
+    "microchip.menu.editGroup.windowTitle": "Edit a group",
+    "microchip.menu.editGroup.submitButton": "Update"
 }

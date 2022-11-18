@@ -12,7 +12,6 @@ public class MicrochipGroup {
     private String displayName;
     private GroupColor color;
     private Set<Microchip> microchips;
-
     private boolean isDefault;
 
     public MicrochipGroup(String displayName, GroupColor color) {
@@ -37,8 +36,16 @@ public class MicrochipGroup {
         return id;
     }
 
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     public String getDisplayName() {
         return displayName;
+    }
+
+    public void setColor(GroupColor color) {
+        this.color = color;
     }
 
     public GroupColor getColor() {
