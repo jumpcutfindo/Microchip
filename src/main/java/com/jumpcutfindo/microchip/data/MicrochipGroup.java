@@ -78,6 +78,10 @@ public class MicrochipGroup {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof MicrochipGroup other && other.getId().equals(this.id);
+        return obj instanceof MicrochipGroup other
+                && other.getId().equals(this.id)
+                && other.getColor().equals(this.color)
+                && other.getDisplayName().equals(this.displayName)
+                && other.getMicrochips().size() == this.microchips.size();
     }
 }
