@@ -50,7 +50,7 @@ public class MicrochipsListView extends ListView {
         }
 
         this.titleX = 7;
-        this.titleY = 9;
+        this.titleY = 10    ;
 
         this.editGroupButton = new IconButton(screen, x + 154, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
         this.deleteGroupButton = new IconButton(screen, x + 182, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));

@@ -35,7 +35,7 @@ public class MicrochipGroupListView extends ListView {
         // Set various variables
         this.title = new TranslatableText("microchip.menu.groupTitle");
         this.titleX = 7;
-        this.titleY = 9;
+        this.titleY = 10;
 
         this.createGroupButton = new IconButton(screen, x + 126, y + 6, 0, 0, this::onCreateGroup, new TranslatableText("microchip.menu.createGroup.tooltip"));
         this.canCreate = true;
