@@ -193,7 +193,7 @@ public abstract class ListView {
         } else {
             if (item.isSelected()) {
                 this.selectedItems.remove(item);
-                this.selectedIndices.remove(index);
+                this.selectedIndices.remove((Integer) index);
                 item.setSelected(false);
             } else {
                 this.selectedItems.add(item);
