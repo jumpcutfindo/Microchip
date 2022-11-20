@@ -68,6 +68,8 @@ public class MicrochipModifyGroupWindow extends Window {
                 button.setSelected(true);
             }
         }
+
+        this.groupNameField.setTextFieldFocused(true);
     }
 
     private boolean isEdit() {
