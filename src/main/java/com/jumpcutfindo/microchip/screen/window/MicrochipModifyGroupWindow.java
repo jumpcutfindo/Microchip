@@ -131,6 +131,11 @@ public class MicrochipModifyGroupWindow extends Window {
         this.submitButton.y = y + 95;
         this.submitButton.renderButton(matrices, mouseX, mouseY, 0);
         this.submitButton.active = this.isValidInput();
+
+        // Render tooltips
+        for (ColorButton colorButton : colorButtons) {
+            colorButton.renderTooltip(matrices, mouseX, mouseY, 0);
+        }
     }
 
     @Override

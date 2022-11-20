@@ -10,6 +10,7 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 public class ColorButton {
@@ -56,6 +57,13 @@ public class ColorButton {
         if (this.isSelected) this.screen.drawTexture(matrices, x, y + 12, u, v + 10, this.width, this.height);
     }
 
+    public boolean renderTooltip(MatrixStack matrices, int mouseX, int mouseY, int delta) {
+        if (isMouseWithin(mouseX, mouseY)) {
+            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.color." + color.getColorName()), mouseX, mouseY);
+            return true;
+        }
+        return false;
+    }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, width, height)) {
@@ -69,5 +77,9 @@ public class ColorButton {
 
     private void playDownSound(SoundManager soundManager) {
         soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    }
+
+    private boolean isMouseWithin(int mouseX, int mouseY) {
+        return MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height);
     }
 }

@@ -5,6 +5,15 @@
 
     "microchip.menu.groupTitle": "Microchips",
 
+    "microchip.menu.color.red": "Red",
+    "microchip.menu.color.orange": "Orange",
+    "microchip.menu.color.yellow": "Yellow",
+    "microchip.menu.color.green": "Green",
+    "microchip.menu.color.blue": "Blue",
+    "microchip.menu.color.indigo": "Indigo",
+    "microchip.menu.color.pink": "Pink",
+    "microchip.menu.color.gray": "Gray",
+
     "microchip.menu.createGroup.tooltip": "Create Group...",
     "microchip.menu.deleteGroup.tooltip": "Delete Group",
     "microchip.menu.editGroup.tooltip": "Edit Group...",
