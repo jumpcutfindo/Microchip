@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
-import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.Tagger;
@@ -31,6 +30,7 @@ public class ServerNetworker implements ModInitializer {
     private static void initializeListeners() {
         onGlowEntityPacket();
         onAddEntityToGroup();
+        onMoveEntitiesBetweenGroups();
         onRemoveEntitiesFromGroup();
         onCreateGroup();
         onDeleteGroup();
@@ -54,26 +54,37 @@ public class ServerNetworker implements ModInitializer {
 
             Microchips microchips = Tagger.getMicrochips(player);
             microchips.addToGroup(groupId, new Microchip(entityId));
+        }));
+    }
 
-            sendScreenRefresh(player);
+    private static void onMoveEntitiesBetweenGroups() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_MOVE_ENTITIES_ID, ((server, player, handler, buf, responseSender) -> {
+            UUID fromId = buf.readUuid();
+            UUID toId = buf.readUuid();
+            String microchipIdsSerialized = buf.readString();
+
+            Gson gson = new Gson();
+            Type idsType = new TypeToken<List<UUID>>(){}.getType();
+            List<UUID> microchipIds = gson.fromJson(microchipIdsSerialized, idsType);
+
+            Microchips microchips = Tagger.getMicrochips(player);
+            microchips.moveBetweenGroups(fromId, toId, microchipIds);
         }));
     }
 
     private static void onRemoveEntitiesFromGroup() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REMOVE_ENTITY_FROM_GROUP_ID, ((server, player, handler, buf, responseSender) -> {
             UUID groupId = buf.readUuid();
-            String entityIdsSerialised = buf.readString();
+            String microchipIdsSerialised = buf.readString();
 
             Gson gson = new Gson();
             Type idsType = new TypeToken<List<UUID>>(){}.getType();
-            List<UUID> entityIds = gson.fromJson(entityIdsSerialised, idsType);
+            List<UUID> microchipIds = gson.fromJson(microchipIdsSerialised, idsType);
 
-            if (groupId == null || entityIds == null) return;
+            if (groupId == null || microchipIds == null) return;
 
             Microchips microchips = Tagger.getMicrochips(player);
-            microchips.removeFromGroup(groupId, entityIds);
-
-            sendScreenRefresh(player);
+            microchips.removeFromGroup(groupId, microchipIds);
         }));
     }
 

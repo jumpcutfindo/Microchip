@@ -45,8 +45,12 @@ public class MicrochipGroup {
         return color == null ? GroupColor.GRAY : color;
     }
 
-    public Collection<Microchip> getMicrochips() {
-        return this.microchips;
+    public List<Microchip> getMicrochips() {
+        return this.microchips.stream().toList();
+    }
+
+    public List<Microchip> getMicrochipsWithIds(List<UUID> ids) {
+        return this.microchips.stream().filter(microchip -> ids.contains(microchip.getEntityId())).toList();
     }
 
     public boolean add(Microchip microchip) {
@@ -54,12 +58,18 @@ public class MicrochipGroup {
         return this.microchips.add(microchip);
     }
 
+    public boolean addAll(List<Microchip> microchips) {
+        boolean flag = true;
+        for (Microchip microchip : microchips) flag &= this.add(microchip);
+        return flag;
+    }
+
     public boolean remove(UUID microchipId) {
         LOGGER.info(String.format("Removing Microchip(%s) from group(%s)", microchipId, displayName));
         return this.microchips.removeIf(mc -> mc.getEntityId().equals(microchipId));
     }
 
-    public boolean remove(List<UUID> microchipIds) {
+    public boolean removeAll(List<UUID> microchipIds) {
         boolean flag = true;
         for (UUID uuid : microchipIds) flag &= this.remove(uuid);
         return flag;

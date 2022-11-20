@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.data;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.google.gson.Gson;
@@ -105,19 +106,34 @@ public class Microchips implements Component {
         return false;
     }
 
-    public boolean removeFromGroup(UUID groupId, List<UUID> entityIds) {
+    public boolean removeFromGroup(UUID groupId, List<UUID> microchipIds) {
         if (groupId.equals(defaultGroup.getId())) {
             chipCount--;
-            return defaultGroup.remove(entityIds);
+            return defaultGroup.removeAll(microchipIds);
         }
 
         for (MicrochipGroup group : this.userGroups) {
             if (group.getId().equals(groupId)) {
                 chipCount--;
-                return group.remove(entityIds);
+                return group.removeAll(microchipIds);
             }
         }
         return false;
+    }
+
+    public boolean moveBetweenGroups(UUID fromId, UUID toId, List<UUID> microchipIds) {
+        Optional<MicrochipGroup> fromGroupOpt = getAllGroups().stream().filter(g -> g.getId().equals(fromId)).findFirst();
+        Optional<MicrochipGroup> toGroupOpt = getAllGroups().stream().filter(g -> g.getId().equals(toId)).findFirst();
+
+        if (fromGroupOpt.isEmpty() || toGroupOpt.isEmpty()) return false;
+
+        MicrochipGroup fromGroup = fromGroupOpt.get();
+        MicrochipGroup toGroup = toGroupOpt.get();
+
+        List<Microchip> microchips = fromGroup.getMicrochipsWithIds(microchipIds);
+        toGroup.addAll(microchips);
+
+        return true;
     }
 
     @Override

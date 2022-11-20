@@ -9,6 +9,7 @@ public class NetworkConstants {
 
     public static final Identifier PACKET_ADD_ENTITY_TO_GROUP_ID = new Identifier(MOD_ID, "add_entity_to_group");
     public static final Identifier PACKET_REMOVE_ENTITY_FROM_GROUP_ID = new Identifier(MOD_ID, "remove_entity_from_group");
+    public static final Identifier PACKET_MOVE_ENTITIES_ID = new Identifier(MOD_ID, "move_entities");
     public static final Identifier PACKET_CREATE_GROUP_ID = new Identifier(MOD_ID, "create_group");
     public static final Identifier PACKET_DELETE_GROUP_ID = new Identifier(MOD_ID, "delete_group");
 

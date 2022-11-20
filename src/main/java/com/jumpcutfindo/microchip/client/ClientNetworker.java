@@ -43,14 +43,26 @@ public class ClientNetworker implements ClientModInitializer {
         ClientPlayNetworking.send(NetworkConstants.PACKET_ADD_ENTITY_TO_GROUP_ID, buffer);
     }
 
-
-    public static void sendRemoveEntitiesFromGroupPacket(UUID groupId, List<UUID> entityIds) {
+    public static void sendMoveEntitiesPacket(UUID fromGroup, UUID toGroup, List<UUID> microchipIds) {
         Gson gson = new Gson();
-        String entityIdsSerialized = gson.toJson(entityIds);
+        String microchipIdsSerialized = gson.toJson(microchipIds);
+
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeUuid(fromGroup);
+        buffer.writeUuid(toGroup);
+        buffer.writeString(microchipIdsSerialized);
+
+        ClientPlayNetworking.send(NetworkConstants.PACKET_MOVE_ENTITIES_ID, buffer);
+    }
+
+
+    public static void sendRemoveEntitiesFromGroupPacket(UUID groupId, List<UUID> microchipIds) {
+        Gson gson = new Gson();
+        String microchipIdsSerialized = gson.toJson(microchipIds);
 
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(groupId);
-        buffer.writeString(entityIdsSerialized);
+        buffer.writeString(microchipIdsSerialized);
 
         ClientPlayNetworking.send(NetworkConstants.PACKET_REMOVE_ENTITY_FROM_GROUP_ID, buffer);
     }
