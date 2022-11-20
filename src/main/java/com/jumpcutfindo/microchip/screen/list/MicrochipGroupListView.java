@@ -39,6 +39,8 @@ public class MicrochipGroupListView extends ListView {
 
         this.createGroupButton = new IconButton(screen, x + 126, y + 6, 0, 0, this::onCreateGroup, new TranslatableText("microchip.menu.createGroup.tooltip"));
         this.canCreate = true;
+
+        this.setSelected(0);
     }
 
     @Override
@@ -58,7 +60,9 @@ public class MicrochipGroupListView extends ListView {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (this.canCreate && this.createGroupButton.mouseClicked(mouseX, mouseY, button)) return true;
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        boolean flag = super.mouseClicked(mouseX, mouseY, button);
+        if (flag && this.canCreate) screen.setSelectedGroup(this.getSelectedIndex());
+        return flag;
     }
 
     public void setTexture(Identifier texture) {
@@ -80,6 +84,10 @@ public class MicrochipGroupListView extends ListView {
 
     public MicrochipGroupListItem getSelectedItem() {
         return this.getSelectedItems().size() > 0 ? (MicrochipGroupListItem) this.getSelectedItems().get(0) : null;
+    }
+
+    public int getSelectedIndex() {
+        return this.getSelectedIndices().size() > 0 ? this.getSelectedIndices().get(0) : 0;
     }
 
     private void onCreateGroup() {

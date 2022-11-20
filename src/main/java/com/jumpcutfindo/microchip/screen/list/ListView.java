@@ -41,7 +41,8 @@ public abstract class ListView {
     protected final List<ListItem> listItems;
     protected List<ListItem> visibleItems;
 
-    private final List<ListItem> selectedItems;
+    private List<ListItem> selectedItems;
+    private List<Integer> selectedIndices;
 
     public ListView(
             MicrochipsMenuScreen screen,
@@ -81,6 +82,7 @@ public abstract class ListView {
 
         this.isSingleSelect = isSingleSelect;
         this.selectedItems = new ArrayList<>();
+        this.selectedIndices = new ArrayList<>();
     }
 
     public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
@@ -129,19 +131,7 @@ public abstract class ListView {
             ListItem item = this.listItems.get(i);
             if (item.onSelect(x + listX, y + listY + offsetY, mouseX, mouseY)) {
                 this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-                if (isSingleSelect) {
-                    this.resetSelection();
-                    this.selectedItems.add(item);
-                    item.setSelected(true);
-                } else {
-                    if (item.isSelected()) {
-                        this.selectedItems.remove(item);
-                        item.setSelected(false);
-                    } else {
-                        this.selectedItems.add(item);
-                        item.setSelected(true);
-                    }
-                }
+                this.setSelected(i);
                 return true;
             }
 
@@ -190,6 +180,31 @@ public abstract class ListView {
         return textureHeight;
     }
 
+    public boolean setSelected(int index) {
+        if (index >= this.listItems.size()) return false;
+
+        ListItem item = this.listItems.get(index);
+
+        if (isSingleSelect) {
+            this.resetSelection();
+            this.selectedItems.add(item);
+            this.selectedIndices.add(index);
+            item.setSelected(true);
+        } else {
+            if (item.isSelected()) {
+                this.selectedItems.remove(item);
+                this.selectedIndices.remove(index);
+                item.setSelected(false);
+            } else {
+                this.selectedItems.add(item);
+                this.selectedIndices.add(index);
+                item.setSelected(true);
+            }
+        }
+
+        return true;
+    }
+
     public boolean isAnySelected() {
        return selectedItems.size() > 0;
     }
@@ -198,8 +213,14 @@ public abstract class ListView {
         return selectedItems;
     }
 
+    public List<Integer> getSelectedIndices() {
+        return selectedIndices;
+    }
+
     private void resetSelection() {
         for (ListItem item : listItems) item.setSelected(false);
+        this.selectedItems = new ArrayList<>();
+        this.selectedIndices = new ArrayList<>();
     }
 
     public void playDownSound(SoundManager soundManager) {

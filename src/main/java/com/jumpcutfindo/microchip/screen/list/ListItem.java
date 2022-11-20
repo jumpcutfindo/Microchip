@@ -13,7 +13,6 @@ public abstract class ListItem {
     protected int u, v, width, height;
     protected int hoverU, hoverV;
     protected int selectedU, selectedV;
-
     protected boolean isSelected;
 
     public ListItem(MicrochipsMenuScreen screen, Identifier texture, int u, int v, int hoverU, int hoverV, int selectedU, int selectedV, int width, int height) {

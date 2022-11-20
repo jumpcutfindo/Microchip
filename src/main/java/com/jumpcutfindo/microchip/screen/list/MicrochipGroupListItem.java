@@ -26,11 +26,7 @@ public class MicrochipGroupListItem extends ListItem {
 
     @Override
     public boolean onSelect(int x, int y, double mouseX, double mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
-            screen.setSelectedGroup(index);
-            return true;
-        }
-        return false;
+        return MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height);
     }
 
     public MicrochipGroup getGroup() {

@@ -217,7 +217,12 @@ public class MicrochipsMenuScreen extends Screen {
     }
 
     private void refreshGroups() {
+        int selectedIndex = 0;
+        if (this.microchipGroupList != null) {
+            selectedIndex = this.microchipGroupList.getSelectedIndex();
+        }
         this.microchipGroupList = new MicrochipGroupListView(this, this.microchips, x, y);
+        this.microchipGroupList.setSelected(selectedIndex);
     }
 
     private void refreshMicrochips() {
