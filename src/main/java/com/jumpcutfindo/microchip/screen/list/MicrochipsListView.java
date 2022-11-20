@@ -12,6 +12,7 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.IconButton;
+import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.render.GameRenderer;
@@ -63,17 +64,19 @@ public class MicrochipsListView extends ListView {
     @Override
     public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
         if (this.group.getColor() != GroupColor.GRAY) {
-            float r = (float) primaryColor.getRed() / 255.0f;
-            float g = (float) primaryColor.getGreen() / 255.0f;
-            float b = (float) primaryColor.getBlue() / 255.0f;
+            Color color = primaryColor;
+            float r = (float) color.getRed() / 204.0f;
+            float g = (float) color.getGreen() / 204.0f;
+            float b = (float) color.getBlue() / 204.0f;
+            float a = 0.1f;
 
-            RenderSystem.setShaderColor(r, g, b, 0.1f);
+            RenderSystem.setShaderColor(r, g, b, 0.0f);
         }
 
         super.renderBackground(matrices, mouseX, mouseY);
 
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
+        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.group.getColor().getPrimaryColor());
     }
 
     @Override
@@ -91,14 +94,20 @@ public class MicrochipsListView extends ListView {
         if (this.isAnySelected()) {
             this.moveMicrochipsButton.render(matrices, mouseX, mouseY, 0);
             this.deleteMicrochipsButton.render(matrices, mouseX, mouseY, 0);
+
+            this.moveMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            this.deleteMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
         } else {
             this.editGroupButton.render(matrices, mouseX, mouseY, 0);
             this.deleteGroupButton.render(matrices, mouseX, mouseY, 0);
+
+            this.editGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            this.deleteGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
         }
     }
 
     private void onEditGroup() {
-
+        this.screen.setActiveWindow(MicrochipModifyGroupWindow.createEditWindow(this.screen, this.group));
     }
 
     private void onDeleteGroup() {

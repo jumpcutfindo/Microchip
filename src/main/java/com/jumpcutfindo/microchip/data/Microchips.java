@@ -78,6 +78,26 @@ public class Microchips implements Component {
         return userGroups.add(group);
     }
 
+    public boolean updateGroup(UUID groupId, String name, GroupColor color) {
+        MicrochipGroup group = null;
+
+        if (this.defaultGroup.getId().equals(groupId)) group = this.defaultGroup;
+        else {
+            for (MicrochipGroup g : this.userGroups) {
+                if (g.getId().equals(groupId)) {
+                    group = g;
+                    break;
+                }
+            }
+        }
+
+        if (group == null) return false;
+
+        group.setDisplayName(name);
+        group.setColor(color);
+        return true;
+    }
+
     public boolean deleteGroup(UUID id) {
         groupCount--;
         return userGroups.removeIf(group -> group.getId().equals(id));

@@ -25,6 +25,13 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
     }
 
     @Override
+    public boolean updateGroup(UUID groupId, String name, GroupColor color) {
+        boolean flag = super.updateGroup(groupId, name, color);
+        MicrochipComponents.MICROCHIPS.sync(this.owner);
+        return flag;
+    }
+
+    @Override
     public boolean deleteGroup(UUID id) {
         boolean flag = super.deleteGroup(id);
         MicrochipComponents.MICROCHIPS.sync(this.owner);

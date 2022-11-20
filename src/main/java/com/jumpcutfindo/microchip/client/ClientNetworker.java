@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.google.gson.Gson;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -73,6 +74,15 @@ public class ClientNetworker implements ClientModInitializer {
         buffer.writeInt(color.ordinal());
 
         ClientPlayNetworking.send(NetworkConstants.PACKET_CREATE_GROUP_ID, buffer);
+    }
+
+    public static void sendUpdateGroupPacket(MicrochipGroup group, String groupName, GroupColor color) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeUuid(group.getId());
+        buffer.writeString(groupName);
+        buffer.writeInt(color.ordinal());
+
+        ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_GROUP_ID, buffer);
     }
 
     public static void sendDeleteGroupPacket(UUID groupId) {

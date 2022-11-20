@@ -1,5 +1,6 @@
 package com.jumpcutfindo.microchip.screen;
 
+import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
@@ -18,12 +19,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
+
 public class MicrochipsMenuScreen extends Screen {
     public static final Identifier BUTTONS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
 
     private final int titleX, titleY;
     private int x, y;
     private Microchips microchips;
+
+    private List<MicrochipGroup> microchipGroups;
     private int groupCount, chipCount;
     private int selectedGroup;
 
@@ -180,14 +185,14 @@ public class MicrochipsMenuScreen extends Screen {
 
     private boolean hasUpdates() {
         Microchips clientMicrochips = Tagger.getMicrochips(client.player);
-        return this.groupCount != clientMicrochips.getGroupCount()
-                || this.chipCount != clientMicrochips.getChipCount();
+        return !this.microchipGroups.equals(clientMicrochips.getAllGroups());
     }
 
     public void refreshScreen(RefreshType refreshType) {
         this.microchips = Tagger.getMicrochips(client.player);
         this.groupCount = this.microchips.getGroupCount();
         this.chipCount = this.microchips.getChipCount();
+        this.microchipGroups = this.microchips.getAllGroups();
 
         switch (refreshType) {
         case GROUP -> refreshGroups();
