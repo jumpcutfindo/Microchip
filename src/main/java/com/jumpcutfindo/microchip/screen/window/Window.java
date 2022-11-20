@@ -25,7 +25,7 @@ public abstract class Window {
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY) {
-        this.renderBackgroundGradient(matrices, x, y);
+        this.renderBackgroundGradient(matrices);
         this.renderBackground(matrices);
         this.renderContent(matrices, mouseX, mouseY);
     }
@@ -56,6 +56,10 @@ public abstract class Window {
 
     public abstract void tick();
 
+    public abstract boolean handleMouseScroll(double mouseX, double mouseY, double amount);
+
+    public abstract boolean handleMouseDrag(double mouseX, double mouseY, int button, double deltaX, double deltaY);
+
     public abstract boolean handleClick(int mouseX, int mouseY, int button);
 
     public abstract boolean handleKeyPress(int keyCode, int scanCode, int modifiers);
@@ -64,7 +68,7 @@ public abstract class Window {
 
     public abstract List<ClickableWidget> getWidgets();
 
-    private void renderBackgroundGradient(MatrixStack matrices, int x, int y) {
+    private void renderBackgroundGradient(MatrixStack matrices) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         screen.drawBackgroundGradient(matrices);

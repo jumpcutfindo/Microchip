@@ -169,6 +169,16 @@ public class MicrochipModifyGroupWindow extends Window {
         this.groupNameField.tick();
     }
 
+    @Override
+    public boolean handleMouseScroll(double mouseX, double mouseY, double amount) {
+        return false;
+    }
+
+    @Override
+    public boolean handleMouseDrag(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return false;
+    }
+
     private boolean isValidInput() {
         return !this.groupNameField.getText().equals("");
     }

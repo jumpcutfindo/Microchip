@@ -33,6 +33,10 @@ public class MicrochipGroupListItem extends ListItem {
         return false;
     }
 
+    public MicrochipGroup getGroup() {
+        return this.microchipGroup;
+    }
+
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         screen.getTextRenderer().draw(matrices, new LiteralText(this.microchipGroup.getDisplayName()), (float) (x + 20), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());

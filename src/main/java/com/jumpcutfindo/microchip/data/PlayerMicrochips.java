@@ -53,6 +53,13 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
     }
 
     @Override
+    public boolean moveBetweenGroups(UUID fromId, UUID toId, List<UUID> microchipIds) {
+        boolean flag = super.moveBetweenGroups(fromId, toId, microchipIds);
+        MicrochipComponents.MICROCHIPS.sync(this.owner);
+        return flag;
+    }
+
+    @Override
     public boolean shouldSyncWith(ServerPlayerEntity player) {
         return player == this.owner;
     }

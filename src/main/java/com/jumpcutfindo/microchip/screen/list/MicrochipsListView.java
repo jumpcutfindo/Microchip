@@ -13,6 +13,7 @@ import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
+import com.jumpcutfindo.microchip.screen.window.MicrochipMoveChipsWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.render.GameRenderer;
@@ -76,7 +77,7 @@ public class MicrochipsListView extends ListView {
         super.renderBackground(matrices, mouseX, mouseY);
 
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.group.getColor().getPrimaryColor());
+        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.group.getColor().getShadowColor());
     }
 
     @Override
@@ -116,13 +117,17 @@ public class MicrochipsListView extends ListView {
     }
 
     private void onMoveMicrochips() {
-
+        this.screen.setActiveWindow(new MicrochipMoveChipsWindow(screen, screen.getMicrochips(), this.group, getSelectedIds()));
     }
 
     private void onDeleteMicrochips() {
         if (!this.isAnySelected()) return;
-        List<UUID> microchipIds = this.getSelectedItems().stream().map(item -> ((MicrochipListItem) item).getMicrochip().getEntityId()).toList();
+        List<UUID> microchipIds = getSelectedIds();
         ClientNetworker.sendRemoveEntitiesFromGroupPacket(this.group.getId(), microchipIds);
+    }
+
+    private List<UUID> getSelectedIds() {
+        return this.getSelectedItems().stream().map(item -> ((MicrochipListItem) item).getMicrochip().getEntityId()).toList();
     }
 
     @Override

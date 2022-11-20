@@ -1,9 +1,11 @@
 package com.jumpcutfindo.microchip.screen;
 
-import com.jumpcutfindo.microchip.data.MicrochipGroup;
+import java.util.List;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
@@ -18,8 +20,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-
-import java.util.List;
 
 public class MicrochipsMenuScreen extends Screen {
     public static final Identifier BUTTONS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
@@ -56,6 +56,10 @@ public class MicrochipsMenuScreen extends Screen {
         this.y = (this.height - 178) / 2;
 
         this.refreshScreen(RefreshType.BOTH);
+    }
+
+    public Microchips getMicrochips() {
+        return microchips;
     }
 
     @Override
@@ -107,6 +111,10 @@ public class MicrochipsMenuScreen extends Screen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (this.activeWindow != null) {
+            return this.activeWindow.handleMouseDrag(mouseX, mouseY, button, deltaX, deltaY);
+        }
+
         if (isMouseInGroupList(mouseX, mouseY)) {
             return this.microchipGroupList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
@@ -120,6 +128,10 @@ public class MicrochipsMenuScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if (this.activeWindow != null) {
+            return this.activeWindow.handleMouseScroll(mouseX, mouseY, amount);
+        }
+
         if (isMouseInGroupList(mouseX, mouseY)) {
             return this.microchipGroupList.mouseScrolled(mouseX, mouseY, amount);
         }

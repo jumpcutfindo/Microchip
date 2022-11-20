@@ -17,10 +17,11 @@ import net.minecraft.util.Identifier;
 
 public class MicrochipGroupListView extends ListView {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
-    private final TranslatableText title;
+    private TranslatableText title;
     private final int titleX, titleY;
 
     private final IconButton createGroupButton;
+    private boolean canCreate;
 
     public MicrochipGroupListView(MicrochipsMenuScreen screen, Microchips microchips, int x, int y) {
         super(screen,
@@ -37,6 +38,7 @@ public class MicrochipGroupListView extends ListView {
         this.titleY = 9;
 
         this.createGroupButton = new IconButton(screen, x + 126, y + 6, 0, 0, this::onCreateGroup, new TranslatableText("microchip.menu.createGroup.tooltip"));
+        this.canCreate = true;
     }
 
     @Override
@@ -54,9 +56,30 @@ public class MicrochipGroupListView extends ListView {
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        if (this.createGroupButton.mouseClicked((int) mouseX, (int) mouseY, button)) return true;
+        if (this.canCreate && this.createGroupButton.mouseClicked(mouseX, mouseY, button)) return true;
 
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    public void setTexture(Identifier texture) {
+        this.texture = texture;
+    }
+
+    public void setTitle(TranslatableText title) {
+        this.title = title;
+    }
+
+    public void setCanCreate(boolean canCreate) {
+        this.canCreate = canCreate;
+    }
+
+    public void setTextureDims(int width, int height) {
+        this.textureWidth = width;
+        this.textureHeight = height;
+    }
+
+    public MicrochipGroupListItem getSelectedItem() {
+        return this.getSelectedItems().size() > 0 ? (MicrochipGroupListItem) this.getSelectedItems().get(0) : null;
     }
 
     private void onCreateGroup() {
@@ -68,8 +91,10 @@ public class MicrochipGroupListView extends ListView {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
-        this.createGroupButton.render(matrices, mouseX, mouseY, 0);
-        this.createGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+        if (this.canCreate) {
+            this.createGroupButton.render(matrices, mouseX, mouseY, 0);
+            this.createGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+        }
     }
 
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {

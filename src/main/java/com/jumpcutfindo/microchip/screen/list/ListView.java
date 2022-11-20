@@ -18,9 +18,13 @@ import net.minecraft.util.math.MathHelper;
 public abstract class ListView {
     protected final MicrochipsMenuScreen screen;
 
-    public final int x, y;
-    private final Identifier texture;
-    protected final int textureU, textureV, textureWidth, textureHeight;
+    public int x;
+    public int y;
+    protected Identifier texture;
+    protected final int textureU;
+    protected final int textureV;
+    protected int textureWidth;
+    protected int textureHeight;
     protected final int listX, listY;
     protected final int scrollbarWidth, scrollbarHeight, scrollbarU, scrollbarV, scrollbarX, scrollbarY;
     protected final int maxItems;
@@ -127,6 +131,7 @@ public abstract class ListView {
                 this.playDownSound(MinecraftClient.getInstance().getSoundManager());
                 if (isSingleSelect) {
                     this.resetSelection();
+                    this.selectedItems.add(item);
                     item.setSelected(true);
                 } else {
                     if (item.isSelected()) {

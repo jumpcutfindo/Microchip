@@ -152,6 +152,7 @@ public class Microchips implements Component {
 
         List<Microchip> microchips = fromGroup.getMicrochipsWithIds(microchipIds);
         toGroup.addAll(microchips);
+        fromGroup.removeAll(microchipIds);
 
         return true;
     }
