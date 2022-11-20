@@ -157,6 +157,14 @@ public class Microchips implements Component {
         return true;
     }
 
+    public List<Microchip> getAllMicrochips() {
+        List<Microchip> microchips = new ArrayList<>();
+        microchips.addAll(this.defaultGroup.getMicrochips());
+        userGroups.forEach(group -> this.defaultGroup.addAll(group.getMicrochips()));
+
+        return microchips;
+    }
+
     @Override
     public void readFromNbt(NbtCompound tag) {
         Gson gson = new Gson();

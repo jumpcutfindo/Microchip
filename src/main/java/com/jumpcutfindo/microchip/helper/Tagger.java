@@ -28,9 +28,11 @@ public class Tagger {
             LOGGER.info("Found an entity to tag!");
             Microchips microchips = getMicrochips(player);
 
-            boolean added = microchips.addToGroup(microchips.getDefaultGroup().getId(), new Microchip(entity.getUuid()));
-
-            if (!added) return TagResult.DUPLICATE;
+            if (canTag(player, entity)) {
+                microchips.addToGroup(microchips.getDefaultGroup().getId(), new Microchip(entity.getUuid()));
+            } else {
+                return TagResult.DUPLICATE;
+            }
 
             if (world.isClient()) {
                 ClientNetworker.sendAddEntityToGroupPacket(microchips.getDefaultGroup().getId(), entity.getUuid());
@@ -38,6 +40,11 @@ public class Tagger {
             }
             return TagResult.ADDED;
         }
+    }
+
+    public static boolean canTag(PlayerEntity player, LivingEntity entity) {
+        Microchips microchips = getMicrochips(player);
+        return !microchips.getAllMicrochips().stream().anyMatch(microchip -> entity.getUuid().equals(microchip.getEntityId()));
     }
 
     public static LivingEntity getEntity(World world, Vec3d pos, UUID uuid) {
