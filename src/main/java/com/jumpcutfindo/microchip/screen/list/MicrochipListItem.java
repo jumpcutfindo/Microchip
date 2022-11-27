@@ -36,14 +36,39 @@ public class MicrochipListItem extends ListItem {
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (this.entity != null) {
+            // Draw entity information
             int displayNameX = x + 38;
             int displayNameY = y + 8;
-            if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
+            if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) {
+                if (this.entity.getDisplayName().asString().length() > 20) {
+                    String truncatedName = this.entity.getDisplayName().asTruncatedString(20) + "...";
+                    screen.getTextRenderer().drawWithShadow(matrices, truncatedName, (float) displayNameX, (float) displayNameY, 0xFFFFFF);
+                } else {
+                    screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
+                }
+            }
 
             int entityNameX = x + 38;
             int entityNameY = y + 21;
-            if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) screen.getTextRenderer().draw(matrices, this.entity.getType().getName(), (float) entityNameX, (float) entityNameY, 0x404040);
+            if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
+                screen.getTextRenderer().draw(matrices, this.entity.getType().getName(), (float) entityNameX, (float) entityNameY, 0x404040);
+            }
 
+            // Draw entity health
+            RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
+            if (this.entity.getHealth() > this.entity.getMaxHealth() / 2) {
+                screen.drawTexture(matrices, x + 168, y + 20, 180, 183, 9, 9);
+            } else if (this.entity.getHealth() > this.entity.getMaxHealth() / 4) {
+                screen.drawTexture(matrices, x + 168, y + 20, 189, 183, 9, 9);
+            } else {
+                screen.drawTexture(matrices, x + 168, y + 20, 198, 183, 9, 9);
+            }
+
+            String healthString = String.format("%d/%d", (int) this.entity.getHealth(), (int) this.entity.getMaxHealth());
+            int offset = healthString.length() * 5 + healthString.length() - 1;
+            screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 168 - offset - 3, y + 21, 0xFFFFFF);
+
+            // Draw entity
             this.drawEntity(x, y);
         }
 
