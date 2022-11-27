@@ -44,7 +44,7 @@ public class Tagger {
 
     public static boolean canTag(PlayerEntity player, LivingEntity entity) {
         Microchips microchips = getMicrochips(player);
-        return !microchips.getAllMicrochips().stream().anyMatch(microchip -> entity.getUuid().equals(microchip.getEntityId()));
+        return microchips.getAllMicrochips().stream().noneMatch(microchip -> entity.getUuid().equals(microchip.getEntityId()));
     }
 
     public static LivingEntity getEntity(World world, Vec3d pos, UUID uuid) {
