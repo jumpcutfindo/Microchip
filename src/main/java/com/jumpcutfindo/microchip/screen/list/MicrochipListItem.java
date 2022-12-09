@@ -13,7 +13,10 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
@@ -51,7 +54,15 @@ public class MicrochipListItem extends ListItem {
             int entityNameX = x + 38;
             int entityNameY = y + 21;
             if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
-                screen.getTextRenderer().draw(matrices, this.entity.getType().getName(), (float) entityNameX, (float) entityNameY, 0x404040);
+                Text mobType;
+                if (this.entity instanceof VillagerEntity villager) {
+                    String profession = villager.getVillagerData().getProfession().getId();
+                    mobType = new TranslatableText("entity.minecraft.villager." + profession);
+                } else {
+                    mobType = this.entity.getType().getName();
+                }
+
+                screen.getTextRenderer().draw(matrices, mobType, (float) entityNameX, (float) entityNameY, 0x404040);
             }
 
             // Draw entity health
@@ -67,12 +78,16 @@ public class MicrochipListItem extends ListItem {
             String healthString = String.format("%d/%d", (int) this.entity.getHealth(), (int) this.entity.getMaxHealth());
             int offset = healthString.length() * 5 + healthString.length() - 1;
             screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 168 - offset - 3, y + 21, 0xFFFFFF);
-
-            // Draw entity
-            this.drawEntity(x, y);
         }
 
         drawButton(matrices, x + 172, y + 3, mouseX, mouseY);
+    }
+
+    @Override
+    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        // Draw entity
+        this.drawEntity(x, y);
+        super.renderBackground(matrices, x, y, mouseX, mouseY);
     }
 
     @Override
@@ -91,7 +106,7 @@ public class MicrochipListItem extends ListItem {
 
     private void drawEntity(int x, int y) {
         // Don't render if there is a window active and in front of it
-        if (screen.isBlockedByWindow(x + 15, y + 15)) return;
+        if (screen.isBlockedByWindow(x, y) || screen.isBlockedByWindow(x + 15, y + 15)) return;
 
         int size = (int) ((1 / (this.entity.getHeight() + this.entity.getWidth())) * 30.0f);
 
