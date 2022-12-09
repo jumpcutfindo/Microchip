@@ -135,6 +135,10 @@ public abstract class ListView {
                 return true;
             }
 
+            if (item.onClick(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+
+            }
+
             offsetY += item.getHeight();
         }
 

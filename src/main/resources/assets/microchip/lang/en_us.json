@@ -28,5 +28,7 @@
     "microchip.menu.editGroup.windowTitle": "Edit a group",
     "microchip.menu.editGroup.submitButton": "Update",
     "microchip.menu.moveChips.windowTitle": "Moving %s microchip(s) to...",
-    "microchip.menu.moveChips.submitButton": "Move"
+    "microchip.menu.moveChips.submitButton": "Move",
+
+    "microchip.menu.microchipInfo.windowTitle": "Microchip"
 }

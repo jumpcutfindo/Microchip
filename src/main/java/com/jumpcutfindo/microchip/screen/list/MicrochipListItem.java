@@ -4,6 +4,7 @@ import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -88,6 +89,16 @@ public class MicrochipListItem extends ListItem {
         // Draw entity
         this.drawEntity(x, y);
         super.renderBackground(matrices, x, y, mouseX, mouseY);
+    }
+
+    @Override
+    public boolean onClick(int x, int y, double mouseX, double mouseY) {
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
+            screen.setActiveWindow(new MicrochipInfoWindow(screen, this.microchip));
+            return true;
+        }
+
+        return false;
     }
 
     @Override
