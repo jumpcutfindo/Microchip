@@ -25,12 +25,20 @@ public class MicrochipListItem extends ListItem {
     private final MicrochipGroup group;
     private final Microchip microchip;
     private final LivingEntity entity;
+
+    private final float entityModelSize;
+
     public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip) {
         super(screen, MicrochipsListView.TEXTURE, 0, 178, 0, 178, 0, 178, 180, 36);
         this.group = group;
         this.microchip = microchip;
 
         this.entity = this.getEntity();
+        if (this.entity != null) {
+            this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 24.0f;
+        } else {
+            this.entityModelSize = 0;
+        }
     }
 
     public Microchip getMicrochip() {
@@ -119,8 +127,6 @@ public class MicrochipListItem extends ListItem {
         // Don't render if there is a window active and in front of it
         if (screen.isBlockedByWindow(x, y) || screen.isBlockedByWindow(x + 15, y + 15)) return;
 
-        int size = (int) ((1 / (this.entity.getHeight() + this.entity.getWidth())) * 30.0f);
-
         float f = (float)Math.atan(1.0f);
         float g = (float)Math.atan(0.0f);
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
@@ -130,7 +136,7 @@ public class MicrochipListItem extends ListItem {
         RenderSystem.applyModelViewMatrix();
         MatrixStack matrixStack2 = new MatrixStack();
         matrixStack2.translate(0.0, 0.0, 1000.0);
-        matrixStack2.scale(size, size, size);
+        matrixStack2.scale(entityModelSize, entityModelSize, entityModelSize);
         Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f);
         Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0f);
         quaternion.hamiltonProduct(quaternion2);

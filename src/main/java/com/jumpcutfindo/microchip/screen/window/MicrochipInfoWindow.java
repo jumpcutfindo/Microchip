@@ -10,6 +10,7 @@ import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
@@ -27,6 +28,8 @@ public class MicrochipInfoWindow extends Window {
 
     private final Microchip microchip;
     private LivingEntity entity;
+
+    private final float entityModelSize;
     public MicrochipInfoWindow(MicrochipsMenuScreen screen, Microchip microchip) {
         super(screen, new TranslatableText("microchip.menu.microchipInfo.windowTitle"));
 
@@ -36,23 +39,29 @@ public class MicrochipInfoWindow extends Window {
         this.microchip = microchip;
         this.entity = Tagger.getEntity(screen.getPlayer().getWorld(), screen.getPlayer().getPos(), microchip.getEntityId());
 
-        // TODO: Info Window
-        /*
-            Info window should contain name, type, health (full), armour
-         */
+        if (this.entity != null) {
+            this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 48.0f;
+        } else {
+            this.entityModelSize = 0;
+        }
     }
 
     @Override
     public void renderBackground(MatrixStack matrices) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-
-        this.screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
     }
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+
+        // Draw background first then entity
+        this.screen.drawTexture(matrices, x + 8, y + 26, 160, 0, 62, 62);
+        drawLookingEntity(entity, x + 38, y + 82, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        this.screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
+
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
     }
 
@@ -91,7 +100,7 @@ public class MicrochipInfoWindow extends Window {
         return new ArrayList<>();
     }
 
-    private static void drawLookingEntity(LivingEntity entity, int x, int y, double mouseX, double mouseY, int size) {
+    private static void drawLookingEntity(LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
         float f = (float)Math.atan((double)(mouseX / 40.0F));
         float g = (float)Math.atan((double)(mouseY / 40.0F));
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
