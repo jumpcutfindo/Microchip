@@ -101,7 +101,8 @@ public class MicrochipGroupListView extends ListView {
 
         if (this.canCreate) {
             this.createGroupButton.render(matrices, mouseX, mouseY, 0);
-            this.createGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+
+            if (!screen.isWindowOpen()) this.createGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
         }
     }
 

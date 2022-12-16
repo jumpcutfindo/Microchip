@@ -244,6 +244,10 @@ public class MicrochipsMenuScreen extends Screen {
         }
     }
 
+    public boolean isWindowOpen() {
+        return this.activeWindow != null;
+    }
+
     protected int getGroupListX() {
         return this.x;
     }

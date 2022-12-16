@@ -96,14 +96,18 @@ public class MicrochipsListView extends ListView {
             this.moveMicrochipsButton.render(matrices, mouseX, mouseY, 0);
             this.deleteMicrochipsButton.render(matrices, mouseX, mouseY, 0);
 
-            this.moveMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
-            this.deleteMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            if (!screen.isWindowOpen()) {
+                this.moveMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
+                this.deleteMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            }
         } else {
             this.editGroupButton.render(matrices, mouseX, mouseY, 0);
             this.deleteGroupButton.render(matrices, mouseX, mouseY, 0);
 
-            this.editGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
-            this.deleteGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            if (!screen.isWindowOpen()) {
+                this.editGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+                this.deleteGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            }
         }
     }
 
