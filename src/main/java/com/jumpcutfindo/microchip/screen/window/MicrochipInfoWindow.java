@@ -27,10 +27,13 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.StringHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
@@ -41,6 +44,7 @@ public class MicrochipInfoWindow extends Window {
     private final GroupColor color;
     private LivingEntity entity;
     private Collection<StatusEffectInstance> entityStatuses;
+    private int timeSinceStatusRetrieved = 0;
 
     private final float entityModelSize;
     public MicrochipInfoWindow(MicrochipsMenuScreen screen, Microchip microchip, GroupColor color) {
@@ -111,23 +115,31 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderTexture(0, TEXTURE);
         this.screen.drawTexture(matrices, x + 152, y + 142, 177, 128, 9, 9);
 
-        Collection<StatusEffectInstance> effects = this.entityStatuses;
+        // Draw status effects
+        this.screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (x + 7), (float) (y + 158), 0xFFFFFF);
         StatusEffectSpriteManager statusEffectSpriteManager = MinecraftClient.getInstance().getStatusEffectSpriteManager();
         int effectsOffset = 0;
-        for (Iterator<StatusEffectInstance> iterator = effects.iterator(); iterator.hasNext(); effectsOffset += 22) {
-            StatusEffect statusEffect = iterator.next().getEffectType();
+        for (Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator(); iterator.hasNext(); effectsOffset += 22) {
+            StatusEffectInstance instance = iterator.next();
+            StatusEffect statusEffect = instance.getEffectType();
             Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
             RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
-            DrawableHelper.drawSprite(matrices, x + 7 + effectsOffset, y + 168, 0, 18, 18, sprite);
-        }
+            DrawableHelper.drawSprite(matrices, x + 7 + effectsOffset, y + 170, 0, 18, 18, sprite);
 
-        // Draw status effects
-        this.screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (x + 7), (float) (y + 156), 0xFFFFFF);
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 7 + effectsOffset, y + 170, 18, 18)) {
+                Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved)));
+                Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
+                screen.renderTooltip(matrices, text, mouseX, mouseY);
+
+                // TODO: Shift this tooltip rendering out into separate function
+            }
+        }
+        // TODO: Handle overflow of effects, when hover over the text can display the list of effects + time left
     }
 
     @Override
     public void tick() {
-
+        timeSinceStatusRetrieved++;
     }
 
     @Override
@@ -208,5 +220,6 @@ public class MicrochipInfoWindow extends Window {
 
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
         this.entityStatuses = entityStatuses;
+        timeSinceStatusRetrieved = 0;
     }
 }
