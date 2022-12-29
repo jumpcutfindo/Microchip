@@ -1,8 +1,12 @@
 package com.jumpcutfindo.microchip.helper;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.slf4j.Logger;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
@@ -55,5 +59,17 @@ public class Tagger {
 
     public static Microchips getMicrochips(PlayerEntity player) {
         return MicrochipComponents.MICROCHIPS.get(player);
+    }
+
+    public static Text getEntityTypeText(LivingEntity entity) {
+        Text mobType;
+        if (entity instanceof VillagerEntity villager) {
+            String profession = villager.getVillagerData().getProfession().getId();
+            mobType = new TranslatableText("entity.minecraft.villager." + profession);
+        } else {
+            mobType = entity.getType().getName();
+        }
+
+        return mobType;
     }
 }

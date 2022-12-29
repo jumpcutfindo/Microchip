@@ -1,5 +1,7 @@
 package com.jumpcutfindo.microchip.data;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -9,7 +11,6 @@ public class Microchip {
     public Microchip(UUID entityId) {
         this.entityId = entityId;
     }
-
     public UUID getEntityId() {
         return entityId;
     }

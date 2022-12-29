@@ -63,15 +63,7 @@ public class MicrochipListItem extends ListItem {
             int entityNameX = x + 38;
             int entityNameY = y + 21;
             if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
-                Text mobType;
-                if (this.entity instanceof VillagerEntity villager) {
-                    String profession = villager.getVillagerData().getProfession().getId();
-                    mobType = new TranslatableText("entity.minecraft.villager." + profession);
-                } else {
-                    mobType = this.entity.getType().getName();
-                }
-
-                screen.getTextRenderer().draw(matrices, mobType, (float) entityNameX, (float) entityNameY, 0x404040);
+                screen.getTextRenderer().draw(matrices, Tagger.getEntityTypeText(entity), (float) entityNameX, (float) entityNameY, 0x404040);
             }
 
             // Draw entity health
@@ -95,14 +87,14 @@ public class MicrochipListItem extends ListItem {
     @Override
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         // Draw entity
-        this.drawEntity(x, y);
+        if (this.entity != null) this.drawEntity(x, y);
         super.renderBackground(matrices, x, y, mouseX, mouseY);
     }
 
     @Override
     public boolean onClick(int x, int y, double mouseX, double mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
-            screen.setActiveWindow(new MicrochipInfoWindow(screen, this.microchip));
+        if (this.entity != null && MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
+            screen.setActiveWindow(new MicrochipInfoWindow(screen, this.microchip, this.group.getColor()));
             return true;
         }
 

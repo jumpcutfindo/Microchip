@@ -275,15 +275,15 @@ public class MicrochipsMenuScreen extends Screen {
                 && y >= textureY && y < textureY + textureHeight;
     }
 
-    public static void setShaderColor(GroupColor groupColor) {
-        if (groupColor != GroupColor.GRAY) {
-            Color color = new Color(groupColor.getPrimaryColor());
-            float r = (float) color.getRed() / 204.0f;
-            float g = (float) color.getGreen() / 204.0f;
-            float b = (float) color.getBlue() / 204.0f;
+    public static void setShaderColor(GroupColor groupColor, boolean shouldIgnoreGray) {
+        if (shouldIgnoreGray && groupColor == GroupColor.GRAY) return;
 
-            RenderSystem.setShaderColor(r, g, b, 0.0f);
-        }
+        Color color = new Color(groupColor.getPrimaryColor());
+        float r = (float) color.getRed() / 204.0f;
+        float g = (float) color.getGreen() / 204.0f;
+        float b = (float) color.getBlue() / 204.0f;
+
+        RenderSystem.setShaderColor(r, g, b, 0.0f);
     }
 
     public enum RefreshType {

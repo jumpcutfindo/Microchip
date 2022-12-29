@@ -60,7 +60,7 @@ public class MicrochipsListView extends ListView {
 
     @Override
     public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
-        MicrochipsMenuScreen.setShaderColor(this.group.getColor());
+        MicrochipsMenuScreen.setShaderColor(this.group.getColor(), true);
 
         super.renderBackground(matrices, mouseX, mouseY);
 

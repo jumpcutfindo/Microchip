@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
@@ -18,6 +19,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
@@ -27,16 +29,18 @@ public class MicrochipInfoWindow extends Window {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_info_window.png");
 
     private final Microchip microchip;
+    private final GroupColor color;
     private LivingEntity entity;
 
     private final float entityModelSize;
-    public MicrochipInfoWindow(MicrochipsMenuScreen screen, Microchip microchip) {
+    public MicrochipInfoWindow(MicrochipsMenuScreen screen, Microchip microchip, GroupColor color) {
         super(screen, new TranslatableText("microchip.menu.microchipInfo.windowTitle"));
 
-        this.width = 160;
-        this.height = 200;
+        this.width = 168;
+        this.height = 96;
 
         this.microchip = microchip;
+        this.color = color;
         this.entity = Tagger.getEntity(screen.getPlayer().getWorld(), screen.getPlayer().getPos(), microchip.getEntityId());
 
         if (this.entity != null) {
@@ -56,13 +60,19 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
-        // Draw background first then entity
-        this.screen.drawTexture(matrices, x + 8, y + 26, 160, 0, 62, 62);
-        drawLookingEntity(entity, x + 38, y + 82, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
+        MicrochipsMenuScreen.setShaderColor(this.color, false);
+        this.screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
+        drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
+
         RenderSystem.setShaderTexture(0, TEXTURE);
+        MicrochipsMenuScreen.setShaderColor(this.color, false);
         this.screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
 
-        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
+        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
+
+        this.screen.getTextRenderer().draw(matrices, this.entity.getDisplayName(), x + 59, y + 30, this.color.getShadowColor());
+        this.screen.getTextRenderer().draw(matrices, Tagger.getEntityTypeText(entity), x + 59, y + 50, this.color.getShadowColor());
+        this.screen.getTextRenderer().draw(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, this.color.getShadowColor());
     }
 
     @Override
