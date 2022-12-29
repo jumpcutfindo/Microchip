@@ -174,6 +174,10 @@ public class MicrochipsMenuScreen extends Screen {
         if (this.activeWindow != null) this.activeWindow.tick();
     }
 
+    public Window getActiveWindow() {
+        return activeWindow;
+    }
+
     public void setActiveWindow(Window window) {
         this.clearChildren();
         this.activeWindow = window;

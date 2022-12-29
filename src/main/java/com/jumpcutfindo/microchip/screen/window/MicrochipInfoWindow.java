@@ -1,9 +1,12 @@
 package com.jumpcutfindo.microchip.screen.window;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.Tagger;
@@ -11,14 +14,20 @@ import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -31,13 +40,14 @@ public class MicrochipInfoWindow extends Window {
     private final Microchip microchip;
     private final GroupColor color;
     private LivingEntity entity;
+    private Collection<StatusEffectInstance> entityStatuses;
 
     private final float entityModelSize;
     public MicrochipInfoWindow(MicrochipsMenuScreen screen, Microchip microchip, GroupColor color) {
         super(screen, new TranslatableText("microchip.menu.microchipInfo.windowTitle"));
 
         this.width = 168;
-        this.height = 96;
+        this.height = 200;
 
         this.microchip = microchip;
         this.color = color;
@@ -48,6 +58,9 @@ public class MicrochipInfoWindow extends Window {
         } else {
             this.entityModelSize = 0;
         }
+
+        this.entityStatuses = new ArrayList<>();
+        ClientNetworker.sendRequestForEntityStatuses(this.microchip.getEntityId());
     }
 
     @Override
@@ -60,20 +73,56 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
+        // Draw entity background, then entity, then the main UI
         MicrochipsMenuScreen.setShaderColor(this.color, false);
         this.screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
         drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
         MicrochipsMenuScreen.setShaderColor(this.color, false);
-        RenderSystem.setShader(GameRenderer::getBlockShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         this.screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
 
+        // Draw the title and the entity information
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
+        this.screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), x + 59, y + 30, 0xFFFFFF);
+        this.screen.getTextRenderer().drawWithShadow(matrices, Tagger.getEntityTypeText(entity), x + 59, y + 50, 0xFFFFFF);
+        this.screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, 0xFFFFFF);
 
-        this.screen.getTextRenderer().draw(matrices, this.entity.getDisplayName(), x + 59, y + 30, this.color.getShadowColor());
-        this.screen.getTextRenderer().draw(matrices, Tagger.getEntityTypeText(entity), x + 59, y + 50, this.color.getShadowColor());
-        this.screen.getTextRenderer().draw(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, this.color.getShadowColor());
+        // Draw information based on the tab
+        this.screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
+
+        // Draw health
+        this.screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.health"), (float) (x + 7), (float) (y + 118), 0xFFFFFF);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        this.screen.drawTexture(matrices, x + 7, y + 130, 0, 200, 154, 5);
+        this.screen.drawTexture(matrices, x + 7, y + 130, 0, 205, (int) ((this.entity.getHealth() / this.entity.getMaxHealth()) * 154), 5);
+        String healthString = String.format("%d/%d", (int) this.entity.getHealth(), (int) this.entity.getMaxHealth());
+        int offset = healthString.length() * 5 + healthString.length() - 1;
+        screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 152 - offset - 3, y + 118, 0xFFFFFF);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        this.screen.drawTexture(matrices, x + 152, y + 117, 168, 128, 9, 9);
+
+        // Draw armor
+        this.screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.armor"), (float) (x + 7), (float) (y + 143), 0xFFFFFF);
+        String armorString = String.format("%d", (int) this.entity.getArmor());
+        int armorStringOffset = armorString.length() * 5 + armorString.length() - 1;
+        screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 152 - armorStringOffset - 3, y + 143, 0xFFFFFF);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        this.screen.drawTexture(matrices, x + 152, y + 142, 177, 128, 9, 9);
+
+        Collection<StatusEffectInstance> effects = this.entityStatuses;
+        StatusEffectSpriteManager statusEffectSpriteManager = MinecraftClient.getInstance().getStatusEffectSpriteManager();
+        int effectsOffset = 0;
+        for (Iterator<StatusEffectInstance> iterator = effects.iterator(); iterator.hasNext(); effectsOffset += 22) {
+            StatusEffect statusEffect = iterator.next().getEffectType();
+            Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
+            RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
+            DrawableHelper.drawSprite(matrices, x + 7 + effectsOffset, y + 168, 0, 18, 18, sprite);
+        }
+
+        // Draw status effects
+        this.screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (x + 7), (float) (y + 156), 0xFFFFFF);
     }
 
     @Override
@@ -155,5 +204,9 @@ public class MicrochipInfoWindow extends Window {
         matrixStack.pop();
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
+    }
+
+    public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
+        this.entityStatuses = entityStatuses;
     }
 }

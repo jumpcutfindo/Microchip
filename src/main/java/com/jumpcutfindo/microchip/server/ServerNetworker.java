@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.server;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ServerNetworker implements ModInitializer {
@@ -35,6 +38,7 @@ public class ServerNetworker implements ModInitializer {
         onCreateGroup();
         onUpdateGroup();
         onDeleteGroup();
+        onRequestEntityStatuses();
     }
 
     private static void onGlowEntityPacket() {
@@ -42,7 +46,7 @@ public class ServerNetworker implements ModInitializer {
             UUID entityId = buf.readUuid();
             if (entityId == null) return;
 
-            LivingEntity entity = Looker.getEntityByUuid(player.world, player, entityId);
+            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
             if (entity != null) entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 40, 1), player);
         }));
     }
@@ -119,7 +123,24 @@ public class ServerNetworker implements ModInitializer {
         }));
     }
 
-    public static void sendScreenRefresh(ServerPlayerEntity player) {
-        ServerPlayNetworking.send(player, NetworkConstants.PACKET_REFRESH_SCREEN, PacketByteBufs.create());
+    private static void onRequestEntityStatuses() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, ((server, player, handler, buf, responseSender) -> {
+            UUID entityId = buf.readUuid();
+
+            LivingEntity target = (LivingEntity) player.getWorld().getEntity(entityId);
+
+            if (target != null) {
+                Collection<StatusEffectInstance> effects = target.getStatusEffects();
+                PacketByteBuf buffer = PacketByteBufs.create();
+                buffer.writeCollection(effects, ((packetByteBuf, statusEffectInstance) -> {
+                    NbtCompound nbt = new NbtCompound();
+                    nbt = statusEffectInstance.writeNbt(nbt);
+
+                    packetByteBuf.writeNbt(nbt);
+                }));
+
+                ServerPlayNetworking.send(player, NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, buffer);
+            }
+        }));
     }
 }

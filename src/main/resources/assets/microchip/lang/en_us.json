@@ -30,5 +30,9 @@
     "microchip.menu.moveChips.windowTitle": "Moving %s microchip(s) to...",
     "microchip.menu.moveChips.submitButton": "Move",
 
-    "microchip.menu.microchipInfo.windowTitle": "Microchip"
+    "microchip.menu.microchipInfo.windowTitle": "Microchip",
+    "microchip.menu.microchipInfo.statusTab": "Status",
+    "microchip.menu.microchipInfo.statusTab.health": "Health",
+    "microchip.menu.microchipInfo.statusTab.armor": "Armor",
+    "microchip.menu.microchipInfo.statusTab.effects": "Effects"
 }

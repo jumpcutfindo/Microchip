@@ -12,10 +12,12 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Quaternion;
@@ -94,6 +96,7 @@ public class MicrochipListItem extends ListItem {
     @Override
     public boolean onClick(int x, int y, double mouseX, double mouseY) {
         if (this.entity != null && MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
+            MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             screen.setActiveWindow(new MicrochipInfoWindow(screen, this.microchip, this.group.getColor()));
             return true;
         }

@@ -1,33 +1,31 @@
 package com.jumpcutfindo.microchip.client;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
+import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.network.PacketByteBuf;
 
 public class ClientNetworker implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        onScreenRefresh();
-    }
-
-    private static void onScreenRefresh() {
-        ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REFRESH_SCREEN, (client, handler, buf, responseSender) -> {
-            if (client.currentScreen instanceof MicrochipsMenuScreen screen) {
-                screen.refreshScreen(MicrochipsMenuScreen.RefreshType.BOTH);
-            }
-        });
+        onReceiveEntityStatusesPacket();
     }
 
     public static void sendGlowPacket(LivingEntity entity) {
@@ -90,5 +88,23 @@ public class ClientNetworker implements ClientModInitializer {
         buffer.writeUuid(groupId);
 
         ClientPlayNetworking.send(NetworkConstants.PACKET_DELETE_GROUP_ID, buffer);
+    }
+
+    public static void sendRequestForEntityStatuses(UUID entityId) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeUuid(entityId);
+
+        ClientPlayNetworking.send(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, buffer);
+    }
+
+    public static void onReceiveEntityStatusesPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, (client, handler, buf, responseSender) -> {
+
+            Collection<StatusEffectInstance> entityStatuses = buf.readCollection((size) -> new ArrayList<>(), (packetByteBuf -> StatusEffectInstance.fromNbt(packetByteBuf.readNbt())));
+
+            if (client.currentScreen instanceof MicrochipsMenuScreen screen && screen.getActiveWindow() instanceof MicrochipInfoWindow infoWindow) {
+                infoWindow.setEntityStatuses(entityStatuses);
+            }
+        });
     }
 }

@@ -15,5 +15,5 @@ public class NetworkConstants {
     public static final Identifier PACKET_UPDATE_GROUP_ID = new Identifier(MOD_ID, "update_group");
     public static final Identifier PACKET_DELETE_GROUP_ID = new Identifier(MOD_ID, "delete_group");
 
-    public static final Identifier PACKET_REFRESH_SCREEN = new Identifier(MOD_ID, "refresh_screen");
+    public static final Identifier PACKET_REQUEST_ENTITY_STATUSES_ID = new Identifier(MOD_ID, "request_entity_statuses");
 }
