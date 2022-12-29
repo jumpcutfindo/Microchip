@@ -44,7 +44,7 @@ public class MicrochipInfoWindow extends Window {
         this.entity = Tagger.getEntity(screen.getPlayer().getWorld(), screen.getPlayer().getPos(), microchip.getEntityId());
 
         if (this.entity != null) {
-            this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 48.0f;
+            this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 48.0f * (float) Math.max(Math.cos(this.entity.getWidth() / this.entity.getHeight()), Math.cos(this.entity.getHeight() / this.entity.getWidth()));
         } else {
             this.entityModelSize = 0;
         }
@@ -66,6 +66,7 @@ public class MicrochipInfoWindow extends Window {
 
         RenderSystem.setShaderTexture(0, TEXTURE);
         MicrochipsMenuScreen.setShaderColor(this.color, false);
+        RenderSystem.setShader(GameRenderer::getBlockShader);
         this.screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
 
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
