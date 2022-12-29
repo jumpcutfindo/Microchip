@@ -29,8 +29,6 @@ public class MicrochipsListView extends ListView {
     private final int titleX, titleY;
     private final IconButton editGroupButton, deleteGroupButton, moveMicrochipsButton, deleteMicrochipsButton;
     private final LiteralText title;
-
-    private final Color primaryColor;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int x, int y) {
         super(screen,
                 x, y,
@@ -58,21 +56,11 @@ public class MicrochipsListView extends ListView {
 
         this.moveMicrochipsButton = new IconButton(screen, x + 154, y + 6, 104, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
         this.deleteMicrochipsButton = new IconButton(screen, x + 182, y + 6, 104, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
-
-        this.primaryColor = new Color(this.group.getColor().getPrimaryColor());
     }
 
     @Override
     public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
-        if (this.group.getColor() != GroupColor.GRAY) {
-            Color color = primaryColor;
-            float r = (float) color.getRed() / 204.0f;
-            float g = (float) color.getGreen() / 204.0f;
-            float b = (float) color.getBlue() / 204.0f;
-            float a = 0.1f;
-
-            RenderSystem.setShaderColor(r, g, b, 0.0f);
-        }
+        MicrochipsMenuScreen.setShaderColor(this.group.getColor());
 
         super.renderBackground(matrices, mouseX, mouseY);
 

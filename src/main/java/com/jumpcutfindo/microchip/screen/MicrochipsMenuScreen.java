@@ -1,7 +1,9 @@
 package com.jumpcutfindo.microchip.screen;
 
+import java.awt.*;
 import java.util.List;
 
+import com.jumpcutfindo.microchip.data.GroupColor;
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
@@ -271,6 +273,17 @@ public class MicrochipsMenuScreen extends Screen {
     public static boolean isWithin(double x, double y, int textureX, int textureY, int textureWidth, int textureHeight) {
         return x >= textureX && x < textureX + textureWidth
                 && y >= textureY && y < textureY + textureHeight;
+    }
+
+    public static void setShaderColor(GroupColor groupColor) {
+        if (groupColor != GroupColor.GRAY) {
+            Color color = new Color(groupColor.getPrimaryColor());
+            float r = (float) color.getRed() / 204.0f;
+            float g = (float) color.getGreen() / 204.0f;
+            float b = (float) color.getBlue() / 204.0f;
+
+            RenderSystem.setShaderColor(r, g, b, 0.0f);
+        }
     }
 
     public enum RefreshType {
