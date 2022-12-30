@@ -132,20 +132,22 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         int tabVerticalOffset = 0;
+        int tabIconVerticalOffset = 0;
         for (int i = 0; i < Tab.values().length; i++) {
             Tab tab = Tab.values()[i];
 
             MicrochipsMenuScreen.setShaderColor(color, false);
             if (tab == selectedTab) {
-                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62, 32, 29);
+                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62 + (i == 0 ? 0 : 27), 32, 29);
             } else {
-                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 200, 62, 32, 29);
+                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 200, 62 + (i == 0 ? 0 : 27), 32, 29);
             }
 
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            screen.drawTexture(matrices, x + 170, y + 101 + tabVerticalOffset, 168 + i * 18, 91, 18, 18);
+            screen.drawTexture(matrices, x + 170, y + 100 + tabIconVerticalOffset, 214 + i * 18, 0, 18, 18);
 
             tabVerticalOffset += 29;
+            tabIconVerticalOffset += 31;
         }
     }
 
