@@ -42,6 +42,7 @@ public class MicrochipInfoWindow extends Window {
 
     private final Microchip microchip;
     private final GroupColor color;
+    private final int statusDisplayCount;
     private LivingEntity entity;
     private Collection<StatusEffectInstance> entityStatuses;
     private int timeSinceStatusRetrieved = 0;
@@ -63,6 +64,7 @@ public class MicrochipInfoWindow extends Window {
             this.entityModelSize = 0;
         }
 
+        this.statusDisplayCount = 5;
         this.entityStatuses = new ArrayList<>();
         ClientNetworker.sendRequestForEntityStatuses(this.microchip.getEntityId());
     }
@@ -79,62 +81,101 @@ public class MicrochipInfoWindow extends Window {
 
         // Draw entity background, then entity, then the main UI
         MicrochipsMenuScreen.setShaderColor(this.color, false);
-        this.screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
+        screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
         drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
         MicrochipsMenuScreen.setShaderColor(this.color, false);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        this.screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
+        screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
 
         // Draw the title and the entity information
-        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
-        this.screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), x + 59, y + 30, 0xFFFFFF);
-        this.screen.getTextRenderer().drawWithShadow(matrices, Tagger.getEntityTypeText(entity), x + 59, y + 50, 0xFFFFFF);
-        this.screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, 0xFFFFFF);
+        screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
+        screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), x + 59, y + 30, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, Tagger.getEntityTypeText(entity), x + 59, y + 50, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, 0xFFFFFF);
 
         // Draw information based on the tab
-        this.screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
+        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
 
         // Draw health
-        this.screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.health"), (float) (x + 7), (float) (y + 118), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.health"), (float) (x + 7), (float) (y + 118), 0xFFFFFF);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.screen.drawTexture(matrices, x + 7, y + 130, 0, 200, 154, 5);
-        this.screen.drawTexture(matrices, x + 7, y + 130, 0, 205, (int) ((this.entity.getHealth() / this.entity.getMaxHealth()) * 154), 5);
+        screen.drawTexture(matrices, x + 7, y + 130, 0, 200, 154, 5);
+        screen.drawTexture(matrices, x + 7, y + 130, 0, 205, (int) ((this.entity.getHealth() / this.entity.getMaxHealth()) * 154), 5);
         String healthString = String.format("%d/%d", (int) this.entity.getHealth(), (int) this.entity.getMaxHealth());
         int offset = healthString.length() * 5 + healthString.length() - 1;
         screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 152 - offset - 3, y + 118, 0xFFFFFF);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.screen.drawTexture(matrices, x + 152, y + 117, 168, 128, 9, 9);
+        screen.drawTexture(matrices, x + 152, y + 117, 168, 128, 9, 9);
 
         // Draw armor
-        this.screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.armor"), (float) (x + 7), (float) (y + 143), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.armor"), (float) (x + 7), (float) (y + 143), 0xFFFFFF);
         String armorString = String.format("%d", (int) this.entity.getArmor());
         int armorStringOffset = armorString.length() * 5 + armorString.length() - 1;
         screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 152 - armorStringOffset - 3, y + 143, 0xFFFFFF);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.screen.drawTexture(matrices, x + 152, y + 142, 177, 128, 9, 9);
+        screen.drawTexture(matrices, x + 152, y + 142, 177, 128, 9, 9);
 
         // Draw status effects
-        this.screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (x + 7), (float) (y + 158), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (x + 7), (float) (y + 158), 0xFFFFFF);
         StatusEffectSpriteManager statusEffectSpriteManager = MinecraftClient.getInstance().getStatusEffectSpriteManager();
+
         int effectsOffset = 0;
-        for (Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator(); iterator.hasNext(); effectsOffset += 22) {
-            StatusEffectInstance instance = iterator.next();
-            StatusEffect statusEffect = instance.getEffectType();
-            Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
-            RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
-            DrawableHelper.drawSprite(matrices, x + 7 + effectsOffset, y + 170, 0, 18, 18, sprite);
+        int statusEffectBgOffset = 0;
+        Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator();
+        for (int i = 0; i < statusDisplayCount; i++) {
+            // Draw background
+            RenderSystem.setShaderTexture(0, TEXTURE);
+            screen.drawTexture(matrices, x + 7 + statusEffectBgOffset, y + 170, 168, 137, 22, 22);
+            statusEffectBgOffset += 24;
 
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 7 + effectsOffset, y + 170, 18, 18)) {
-                Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved)));
-                Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
-                screen.renderTooltip(matrices, text, mouseX, mouseY);
+            // Draw effect
+            if (iterator.hasNext()) {
+                StatusEffectInstance instance = iterator.next();
+                StatusEffect statusEffect = instance.getEffectType();
+                Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
+                RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
+                DrawableHelper.drawSprite(matrices, x + 9 + effectsOffset, y + 172, 0, 18, 18, sprite);
+            }
+            
+            effectsOffset += 24;
+        }
+        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("+%d", Math.max(this.entityStatuses.size() - statusDisplayCount, 0))), (float) (x + 9 + effectsOffset), (float) (y + 177), 0xFFFFFF);
 
-                // TODO: Shift this tooltip rendering out into separate function
+        this.drawTooltips(matrices, mouseX, mouseY);
+    }
+
+    private void drawTooltips(MatrixStack matrices, int mouseX, int mouseY) {
+        // Draw tooltips for drawn statuses
+        Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator();
+        int effectsOffset = 0;
+
+        for (int i = 0; i < statusDisplayCount; i++) {
+            if (iterator.hasNext()) {
+                StatusEffectInstance instance = iterator.next();
+                StatusEffect statusEffect = instance.getEffectType();
+                if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
+                    Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved)));
+                    Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
+                    screen.renderTooltip(matrices, text, mouseX, mouseY);
+                }
+
+                effectsOffset += 24;
             }
         }
-        // TODO: Handle overflow of effects, when hover over the text can display the list of effects + time left
+
+        // Draw tooltips for extra statuses
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
+            List<Text> statuses = new ArrayList<>();
+            while (iterator.hasNext()) {
+                StatusEffectInstance instance = iterator.next();
+                TranslatableText statusName = new TranslatableText(instance.getTranslationKey());
+                statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved))));
+                statuses.add(statusName);
+            }
+            screen.renderTooltip(matrices, statuses, mouseX, mouseY);
+        }
     }
 
     @Override
