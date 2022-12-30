@@ -15,7 +15,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
@@ -28,9 +28,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffectUtil;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -49,6 +46,20 @@ public class MicrochipInfoWindow extends Window {
     private final int statusDisplayCount;
     private LivingEntity entity;
     private Collection<StatusEffectInstance> entityStatuses;
+
+    private final List<String> buttonTranslatableKeys = List.of(
+            "microchip.menu.microchipInfo.actionTab.locate",
+            "microchip.menu.microchipInfo.actionTab.teleportTo",
+            "microchip.menu.microchipInfo.actionTab.heal",
+            "microchip.menu.microchipInfo.actionTab.kill"
+    );
+
+    private final List<ButtonWidget.PressAction> buttonActions = List.of(
+            (locateButton) -> {},
+            (teleportToButton) -> {},
+            (healButton) -> {},
+            (killButton) -> {}
+    );
     private int timeSinceStatusRetrieved = 0;
 
     private final float entityModelSize;
@@ -91,7 +102,6 @@ public class MicrochipInfoWindow extends Window {
         }
 
         this.drawTabs(matrices, mouseX, mouseY);
-
         this.drawTooltips(matrices, mouseX, mouseY);
     }
 
@@ -184,39 +194,64 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private void drawActionTab(MatrixStack matrices, int mouseX, int mouseY) {
+        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
 
+        int xOffset = 77;
+        int yOffset = 24;
+
+        for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
+            ButtonWidget buttonWidget = new ButtonWidget(x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset , 75, 20, new TranslatableText(buttonTranslatableKeys.get(i)), buttonActions.get(i));
+            buttonWidget.render(matrices, mouseX, mouseY, 0);
+        }
     }
 
     private void drawTooltips(MatrixStack matrices, int mouseX, int mouseY) {
-        // Draw tooltips for drawn statuses
-        Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator();
-        int effectsOffset = 0;
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        switch (selectedTab) {
+        case STATUS -> {
+            // Draw tooltips for drawn statuses
+            Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator();
+            int effectsOffset = 0;
 
-        for (int i = 0; i < statusDisplayCount; i++) {
-            if (iterator.hasNext()) {
-                StatusEffectInstance instance = iterator.next();
-                StatusEffect statusEffect = instance.getEffectType();
-                if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
-                    Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved)));
-                    Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
-                    screen.renderTooltip(matrices, text, mouseX, mouseY);
+            for (int i = 0; i < statusDisplayCount; i++) {
+                if (iterator.hasNext()) {
+                    StatusEffectInstance instance = iterator.next();
+                    StatusEffect statusEffect = instance.getEffectType();
+                    if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
+                        Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved)));
+                        Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
+                        screen.renderTooltip(matrices, text, mouseX, mouseY);
+                    }
+
+                    effectsOffset += 24;
                 }
+            }
 
-                effectsOffset += 24;
+            // Draw tooltips for extra statuses
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
+                List<Text> statuses = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    StatusEffectInstance instance = iterator.next();
+                    TranslatableText statusName = new TranslatableText(instance.getTranslationKey());
+                    statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved))));
+                    statuses.add(statusName);
+                }
+                screen.renderTooltip(matrices, statuses, mouseX, mouseY);
             }
         }
+        case ACTIONS -> {
+            int xOffset = 77;
+            int yOffset = 24;
 
-        // Draw tooltips for extra statuses
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
-            List<Text> statuses = new ArrayList<>();
-            while (iterator.hasNext()) {
-                StatusEffectInstance instance = iterator.next();
-                TranslatableText statusName = new TranslatableText(instance.getTranslationKey());
-                statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved))));
-                statuses.add(statusName);
+            for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
+                if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset, 75, 20)) {
+                    screen.renderTooltip(matrices, new TranslatableText(buttonTranslatableKeys.get(i) + ".tooltip"), mouseX, mouseY);
+                }
             }
-            screen.renderTooltip(matrices, statuses, mouseX, mouseY);
         }
+        }
+
+
     }
 
     @Override
