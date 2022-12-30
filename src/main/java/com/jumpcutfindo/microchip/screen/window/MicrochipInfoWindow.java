@@ -129,16 +129,21 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private void drawTabs(MatrixStack matrices, int mouseX, int mouseY) {
-        MicrochipsMenuScreen.setShaderColor(color, false);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         int tabVerticalOffset = 0;
-        for (Tab tab : Tab.values()) {
+        for (int i = 0; i < Tab.values().length; i++) {
+            Tab tab = Tab.values()[i];
+
+            MicrochipsMenuScreen.setShaderColor(color, false);
             if (tab == selectedTab) {
                 screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62, 32, 29);
             } else {
                 screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 200, 62, 32, 29);
             }
+
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            screen.drawTexture(matrices, x + 170, y + 101 + tabVerticalOffset, 168 + i * 18, 91, 18, 18);
 
             tabVerticalOffset += 29;
         }
