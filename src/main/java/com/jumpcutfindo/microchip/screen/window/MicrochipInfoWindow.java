@@ -21,6 +21,7 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -29,6 +30,8 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -42,6 +45,7 @@ public class MicrochipInfoWindow extends Window {
 
     private final Microchip microchip;
     private final GroupColor color;
+    private Tab selectedTab;
     private final int statusDisplayCount;
     private LivingEntity entity;
     private Collection<StatusEffectInstance> entityStatuses;
@@ -67,6 +71,8 @@ public class MicrochipInfoWindow extends Window {
         this.statusDisplayCount = 5;
         this.entityStatuses = new ArrayList<>();
         ClientNetworker.sendRequestForEntityStatuses(this.microchip.getEntityId());
+
+        this.selectedTab = Tab.STATUS;
     }
 
     @Override
@@ -75,13 +81,29 @@ public class MicrochipInfoWindow extends Window {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
+
+        this.drawIdentityCard(matrices, mouseX, mouseY);
+
+        // Draw tabs according to selection
+        switch (selectedTab) {
+            case STATUS -> drawStatusTab(matrices, mouseX, mouseY);
+            case ACTIONS -> drawActionTab(matrices, mouseX, mouseY);
+        }
+
+        this.drawTabs(matrices, mouseX, mouseY);
+
+        this.drawTooltips(matrices, mouseX, mouseY);
+    }
+
+    private void drawIdentityCard(MatrixStack matrices, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
-        // Draw entity background, then entity, then the main UI
         MicrochipsMenuScreen.setShaderColor(this.color, false);
         screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
+
+        // Draw entity background, then entity, then the main UI
         drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -94,8 +116,25 @@ public class MicrochipInfoWindow extends Window {
         screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), x + 59, y + 30, 0xFFFFFF);
         screen.getTextRenderer().drawWithShadow(matrices, Tagger.getEntityTypeText(entity), x + 59, y + 50, 0xFFFFFF);
         screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, 0xFFFFFF);
+    }
 
-        // Draw information based on the tab
+    private void drawTabs(MatrixStack matrices, int mouseX, int mouseY) {
+        MicrochipsMenuScreen.setShaderColor(color, false);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+
+        int tabVerticalOffset = 0;
+        for (Tab tab : Tab.values()) {
+            if (tab == selectedTab) {
+                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62, 32, 29);
+            } else {
+                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 200, 62, 32, 29);
+            }
+
+            tabVerticalOffset += 29;
+        }
+    }
+
+    private void drawStatusTab(MatrixStack matrices, int mouseX, int mouseY) {
         screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
 
         // Draw health
@@ -138,12 +177,14 @@ public class MicrochipInfoWindow extends Window {
                 RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
                 DrawableHelper.drawSprite(matrices, x + 9 + effectsOffset, y + 172, 0, 18, 18, sprite);
             }
-            
+
             effectsOffset += 24;
         }
         screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("+%d", Math.max(this.entityStatuses.size() - statusDisplayCount, 0))), (float) (x + 9 + effectsOffset), (float) (y + 177), 0xFFFFFF);
+    }
 
-        this.drawTooltips(matrices, mouseX, mouseY);
+    private void drawActionTab(MatrixStack matrices, int mouseX, int mouseY) {
+
     }
 
     private void drawTooltips(MatrixStack matrices, int mouseX, int mouseY) {
@@ -195,6 +236,15 @@ public class MicrochipInfoWindow extends Window {
 
     @Override
     public boolean handleClick(int mouseX, int mouseY, int button) {
+        int tabVerticalOffset = 0;
+        for (Tab tab : Tab.values()) {
+            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
+                selectedTab = tab;
+                MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            }
+            tabVerticalOffset += 29;
+        }
+
         return false;
     }
 
@@ -262,5 +312,9 @@ public class MicrochipInfoWindow extends Window {
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
         this.entityStatuses = entityStatuses;
         timeSinceStatusRetrieved = 0;
+    }
+
+    private enum Tab {
+        STATUS, ACTIONS
     }
 }
