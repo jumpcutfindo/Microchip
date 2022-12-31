@@ -94,6 +94,8 @@ public class MicrochipListItem extends ListItem {
             RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
             screen.drawTexture(matrices, x + 4, y + 4, 0, 214, 28, 28);
         }
+
+        MicrochipsMenuScreen.setShaderColor(this.group.getColor(), false);
         super.renderBackground(matrices, x, y, mouseX, mouseY);
     }
 

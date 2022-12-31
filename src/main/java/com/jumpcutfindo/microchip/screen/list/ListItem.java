@@ -50,7 +50,6 @@ public abstract class ListItem {
 
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.texture);
 
         if (isSelected) {
