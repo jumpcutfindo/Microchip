@@ -3,7 +3,6 @@ package com.jumpcutfindo.microchip.client;
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.helper.TagResult;
-import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -39,7 +38,7 @@ public class InputListener implements ClientModInitializer {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (tagBinding.wasPressed() && client.player != null) {
-                TagResult result = Tagger.tag(client.world, client.player);
+                TagResult result = ClientTagger.tag(client.world, client.player);
 
                 switch (result) {
                 case ADDED -> client.player.sendMessage(new TranslatableText("microchip.action.tag.added"), false);

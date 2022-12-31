@@ -7,9 +7,9 @@ import java.util.List;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.ClientNetworker;
+import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
-import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -71,7 +71,7 @@ public class MicrochipInfoWindow extends Window {
 
         this.microchip = microchip;
         this.color = color;
-        this.entity = Tagger.getEntity(screen.getPlayer().getWorld(), screen.getPlayer().getPos(), microchip.getEntityId());
+        this.entity = ClientTagger.getEntity(screen.getPlayer().getWorld(), screen.getPlayer().getPos(), microchip.getEntityId());
 
         if (this.entity != null) {
             this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 48.0f * (float) Math.max(Math.cos(this.entity.getWidth() / this.entity.getHeight()), Math.cos(this.entity.getHeight() / this.entity.getWidth()));
@@ -124,7 +124,7 @@ public class MicrochipInfoWindow extends Window {
         // Draw the title and the entity information
         screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
         screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), x + 59, y + 30, 0xFFFFFF);
-        screen.getTextRenderer().drawWithShadow(matrices, Tagger.getEntityTypeText(entity), x + 59, y + 50, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, ClientTagger.getEntityTypeText(entity), x + 59, y + 50, 0xFFFFFF);
         screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, 0xFFFFFF);
     }
 

@@ -1,8 +1,8 @@
 package com.jumpcutfindo.microchip.screen.list;
 
+import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
-import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,11 +15,8 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
@@ -65,7 +62,7 @@ public class MicrochipListItem extends ListItem {
             int entityNameX = x + 38;
             int entityNameY = y + 21;
             if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
-                screen.getTextRenderer().draw(matrices, Tagger.getEntityTypeText(entity), (float) entityNameX, (float) entityNameY, 0x404040);
+                screen.getTextRenderer().draw(matrices, ClientTagger.getEntityTypeText(entity), (float) entityNameX, (float) entityNameY, 0x404040);
             }
 
             // Draw entity health
@@ -167,6 +164,6 @@ public class MicrochipListItem extends ListItem {
 
     private LivingEntity getEntity() {
         PlayerEntity player = this.screen.getPlayer();
-        return Tagger.getEntity(player.getWorld(), player.getPos(), microchip.getEntityId());
+        return ClientTagger.getEntity(player.getWorld(), player.getPos(), microchip.getEntityId());
     }
 }
