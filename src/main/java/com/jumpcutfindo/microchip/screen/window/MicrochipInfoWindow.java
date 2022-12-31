@@ -10,6 +10,7 @@ import com.jumpcutfindo.microchip.client.ClientNetworker;
 import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -112,7 +113,7 @@ public class MicrochipInfoWindow extends Window {
         MicrochipsMenuScreen.setShaderColor(this.color, false);
         screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
 
-        // Draw entity background, then entity, then the main UIm
+        // Draw entity background, then entity, then the main UI
         if (this.entity != null) drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
         else {
             screen.drawTexture(matrices, x + 18, y + 40, 0, 215, 28, 28);
@@ -125,14 +126,10 @@ public class MicrochipInfoWindow extends Window {
 
         // Draw the title and the entity information
         screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
-        screen.getTextRenderer().drawWithShadow(matrices, microchip.getEntityData().getDisplayName(), x + 59, y + 30, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, StringUtils.truncatedName(microchip.getEntityData().getDisplayName(), 15), x + 59, y + 30, 0xFFFFFF);
         screen.getTextRenderer().drawWithShadow(matrices, microchip.getEntityData().getTypeName(), x + 59, y + 50, 0xFFFFFF);
 
-        if (this.entity != null) {
-            screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, 0xFFFFFF);
-        } else {
-            screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", (int) microchip.getEntityData().getX(), (int) microchip.getEntityData().getY(), (int) microchip.getEntityData().getZ())), x + 59, y + 70, 0xFFFFFF);
-        }
+        screen.getTextRenderer().drawWithShadow(matrices, StringUtils.truncatedName(getCoordinates(), 18), x + 59, y + 70, 0xFFFFFF);
     }
 
     private void drawTabs(MatrixStack matrices, int mouseX, int mouseY) {
@@ -151,7 +148,7 @@ public class MicrochipInfoWindow extends Window {
             }
 
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            screen.drawTexture(matrices, x + 170, y + 100 + tabIconVerticalOffset, 214 + i * 18, 0, 18, 18);
+            screen.drawTexture(matrices, x + 171, y + 100 + tabIconVerticalOffset, 214 + i * 18, 0, 18, 18);
 
             tabVerticalOffset += 29;
             tabIconVerticalOffset += 31;
@@ -225,6 +222,24 @@ public class MicrochipInfoWindow extends Window {
 
     private void drawTooltips(MatrixStack matrices, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+        // Display name
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 59, y + 29, 102, 12)) {
+            screen.renderTooltip(matrices, new LiteralText(microchip.getEntityData().getDisplayName()), mouseX, mouseY);
+        }
+
+        // Coordinates
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
+            screen.renderTooltip(matrices, new LiteralText(getCoordinates()), mouseX, mouseY);
+        }
+
+        // Tabs
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 164, y + 96, 32, 29)) {
+            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
+        } else if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 164, y + 127, 32, 29)) {
+            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
+        }
+
         switch (selectedTab) {
         case STATUS -> {
             // Draw tooltips for drawn statuses
@@ -270,6 +285,11 @@ public class MicrochipInfoWindow extends Window {
         }
 
 
+    }
+
+    private String getCoordinates() {
+        if (this.entity != null) return String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ());
+        else return String.format("XYZ: %d / %d / %d", (int) microchip.getEntityData().getX(), (int) microchip.getEntityData().getY(), (int) microchip.getEntityData().getZ());
     }
 
     @Override

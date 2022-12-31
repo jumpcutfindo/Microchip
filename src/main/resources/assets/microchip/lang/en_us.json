@@ -19,6 +19,7 @@
     "microchip.menu.editGroup.tooltip": "Edit Group...",
     "microchip.menu.deleteMicrochips.tooltip": "Delete Microchips",
     "microchip.menu.moveMicrochips.tooltip": "Move Microchips...",
+    "microchip.menu.listItem.outOfRange.tooltip": "Mob is out of range",
 
     "microchip.menu.createGroup.windowTitle": "Create a group",
     "microchip.menu.createGroup.title": "Name",

@@ -50,7 +50,7 @@ public class IconButton {
             return;
         }
 
-        if (isMouseWithin(mouseX, mouseY)) {
+        if (isMouseWithin(mouseX, mouseY) && !screen.isWindowOpen()) {
             // Hovered
             screen.drawTexture(matrices, x, y, u + 26, v, width, height);
         } else {

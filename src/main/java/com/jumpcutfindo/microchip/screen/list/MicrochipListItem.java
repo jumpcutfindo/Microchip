@@ -6,6 +6,7 @@ import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipComponents;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.PlayerMicrochips;
+import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -20,6 +21,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
@@ -51,12 +53,7 @@ public class MicrochipListItem extends ListItem {
         if (this.microchip.getEntityData() == null) return;
 
         if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) {
-            if (microchip.getEntityData().getDisplayName().length() > 20) {
-                String truncatedName = microchip.getEntityData().getDisplayName().substring(0, 20) + "...";
-                screen.getTextRenderer().drawWithShadow(matrices, truncatedName, (float) displayNameX, (float) displayNameY, 0xFFFFFF);
-            } else {
-                screen.getTextRenderer().drawWithShadow(matrices, microchip.getEntityData().getDisplayName(), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
-            }
+            screen.getTextRenderer().drawWithShadow(matrices, StringUtils.truncatedName(microchip.getEntityData().getDisplayName(), 20), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
         }
 
         int entityNameX = x + 38;
@@ -85,8 +82,8 @@ public class MicrochipListItem extends ListItem {
         int offset = healthString.length() * 5 + healthString.length() - 1;
         screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 168 - offset - 3, y + 21, 0xFFFFFF);
 
-
         drawButton(matrices, x + 172, y + 3, mouseX, mouseY);
+        drawTooltips(matrices, x, y, mouseX, mouseY);
     }
 
     @Override
@@ -114,6 +111,16 @@ public class MicrochipListItem extends ListItem {
     @Override
     public boolean onSelect(int x, int y, double mouseX, double mouseY) {
         return MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5);
+    }
+
+    private void drawTooltips(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        if (screen.isWindowOpen()) return;
+
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, 180, 36)) {
+            if (this.entity == null) {
+                screen.renderTooltip(matrices, new TranslatableText("microchip.menu.listItem.outOfRange.tooltip"), mouseX, mouseY);
+            }
+        }
     }
 
     private void drawButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
