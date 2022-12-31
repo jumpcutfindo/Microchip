@@ -33,14 +33,10 @@ public class ClientTagger {
             Microchips microchips = Tagger.getMicrochips(player);
 
             if (Tagger.canTag(player, entity)) {
-                microchips.addToGroup(microchips.getDefaultGroup().getId(), new Microchip(entity.getUuid()));
-            } else {
-                return TagResult.DUPLICATE;
-            }
-
-            if (world.isClient()) {
                 ClientNetworker.sendAddEntityToGroupPacket(microchips.getDefaultGroup().getId(), entity.getUuid());
                 ClientNetworker.sendGlowPacket(entity);
+            } else {
+                return TagResult.DUPLICATE;
             }
             return TagResult.ADDED;
         }
