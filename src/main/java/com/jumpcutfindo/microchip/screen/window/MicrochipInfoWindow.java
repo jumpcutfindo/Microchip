@@ -63,15 +63,15 @@ public class MicrochipInfoWindow extends Window {
     private int timeSinceStatusRetrieved = 0;
 
     private final float entityModelSize;
-    public MicrochipInfoWindow(MicrochipsMenuScreen screen, Microchip microchip, GroupColor color) {
+    public MicrochipInfoWindow(MicrochipsMenuScreen screen, Microchip microchip, LivingEntity entity, GroupColor color) {
         super(screen, new TranslatableText("microchip.menu.microchipInfo.windowTitle"));
 
         this.width = 168;
         this.height = 200;
 
         this.microchip = microchip;
+        this.entity = entity;
         this.color = color;
-        this.entity = ClientTagger.getEntity(screen.getPlayer().getWorld(), screen.getPlayer().getPos(), microchip.getEntityId());
 
         if (this.entity != null) {
             this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 48.0f * (float) Math.max(Math.cos(this.entity.getWidth() / this.entity.getHeight()), Math.cos(this.entity.getHeight() / this.entity.getWidth()));
@@ -92,7 +92,6 @@ public class MicrochipInfoWindow extends Window {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-
         this.drawIdentityCard(matrices, mouseX, mouseY);
 
         // Draw tabs according to selection
@@ -114,7 +113,7 @@ public class MicrochipInfoWindow extends Window {
         screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
 
         // Draw entity background, then entity, then the main UIm
-        drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
+        if (this.entity != null) drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
         MicrochipsMenuScreen.setShaderColor(this.color, false);
@@ -123,9 +122,14 @@ public class MicrochipInfoWindow extends Window {
 
         // Draw the title and the entity information
         screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
-        screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), x + 59, y + 30, 0xFFFFFF);
-        screen.getTextRenderer().drawWithShadow(matrices, ClientTagger.getEntityTypeText(entity), x + 59, y + 50, 0xFFFFFF);
-        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, microchip.getEntityData().getDisplayName(), x + 59, y + 30, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, microchip.getEntityData().getTypeName(), x + 59, y + 50, 0xFFFFFF);
+
+        if (this.entity != null) {
+            screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", this.entity.getBlockPos().getX(), this.entity.getBlockPos().getY(), this.entity.getBlockPos().getZ())), x + 59, y + 70, 0xFFFFFF);
+        } else {
+            screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("XYZ: %d / %d / %d", (int) microchip.getEntityData().getX(), (int) microchip.getEntityData().getY(), (int) microchip.getEntityData().getZ())), x + 59, y + 70, 0xFFFFFF);
+        }
     }
 
     private void drawTabs(MatrixStack matrices, int mouseX, int mouseY) {
@@ -157,17 +161,21 @@ public class MicrochipInfoWindow extends Window {
         // Draw health
         screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.health"), (float) (x + 7), (float) (y + 118), 0xFFFFFF);
         RenderSystem.setShaderTexture(0, TEXTURE);
+
+        float health = this.entity == null ? 0.0f : this.entity.getHealth();
         screen.drawTexture(matrices, x + 7, y + 130, 0, 200, 154, 5);
-        screen.drawTexture(matrices, x + 7, y + 130, 0, 205, (int) ((this.entity.getHealth() / this.entity.getMaxHealth()) * 154), 5);
-        String healthString = String.format("%d/%d", (int) this.entity.getHealth(), (int) this.entity.getMaxHealth());
-        int offset = healthString.length() * 5 + healthString.length() - 1;
-        screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 152 - offset - 3, y + 118, 0xFFFFFF);
+        screen.drawTexture(matrices, x + 7, y + 130, 0, 205, (int) ((health / microchip.getEntityData().getMaxHealth()) * 154), 5);
+
+        String healthString = this.entity == null ? "?" : Integer.toString((int) health);
+        String healthDisplayString = String.format("%s/%d", healthString, (int) microchip.getEntityData().getMaxHealth());
+        int offset = healthDisplayString.length() * 5 + healthDisplayString.length() - 1;
+        screen.getTextRenderer().drawWithShadow(matrices, healthDisplayString, x + 152 - offset - 3, y + 118, 0xFFFFFF);
         RenderSystem.setShaderTexture(0, TEXTURE);
         screen.drawTexture(matrices, x + 152, y + 117, 168, 128, 9, 9);
 
         // Draw armor
         screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.armor"), (float) (x + 7), (float) (y + 143), 0xFFFFFF);
-        String armorString = String.format("%d", (int) this.entity.getArmor());
+        String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
         int armorStringOffset = armorString.length() * 5 + armorString.length() - 1;
         screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 152 - armorStringOffset - 3, y + 143, 0xFFFFFF);
         RenderSystem.setShaderTexture(0, TEXTURE);
