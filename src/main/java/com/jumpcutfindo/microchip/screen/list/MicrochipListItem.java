@@ -93,6 +93,10 @@ public class MicrochipListItem extends ListItem {
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         // Draw entity
         if (this.entity != null) this.drawEntity(x, y);
+        else {
+            RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
+            screen.drawTexture(matrices, x + 4, y + 4, 0, 214, 28, 28);
+        }
         super.renderBackground(matrices, x, y, mouseX, mouseY);
     }
 
