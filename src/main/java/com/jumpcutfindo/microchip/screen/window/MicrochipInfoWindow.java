@@ -113,7 +113,7 @@ public class MicrochipInfoWindow extends Window {
         MicrochipsMenuScreen.setShaderColor(this.color, false);
         screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
 
-        // Draw entity background, then entity, then the main UI
+        // Draw entity background, then entity, then the main UIm
         drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
 
         RenderSystem.setShaderTexture(0, TEXTURE);

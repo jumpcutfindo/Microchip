@@ -47,6 +47,7 @@ public class InputListener implements ClientModInitializer {
                 }
             }
             while (guiBinding.wasPressed() && client.player != null) {
+                ClientNetworker.sendRequestToUpdateMicrochips();
                 client.setScreen(new MicrochipsMenuScreen(client.player));
             }
         });

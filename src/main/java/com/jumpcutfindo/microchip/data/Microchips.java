@@ -10,9 +10,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.World;
 
-public class Microchips implements Component {
+public abstract class Microchips implements Component {
     private static final String DEFAULT_GROUP_NAME = "Uncategorised";
     private MicrochipGroup defaultGroup;
     private List<MicrochipGroup> userGroups;
@@ -158,12 +161,13 @@ public class Microchips implements Component {
     }
 
     public List<Microchip> getAllMicrochips() {
-        List<Microchip> microchips = new ArrayList<>();
-        microchips.addAll(this.defaultGroup.getMicrochips());
+        List<Microchip> microchips = new ArrayList<>(this.defaultGroup.getMicrochips());
         userGroups.forEach(group -> microchips.addAll(group.getMicrochips()));
 
         return microchips;
     }
+
+    public abstract void sync();
 
     @Override
     public void readFromNbt(NbtCompound tag) {

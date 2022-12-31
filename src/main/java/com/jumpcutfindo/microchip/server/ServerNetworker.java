@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.data.MicrochipEntityData;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.Tagger;
@@ -39,6 +40,7 @@ public class ServerNetworker implements ModInitializer {
         onUpdateGroup();
         onDeleteGroup();
         onRequestEntityStatuses();
+        onUpdateMicrochips();
     }
 
     private static void onGlowEntityPacket() {
@@ -58,7 +60,8 @@ public class ServerNetworker implements ModInitializer {
             if (groupId == null || entityId == null) return;
 
             Microchips microchips = Tagger.getMicrochips(player);
-            microchips.addToGroup(groupId, new Microchip(entityId));
+            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
+            if (entity != null) microchips.addToGroup(groupId, Microchip.of(entity));
         }));
     }
 
@@ -141,6 +144,19 @@ public class ServerNetworker implements ModInitializer {
 
                 ServerPlayNetworking.send(player, NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, buffer);
             }
+        }));
+    }
+
+    private static void onUpdateMicrochips() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, ((server, player, handler, buf, responseSender) -> {
+            Microchips microchips = Tagger.getMicrochips(player);
+            List<Microchip> microchipList = microchips.getAllMicrochips();
+            microchipList.forEach(microchip -> {
+                LivingEntity entity = (LivingEntity) player.getWorld().getEntity(microchip.getEntityId());
+                if (entity != null) microchip.setEntityData(MicrochipEntityData.from(entity));
+            });
+
+            microchips.sync();
         }));
     }
 }

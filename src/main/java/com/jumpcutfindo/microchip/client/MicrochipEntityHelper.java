@@ -1,6 +1,9 @@
 package com.jumpcutfindo.microchip.client;
 
+import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.data.MicrochipComponents;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -12,20 +15,14 @@ import java.util.function.Consumer;
  * a packet to the server to retrieve from that end.
  */
 public class MicrochipEntityHelper {
-    private final Map<UUID, Consumer<LivingEntity>> waitingConsumers = new HashMap<>();
     public MicrochipEntityHelper() {
     }
 
-    public void populateWithEntity(World world, Vec3d pos, UUID uuid, Consumer<LivingEntity> consumer) {
-        LivingEntity entity = ClientTagger.getEntity(world, pos, uuid);
+    public void populateWithEntity(PlayerEntity player, Microchip microchip, Consumer<LivingEntity> consumer) {
+        LivingEntity entity = ClientTagger.getEntity(player.getWorld(), player.getPos(), microchip.getEntityId());
 
-        if (entity != null) consumer.accept(entity);
-        else {
-            waitingConsumers.put(uuid, consumer);
+        if (entity != null) {
+            consumer.accept(entity);
         }
-    }
-
-    public void clearWaitingConsumers() {
-        Set<UUID> entityIds = waitingConsumers.keySet();
     }
 }

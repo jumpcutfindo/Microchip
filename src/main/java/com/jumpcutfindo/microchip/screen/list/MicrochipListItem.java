@@ -3,7 +3,9 @@ package com.jumpcutfindo.microchip.screen.list;
 import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
 import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.data.MicrochipComponents;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
+import com.jumpcutfindo.microchip.data.PlayerMicrochips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -42,27 +44,32 @@ public class MicrochipListItem extends ListItem {
 
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        // Draw entity information
+        int displayNameX = x + 38;
+        int displayNameY = y + 8;
+
+        if (this.microchip.getEntityData() == null) return;
+
+        if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) {
+            if (microchip.getEntityData().getDisplayName().length() > 20) {
+                String truncatedName = microchip.getEntityData().getDisplayName().substring(0, 20) + "...";
+                screen.getTextRenderer().drawWithShadow(matrices, truncatedName, (float) displayNameX, (float) displayNameY, 0xFFFFFF);
+            } else {
+                screen.getTextRenderer().drawWithShadow(matrices, microchip.getEntityData().getDisplayName(), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
+            }
+        }
+
+        int entityNameX = x + 38;
+        int entityNameY = y + 21;
+        if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
+            screen.getTextRenderer().draw(matrices, microchip.getEntityData().getTypeName(), (float) entityNameX, (float) entityNameY, 0x404040);
+        }
+
+        String entityHealthString = this.entity == null ? "?" : Integer.toString((int) this.entity.getHealth());
+
+        // Draw entity health
+        RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
         if (this.entity != null) {
-            // Draw entity information
-            int displayNameX = x + 38;
-            int displayNameY = y + 8;
-            if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) {
-                if (this.entity.getDisplayName().asString().length() > 20) {
-                    String truncatedName = this.entity.getDisplayName().asTruncatedString(20) + "...";
-                    screen.getTextRenderer().drawWithShadow(matrices, truncatedName, (float) displayNameX, (float) displayNameY, 0xFFFFFF);
-                } else {
-                    screen.getTextRenderer().drawWithShadow(matrices, this.entity.getDisplayName(), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
-                }
-            }
-
-            int entityNameX = x + 38;
-            int entityNameY = y + 21;
-            if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
-                screen.getTextRenderer().draw(matrices, ClientTagger.getEntityTypeText(entity), (float) entityNameX, (float) entityNameY, 0x404040);
-            }
-
-            // Draw entity health
-            RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
             if (this.entity.getHealth() > this.entity.getMaxHealth() / 2) {
                 screen.drawTexture(matrices, x + 168, y + 20, 180, 183, 9, 9);
             } else if (this.entity.getHealth() > this.entity.getMaxHealth() / 4) {
@@ -70,11 +77,14 @@ public class MicrochipListItem extends ListItem {
             } else {
                 screen.drawTexture(matrices, x + 168, y + 20, 198, 183, 9, 9);
             }
-
-            String healthString = String.format("%d/%d", (int) this.entity.getHealth(), (int) this.entity.getMaxHealth());
-            int offset = healthString.length() * 5 + healthString.length() - 1;
-            screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 168 - offset - 3, y + 21, 0xFFFFFF);
+        } else {
+            screen.drawTexture(matrices, x + 168, y + 20, 180, 183, 9, 9);
         }
+
+        String healthString = String.format("%s/%d", entityHealthString, (int) microchip.getEntityData().getMaxHealth());
+        int offset = healthString.length() * 5 + healthString.length() - 1;
+        screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 168 - offset - 3, y + 21, 0xFFFFFF);
+
 
         drawButton(matrices, x + 172, y + 3, mouseX, mouseY);
     }
@@ -159,6 +169,7 @@ public class MicrochipListItem extends ListItem {
     }
     private void setEntity(LivingEntity entity) {
         this.entity = entity;
+
         determineModelSize();
     }
 
@@ -174,6 +185,6 @@ public class MicrochipListItem extends ListItem {
         MicrochipEntityHelper helper = screen.getMicrochipEntityHelper();
         PlayerEntity player = this.screen.getPlayer();
 
-        helper.populateWithEntity(player.getWorld(), player.getPos(), microchip.getEntityId(), this::setEntity);
+        helper.populateWithEntity(player, microchip, this::setEntity);
     }
 }

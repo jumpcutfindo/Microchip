@@ -97,6 +97,10 @@ public class ClientNetworker implements ClientModInitializer {
         ClientPlayNetworking.send(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, buffer);
     }
 
+    public static void sendRequestToUpdateMicrochips() {
+        ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
+    }
+
     public static void onReceiveEntityStatusesPacket() {
         ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, (client, handler, buf, responseSender) -> {
 

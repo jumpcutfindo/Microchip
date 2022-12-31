@@ -1,18 +1,28 @@
 package com.jumpcutfindo.microchip.data;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
+import net.minecraft.entity.LivingEntity;
+
 import java.util.Objects;
 import java.util.UUID;
 
 public class Microchip {
     private UUID entityId;
+    private MicrochipEntityData entityData;
 
-    public Microchip(UUID entityId) {
+    private Microchip(UUID entityId, MicrochipEntityData entityData) {
         this.entityId = entityId;
+        this.entityData = entityData;
     }
     public UUID getEntityId() {
         return entityId;
+    }
+
+    public MicrochipEntityData getEntityData() {
+        return entityData;
+    }
+
+    public void setEntityData(MicrochipEntityData entityData) {
+        this.entityData = entityData;
     }
 
     @Override
@@ -28,5 +38,9 @@ public class Microchip {
     @Override
     public int hashCode() {
         return Objects.hash(entityId);
+    }
+
+    public static Microchip of(LivingEntity entity) {
+        return new Microchip(entity.getUuid(), MicrochipEntityData.from(entity));
     }
 }

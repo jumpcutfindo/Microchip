@@ -60,6 +60,11 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
     }
 
     @Override
+    public void sync() {
+        MicrochipComponents.MICROCHIPS.sync(this.owner);
+    }
+
+    @Override
     public boolean shouldSyncWith(ServerPlayerEntity player) {
         return player == this.owner;
     }

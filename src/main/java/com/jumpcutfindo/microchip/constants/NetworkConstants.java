@@ -16,4 +16,6 @@ public class NetworkConstants {
     public static final Identifier PACKET_DELETE_GROUP_ID = new Identifier(MOD_ID, "delete_group");
 
     public static final Identifier PACKET_REQUEST_ENTITY_STATUSES_ID = new Identifier(MOD_ID, "request_entity_statuses");
+
+    public static final Identifier PACKET_UPDATE_ALL_MICROCHIPS_ID = new Identifier(MOD_ID, "update_all_microchips");
 }
