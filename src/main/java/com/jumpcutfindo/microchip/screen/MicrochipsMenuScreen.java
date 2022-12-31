@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen;
 import java.awt.*;
 import java.util.List;
 
+import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import org.lwjgl.glfw.GLFW;
 
@@ -28,6 +29,7 @@ public class MicrochipsMenuScreen extends Screen {
 
     private final int titleX, titleY;
     private int x, y;
+    private final MicrochipEntityHelper microchipEntityHelper;
     private Microchips microchips;
 
     private List<MicrochipGroup> microchipGroups;
@@ -40,6 +42,7 @@ public class MicrochipsMenuScreen extends Screen {
     private Window activeWindow;
     public MicrochipsMenuScreen(PlayerEntity player) {
         super(new TranslatableText("microchip.menu.title"));
+        this.microchipEntityHelper = new MicrochipEntityHelper();
         this.microchips = Tagger.getMicrochips(player);
         this.groupCount = this.microchips.getGroupCount();
         this.chipCount = this.microchips.getChipCount();
@@ -58,6 +61,10 @@ public class MicrochipsMenuScreen extends Screen {
         this.y = (this.height - 178) / 2;
 
         this.refreshScreen(RefreshType.BOTH);
+    }
+
+    public MicrochipEntityHelper getMicrochipEntityHelper() {
+        return microchipEntityHelper;
     }
 
     public Microchips getMicrochips() {

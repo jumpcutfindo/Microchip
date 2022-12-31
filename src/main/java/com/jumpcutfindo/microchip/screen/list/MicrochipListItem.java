@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.client.ClientTagger;
+import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
@@ -23,21 +24,16 @@ import net.minecraft.util.math.Vec3f;
 public class MicrochipListItem extends ListItem {
     private final MicrochipGroup group;
     private final Microchip microchip;
-    private final LivingEntity entity;
+    private LivingEntity entity;
 
-    private final float entityModelSize;
+    private float entityModelSize;
 
     public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip) {
         super(screen, MicrochipsListView.TEXTURE, 0, 178, 0, 178, 0, 178, 180, 36);
         this.group = group;
         this.microchip = microchip;
 
-        this.entity = this.getEntity();
-        if (this.entity != null) {
-            this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 24.0f;
-        } else {
-            this.entityModelSize = 0;
-        }
+        retrieveEntity();
     }
 
     public Microchip getMicrochip() {
@@ -161,9 +157,23 @@ public class MicrochipListItem extends ListItem {
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
     }
+    private void setEntity(LivingEntity entity) {
+        this.entity = entity;
+        determineModelSize();
+    }
 
-    private LivingEntity getEntity() {
+    private void determineModelSize() {
+        if (this.entity != null) {
+            this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 24.0f;
+        } else {
+            this.entityModelSize = 0;
+        }
+    }
+
+    private void retrieveEntity() {
+        MicrochipEntityHelper helper = screen.getMicrochipEntityHelper();
         PlayerEntity player = this.screen.getPlayer();
-        return ClientTagger.getEntity(player.getWorld(), player.getPos(), microchip.getEntityId());
+
+        helper.populateWithEntity(player.getWorld(), player.getPos(), microchip.getEntityId(), this::setEntity);
     }
 }
