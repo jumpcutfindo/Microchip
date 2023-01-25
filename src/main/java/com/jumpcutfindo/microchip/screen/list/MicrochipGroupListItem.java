@@ -26,12 +26,12 @@ public class MicrochipGroupListItem extends ListItem {
     }
 
     @Override
-    public boolean onClick(int x, int y, double mouseX, double mouseY) {
+    public boolean mouseClicked(int x, int y, double mouseX, double mouseY) {
         return false;
     }
 
     @Override
-    public boolean onSelect(int x, int y, double mouseX, double mouseY) {
+    public boolean mouseSelected(int x, int y, double mouseX, double mouseY) {
         return ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height);
     }
 

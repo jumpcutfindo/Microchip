@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -129,13 +130,13 @@ public abstract class ListView {
             if (i >= this.listItems.size()) break;
 
             ListItem item = this.listItems.get(i);
-            if (item.onSelect(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+            if (item.mouseSelected(x + listX, y + listY + offsetY, mouseX, mouseY)) {
                 this.playDownSound(MinecraftClient.getInstance().getSoundManager());
                 this.setSelected(i);
                 return true;
             }
 
-            if (item.onClick(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+            if (item.mouseClicked(x + listX, y + listY + offsetY, mouseX, mouseY)) {
 
             }
 
@@ -168,8 +169,7 @@ public abstract class ListView {
     }
 
     public boolean isClickInScrollbar(int mouseX, int mouseY) {
-        return mouseX >= x + scrollbarX && mouseX < x + scrollbarX + scrollbarWidth
-                && mouseY >= y + scrollbarY && mouseY < y + scrollbarY + scrollbarHeight;
+        return ScreenUtils.isWithin(mouseX, mouseY, x + scrollbarX, y + scrollbarY, scrollbarWidth, scrollbarHeight);
     }
 
     public boolean hasScrollbar() {

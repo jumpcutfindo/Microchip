@@ -98,6 +98,25 @@ public class MicrochipsListView extends ListView {
         }
     }
 
+    @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        if (group == null) return false;
+
+        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+
+        if (this.isAnySelected()) {
+            return this.moveMicrochipsButton.mouseClicked(mouseX, mouseY, button)
+                    || this.deleteMicrochipsButton.mouseClicked(mouseX, mouseY, button);
+        } else {
+            return this.editGroupButton.mouseClicked(mouseX, mouseY, button)
+                    || this.deleteGroupButton.mouseClicked( mouseX, mouseY, button);
+        }
+    }
+
+    private List<UUID> getSelectedIds() {
+        return this.getSelectedItems().stream().map(item -> ((MicrochipListItem) item).getMicrochip().getEntityId()).toList();
+    }
+
     private void onEditGroup() {
         this.screen.setActiveWindow(MicrochipModifyGroupWindow.createEditWindow(this.screen, this.group));
     }
@@ -115,25 +134,6 @@ public class MicrochipsListView extends ListView {
         if (!this.isAnySelected()) return;
         List<UUID> microchipIds = getSelectedIds();
         ClientNetworker.sendRemoveEntitiesFromGroupPacket(this.group.getId(), microchipIds);
-    }
-
-    private List<UUID> getSelectedIds() {
-        return this.getSelectedItems().stream().map(item -> ((MicrochipListItem) item).getMicrochip().getEntityId()).toList();
-    }
-
-    @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        if (group == null) return false;
-
-        if (super.mouseClicked(mouseX, mouseY, button)) return true;
-
-        if (this.isAnySelected()) {
-            return this.moveMicrochipsButton.mouseClicked(mouseX, mouseY, button)
-                    || this.deleteMicrochipsButton.mouseClicked(mouseX, mouseY, button);
-        } else {
-            return this.editGroupButton.mouseClicked(mouseX, mouseY, button)
-                    || this.deleteGroupButton.mouseClicked( mouseX, mouseY, button);
-        }
     }
 
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {

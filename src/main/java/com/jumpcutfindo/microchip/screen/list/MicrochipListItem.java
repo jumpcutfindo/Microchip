@@ -98,7 +98,7 @@ public class MicrochipListItem extends ListItem {
     }
 
     @Override
-    public boolean onClick(int x, int y, double mouseX, double mouseY) {
+    public boolean mouseClicked(int x, int y, double mouseX, double mouseY) {
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             screen.setActiveWindow(new MicrochipInfoWindow(screen, this.microchip, this.entity, this.group.getColor()));
@@ -109,7 +109,7 @@ public class MicrochipListItem extends ListItem {
     }
 
     @Override
-    public boolean onSelect(int x, int y, double mouseX, double mouseY) {
+    public boolean mouseSelected(int x, int y, double mouseX, double mouseY) {
         return ScreenUtils.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5);
     }
 

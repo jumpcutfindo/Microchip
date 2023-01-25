@@ -71,6 +71,6 @@ public abstract class ListItem {
 
     public abstract void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY);
 
-    public abstract boolean onClick(int x, int y, double mouseX, double mouseY);
-    public abstract boolean onSelect(int x, int y, double mouseX, double mouseY);
+    public abstract boolean mouseClicked(int x, int y, double mouseX, double mouseY);
+    public abstract boolean mouseSelected(int x, int y, double mouseX, double mouseY);
 }
