@@ -85,27 +85,27 @@ public class MicrochipMoveChipsWindow extends Window {
     }
 
     @Override
-    public boolean handleMouseScroll(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         return this.listView.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override
-    public boolean handleMouseDrag(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         return this.listView.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
-    public boolean handleClick(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         return this.submitButton.mouseClicked(mouseX, mouseY, button) || this.listView.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         return false;
     }
 
     @Override
-    public boolean handleCharTyped(char chr, int modifiers) {
+    public boolean charTyped(char chr, int modifiers) {
         return false;
     }
 

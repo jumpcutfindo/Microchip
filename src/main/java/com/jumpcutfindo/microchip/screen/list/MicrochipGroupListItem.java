@@ -4,6 +4,7 @@ import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
@@ -31,7 +32,7 @@ public class MicrochipGroupListItem extends ListItem {
 
     @Override
     public boolean onSelect(int x, int y, double mouseX, double mouseY) {
-        return MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height);
+        return ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height);
     }
 
     public MicrochipGroup getGroup() {

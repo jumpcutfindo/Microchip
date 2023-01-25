@@ -102,7 +102,7 @@ public class MicrochipsMenuScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.activeWindow != null) {
-            return this.activeWindow.handleClick((int) mouseX, (int) mouseY, button);
+            return this.activeWindow.mouseClicked((int) mouseX, (int) mouseY, button);
         }
 
         if (isMouseInGroupList(mouseX, mouseY)) {
@@ -119,7 +119,7 @@ public class MicrochipsMenuScreen extends Screen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.activeWindow != null) {
-            return this.activeWindow.handleMouseDrag(mouseX, mouseY, button, deltaX, deltaY);
+            return this.activeWindow.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
 
         if (isMouseInGroupList(mouseX, mouseY)) {
@@ -136,7 +136,7 @@ public class MicrochipsMenuScreen extends Screen {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (this.activeWindow != null) {
-            return this.activeWindow.handleMouseScroll(mouseX, mouseY, amount);
+            return this.activeWindow.mouseScrolled(mouseX, mouseY, amount);
         }
 
         if (isMouseInGroupList(mouseX, mouseY)) {
@@ -158,7 +158,7 @@ public class MicrochipsMenuScreen extends Screen {
         }
 
         if (this.activeWindow != null) {
-           return this.activeWindow.handleKeyPress(keyCode, scanCode, modifiers);
+           return this.activeWindow.keyPressed(keyCode, scanCode, modifiers);
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -167,7 +167,7 @@ public class MicrochipsMenuScreen extends Screen {
     @Override
     public boolean charTyped(char chr, int modifiers) {
         if (this.activeWindow != null) {
-            return this.activeWindow.handleCharTyped(chr, modifiers);
+            return this.activeWindow.charTyped(chr, modifiers);
         }
 
         return super.charTyped(chr, modifiers);

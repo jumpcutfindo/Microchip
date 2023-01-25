@@ -1,6 +1,5 @@
 package com.jumpcutfindo.microchip.screen.list;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -8,9 +7,9 @@ import java.util.stream.Collectors;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.ClientNetworker;
-import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.jumpcutfindo.microchip.screen.window.MicrochipMoveChipsWindow;
@@ -60,7 +59,7 @@ public class MicrochipsListView extends ListView {
 
     @Override
     public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
-        MicrochipsMenuScreen.setShaderColor(this.group.getColor(), true);
+        ScreenUtils.setShaderColor(this.group.getColor(), true);
 
         super.renderBackground(matrices, mouseX, mouseY);
 

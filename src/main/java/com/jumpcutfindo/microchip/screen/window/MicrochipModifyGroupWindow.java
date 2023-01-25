@@ -139,7 +139,7 @@ public class MicrochipModifyGroupWindow extends Window {
     }
 
     @Override
-    public boolean handleClick(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         for (ColorButton colorButton : colorButtons) {
             if (colorButton.mouseClicked(mouseX, mouseY, button)) {
                 for (ColorButton btn : colorButtons) {
@@ -157,12 +157,12 @@ public class MicrochipModifyGroupWindow extends Window {
     }
 
     @Override
-    public boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         return this.groupNameField.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean handleCharTyped(char chr, int modifiers) {
+    public boolean charTyped(char chr, int modifiers) {
         return this.groupNameField.charTyped(chr, modifiers);
     }
 
@@ -177,12 +177,12 @@ public class MicrochipModifyGroupWindow extends Window {
     }
 
     @Override
-    public boolean handleMouseScroll(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         return false;
     }
 
     @Override
-    public boolean handleMouseDrag(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         return false;
     }
 

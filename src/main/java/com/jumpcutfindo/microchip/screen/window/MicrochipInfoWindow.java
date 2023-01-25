@@ -7,11 +7,11 @@ import java.util.List;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.ClientNetworker;
-import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -110,7 +110,7 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
-        MicrochipsMenuScreen.setShaderColor(this.color, false);
+        ScreenUtils.setShaderColor(this.color, false);
         screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
 
         // Draw entity background, then entity, then the main UI
@@ -120,7 +120,7 @@ public class MicrochipInfoWindow extends Window {
         }
 
         RenderSystem.setShaderTexture(0, TEXTURE);
-        MicrochipsMenuScreen.setShaderColor(this.color, false);
+        ScreenUtils.setShaderColor(this.color, false);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
 
@@ -140,7 +140,7 @@ public class MicrochipInfoWindow extends Window {
         for (int i = 0; i < Tab.values().length; i++) {
             Tab tab = Tab.values()[i];
 
-            MicrochipsMenuScreen.setShaderColor(color, false);
+            ScreenUtils.setShaderColor(color, false);
             if (tab == selectedTab) {
                 screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62 + (i == 0 ? 0 : 27), 32, 29);
             } else {
@@ -224,19 +224,19 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         // Display name
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 59, y + 29, 102, 12)) {
+        if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 29, 102, 12)) {
             screen.renderTooltip(matrices, new LiteralText(microchip.getEntityData().getDisplayName()), mouseX, mouseY);
         }
 
         // Coordinates
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
+        if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
             screen.renderTooltip(matrices, new LiteralText(getCoordinates()), mouseX, mouseY);
         }
 
         // Tabs
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 164, y + 96, 32, 29)) {
+        if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96, 32, 29)) {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
-        } else if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 164, y + 127, 32, 29)) {
+        } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 127, 32, 29)) {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
         }
 
@@ -250,7 +250,7 @@ public class MicrochipInfoWindow extends Window {
                 if (iterator.hasNext()) {
                     StatusEffectInstance instance = iterator.next();
                     StatusEffect statusEffect = instance.getEffectType();
-                    if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
+                    if (ScreenUtils.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
                         Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved)));
                         Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
                         screen.renderTooltip(matrices, text, mouseX, mouseY);
@@ -261,7 +261,7 @@ public class MicrochipInfoWindow extends Window {
             }
 
             // Draw tooltips for extra statuses
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
+            if (ScreenUtils.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
                 List<Text> statuses = new ArrayList<>();
                 while (iterator.hasNext()) {
                     StatusEffectInstance instance = iterator.next();
@@ -277,7 +277,7 @@ public class MicrochipInfoWindow extends Window {
             int yOffset = 24;
 
             for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
-                if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset, 75, 20)) {
+                if (ScreenUtils.isWithin(mouseX, mouseY, x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset, 75, 20)) {
                     screen.renderTooltip(matrices, new TranslatableText(buttonTranslatableKeys.get(i) + ".tooltip"), mouseX, mouseY);
                 }
             }
@@ -298,20 +298,20 @@ public class MicrochipInfoWindow extends Window {
     }
 
     @Override
-    public boolean handleMouseScroll(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         return false;
     }
 
     @Override
-    public boolean handleMouseDrag(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         return false;
     }
 
     @Override
-    public boolean handleClick(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         int tabVerticalOffset = 0;
         for (Tab tab : Tab.values()) {
-            if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
+            if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
                 selectedTab = tab;
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             }
@@ -322,12 +322,12 @@ public class MicrochipInfoWindow extends Window {
     }
 
     @Override
-    public boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         return false;
     }
 
     @Override
-    public boolean handleCharTyped(char chr, int modifiers) {
+    public boolean charTyped(char chr, int modifiers) {
         return false;
     }
 

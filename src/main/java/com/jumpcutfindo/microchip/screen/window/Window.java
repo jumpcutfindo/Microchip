@@ -56,15 +56,15 @@ public abstract class Window {
 
     public abstract void tick();
 
-    public abstract boolean handleMouseScroll(double mouseX, double mouseY, double amount);
+    public abstract boolean mouseScrolled(double mouseX, double mouseY, double amount);
 
-    public abstract boolean handleMouseDrag(double mouseX, double mouseY, int button, double deltaX, double deltaY);
+    public abstract boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY);
 
-    public abstract boolean handleClick(int mouseX, int mouseY, int button);
+    public abstract boolean mouseClicked(int mouseX, int mouseY, int button);
 
-    public abstract boolean handleKeyPress(int keyCode, int scanCode, int modifiers);
+    public abstract boolean keyPressed(int keyCode, int scanCode, int modifiers);
 
-    public abstract boolean handleCharTyped(char chr, int modifiers);
+    public abstract boolean charTyped(char chr, int modifiers);
 
     public abstract List<ClickableWidget> getWidgets();
 

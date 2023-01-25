@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen.component;
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -66,7 +67,7 @@ public class ColorButton {
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, width, height)) {
+        if (ScreenUtils.isWithin(mouseX, mouseY, x, y, width, height)) {
             this.isSelected = !this.isSelected;
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
             return true;
@@ -80,6 +81,6 @@ public class ColorButton {
     }
 
     private boolean isMouseWithin(int mouseX, int mouseY) {
-        return MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height);
+        return ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height);
     }
 }
