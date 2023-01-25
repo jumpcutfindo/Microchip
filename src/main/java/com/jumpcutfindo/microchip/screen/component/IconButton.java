@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.screen.component;
 
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -86,6 +87,6 @@ public class IconButton {
     }
 
     private boolean isMouseWithin(int mouseX, int mouseY) {
-        return MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height);
+        return ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height);
     }
 }

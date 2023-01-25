@@ -1,13 +1,11 @@
 package com.jumpcutfindo.microchip.screen.list;
 
-import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
 import com.jumpcutfindo.microchip.data.Microchip;
-import com.jumpcutfindo.microchip.data.MicrochipComponents;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
-import com.jumpcutfindo.microchip.data.PlayerMicrochips;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -95,13 +93,13 @@ public class MicrochipListItem extends ListItem {
             screen.drawTexture(matrices, x + 4, y + 4, 0, 214, 28, 28);
         }
 
-        MicrochipsMenuScreen.setShaderColor(this.group.getColor(), false);
+        ScreenUtils.setShaderColor(this.group.getColor(), false);
         super.renderBackground(matrices, x, y, mouseX, mouseY);
     }
 
     @Override
     public boolean onClick(int x, int y, double mouseX, double mouseY) {
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
+        if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             screen.setActiveWindow(new MicrochipInfoWindow(screen, this.microchip, this.entity, this.group.getColor()));
             return true;
@@ -112,13 +110,13 @@ public class MicrochipListItem extends ListItem {
 
     @Override
     public boolean onSelect(int x, int y, double mouseX, double mouseY) {
-        return MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5);
+        return ScreenUtils.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5);
     }
 
     private void drawTooltips(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (screen.isWindowOpen()) return;
 
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 4, y + 4, 28, 28)) {
+        if (ScreenUtils.isWithin(mouseX, mouseY, x + 4, y + 4, 28, 28)) {
             if (this.entity == null) {
                 screen.renderTooltip(matrices, new TranslatableText("microchip.menu.listItem.outOfRange.tooltip"), mouseX, mouseY);
             }

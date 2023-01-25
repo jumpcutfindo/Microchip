@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.render.GameRenderer;
@@ -58,7 +59,7 @@ public abstract class ListItem {
             return;
         }
 
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
+        if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             // Hovered
             screen.drawTexture(matrices, x, y, this.hoverU, this.hoverV, this.width, this.height);
         } else {

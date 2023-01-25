@@ -1,10 +1,8 @@
 package com.jumpcutfindo.microchip.screen;
 
-import java.awt.*;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
-import com.jumpcutfindo.microchip.data.GroupColor;
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
@@ -253,7 +251,7 @@ public class MicrochipsMenuScreen extends Screen {
     public boolean isBlockedByWindow(int x, int y) {
         if (this.activeWindow == null) return false;
         else {
-            return isWithin(x, y, this.activeWindow.getX(), this.activeWindow.getY(), this.activeWindow.getWidth(), this.activeWindow.getHeight());
+            return ScreenUtils.isWithin(x, y, this.activeWindow.getX(), this.activeWindow.getY(), this.activeWindow.getWidth(), this.activeWindow.getHeight());
         }
     }
 
@@ -274,27 +272,11 @@ public class MicrochipsMenuScreen extends Screen {
     }
 
     protected boolean isMouseInGroupList(double mouseX, double mouseY) {
-        return isWithin(mouseX, mouseY, getGroupListX(), getListY(), this.microchipGroupList.getTextureWidth(), this.microchipGroupList.getTextureHeight());
+        return ScreenUtils.isWithin(mouseX, mouseY, getGroupListX(), getListY(), this.microchipGroupList.getTextureWidth(), this.microchipGroupList.getTextureHeight());
     }
 
     protected boolean isMouseInMicrochipList(double mouseX, double mouseY) {
-        return isWithin(mouseX, mouseY, getMicrochipListX(), getListY(), this.microchipsList.getTextureWidth(), this.microchipsList.getTextureHeight());
-    }
-
-    public static boolean isWithin(double mouseX, double mouseY, int boundX, int boundY, int boundWidth, int boundHeight) {
-        return mouseX >= boundX && mouseX < boundX + boundWidth
-                && mouseY >= boundY && mouseY < boundY + boundHeight;
-    }
-
-    public static void setShaderColor(GroupColor groupColor, boolean shouldIgnoreGray) {
-        if (shouldIgnoreGray && groupColor == GroupColor.GRAY) return;
-
-        Color color = new Color(groupColor.getPrimaryColor());
-        float r = (float) color.getRed() / 204.0f;
-        float g = (float) color.getGreen() / 204.0f;
-        float b = (float) color.getBlue() / 204.0f;
-
-        RenderSystem.setShaderColor(r, g, b, 0.0f);
+        return ScreenUtils.isWithin(mouseX, mouseY, getMicrochipListX(), getListY(), this.microchipsList.getTextureWidth(), this.microchipsList.getTextureHeight());
     }
 
     public enum RefreshType {
