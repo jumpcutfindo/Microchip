@@ -152,8 +152,9 @@ public class MicrochipModifyGroupWindow extends Window {
             }
         }
 
-        return this.groupNameField.mouseClicked(mouseX, mouseY, button)
-            || this.submitButton.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button)
+                || this.groupNameField.mouseClicked(mouseX, mouseY, button)
+                || this.submitButton.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

@@ -314,11 +314,12 @@ public class MicrochipInfoWindow extends Window {
             if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
                 selectedTab = tab;
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
             }
             tabVerticalOffset += 29;
         }
 
-        return false;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

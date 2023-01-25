@@ -96,7 +96,7 @@ public class MicrochipMoveChipsWindow extends Window {
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        return this.submitButton.mouseClicked(mouseX, mouseY, button) || this.listView.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button) || this.submitButton.mouseClicked(mouseX, mouseY, button) || this.listView.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

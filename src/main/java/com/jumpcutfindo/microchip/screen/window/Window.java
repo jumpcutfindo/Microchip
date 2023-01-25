@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen.window;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -60,7 +61,10 @@ public abstract class Window {
 
     public abstract boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY);
 
-    public abstract boolean mouseClicked(int mouseX, int mouseY, int button);
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        if (!ScreenUtils.isWithin(mouseX, mouseY, x, y, width, height)) screen.setActiveWindow(null);
+        return true;
+    }
 
     public abstract boolean keyPressed(int keyCode, int scanCode, int modifiers);
 
