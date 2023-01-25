@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
+import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.StringUtils;

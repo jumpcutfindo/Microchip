@@ -40,11 +40,15 @@ public class MicrochipGroupListItem extends ListItem {
     }
 
     @Override
-    public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        screen.getTextRenderer().draw(matrices, new LiteralText(this.microchipGroup.getDisplayName()), (float) (x + 20), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
+    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
+        super.renderBackground(matrices, x, y, mouseX, mouseY);
+
+        screen.drawTexture(matrices, x + 1, y + 1, this.microchipGroup.getColor().ordinal() * 16, 214, 16, 16);
     }
 
-    private static int calculateV(MicrochipGroup group, int height) {
-        return group.getColor().ordinal() * height;
+    @Override
+    public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        screen.getTextRenderer().draw(matrices, new LiteralText(this.microchipGroup.getDisplayName()), (float) (x + 19), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
     }
 }
