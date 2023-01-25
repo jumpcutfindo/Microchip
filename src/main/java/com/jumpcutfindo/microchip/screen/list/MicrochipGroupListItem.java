@@ -10,17 +10,17 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 public class MicrochipGroupListItem extends ListItem {
-    private static final Identifier GROUP_LIST_ITEMS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list_items.png");
+    private static final Identifier GROUP_LIST_ITEMS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
     private final MicrochipGroup microchipGroup;
     private final int index;
 
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int index) {
-        super(screen, GROUP_LIST_ITEMS_TEXTURE,
-                0, calculateV(microchipGroup, 18),
-                0, calculateV(microchipGroup, 18),
-                124, calculateV(microchipGroup, 18),
-                124, 18
-        );
+        super(screen);
+
+        this.setBackground(GROUP_LIST_ITEMS_TEXTURE, 0, 178, 124, 18)
+                .setHoveredCoords(0, 178)
+                .setSelectedCoords(0, 196);
+
         this.microchipGroup = microchipGroup;
         this.index = index;
     }

@@ -16,20 +16,29 @@ public abstract class ListItem {
     protected int selectedU, selectedV;
     protected boolean isSelected;
 
-    public ListItem(MicrochipsMenuScreen screen, Identifier texture, int u, int v, int hoverU, int hoverV, int selectedU, int selectedV, int width, int height) {
+    public ListItem(MicrochipsMenuScreen screen) {
         this.screen = screen;
-        this.texture = texture;
+    }
 
+    protected ListItem setBackground(Identifier texture, int u, int v, int width, int height) {
+        this.texture = texture;
         this.u = u;
         this.v = v;
         this.width = width;
         this.height = height;
+        return this;
+    }
 
-        this.hoverU = hoverU;
-        this.hoverV = hoverV;
+    protected ListItem setHoveredCoords(int u, int v) {
+        this.hoverU = u;
+        this.hoverV = v;
+        return this;
+    }
 
-        this.selectedU = selectedU;
-        this.selectedV = selectedV;
+    protected ListItem setSelectedCoords(int u, int v) {
+        this.selectedU = u;
+        this.selectedV = v;
+        return this;
     }
 
     public int getHeight() {
