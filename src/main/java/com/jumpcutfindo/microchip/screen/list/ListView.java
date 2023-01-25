@@ -19,71 +19,81 @@ import net.minecraft.util.math.MathHelper;
 public abstract class ListView {
     protected final MicrochipsMenuScreen screen;
 
-    public int x;
-    public int y;
-    protected Identifier texture;
-    protected final int textureU;
-    protected final int textureV;
-    protected int textureWidth;
-    protected int textureHeight;
-    protected final int listX, listY;
-    protected final int scrollbarWidth, scrollbarHeight, scrollbarU, scrollbarV, scrollbarX, scrollbarY;
-    protected final int maxItems;
+    // Texture position
+    public int x, y;
 
-    private final boolean isSingleSelect;
+    // Texture information
+    protected Identifier texture;
+    protected int textureU, textureV, textureWidth, textureHeight;
+    protected int listX, listY;
+    protected int scrollbarWidth, scrollbarHeight, scrollbarU, scrollbarV, scrollbarX, scrollbarY;
+    protected int maxItems;
+
+    private boolean isSingleSelect;
 
     private int step;
-    private final int maxSteps;
-    private final float stepAmount;
+    private int maxSteps;
+    private float stepAmount;
 
     private float scrollPosition; // Range from 0.0 to 1.0
     private boolean scrolling;
 
-    protected final List<ListItem> listItems;
+    protected List<ListItem> listItems;
     protected List<ListItem> visibleItems;
 
     private List<ListItem> selectedItems;
     private List<Integer> selectedIndices;
 
-    public ListView(
-            MicrochipsMenuScreen screen,
-            int x, int y,
-            Identifier texture, int textureU, int textureV, int textureWidth, int textureHeight,
-            int listX, int listY,
-            int scrollbarU, int scrollbarV, int scrollbarX, int scrollbarY,
-            List<ListItem> listItems, int maxItems,
-            boolean isSingleSelect) {
+    public ListView(MicrochipsMenuScreen screen) {
         this.screen = screen;
 
+        this.selectedItems = new ArrayList<>();
+        this.selectedIndices = new ArrayList<>();
+    }
+
+    protected ListView setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+        return this;
+    }
 
+    protected ListView setTexture(Identifier texture, int u, int v, int width, int height) {
         this.texture = texture;
-        this.textureU = textureU;
-        this.textureV = textureV;
-        this.textureWidth = textureWidth;
-        this.textureHeight = textureHeight;
+        this.textureU = u;
+        this.textureV = v;
+        this.textureWidth = width;
+        this.textureHeight = height;
+        return this;
+    }
 
-        this.listX = listX;
-        this.listY = listY;
+    protected ListView setListPosition(int x, int y) {
+        this.listX = x;
+        this.listY = y;
+        return this;
+    }
 
-        this.scrollbarWidth = 14;
-        this.scrollbarHeight = 144;
-        this.scrollbarU = scrollbarU;
-        this.scrollbarV = scrollbarV;
-        this.scrollbarX = scrollbarX;
-        this.scrollbarY = scrollbarY;
+    protected ListView setScrollbar(int x, int y, int u, int v, int width, int height) {
+        this.scrollbarX = x;
+        this.scrollbarY = y;
+        this.scrollbarU = u;
+        this.scrollbarV = v;
+        this.scrollbarWidth = width;
+        this.scrollbarHeight = height;
+        return this;
+    }
 
+    protected ListView setList(List<ListItem> listItems, int maxItems) {
         this.listItems = listItems;
         this.maxItems = maxItems;
         this.visibleItems = new ArrayList<>();
-
         this.maxSteps = listItems.size() - maxItems;
         this.stepAmount = (float) (this.scrollbarHeight - 15) / (float) (this.maxSteps);
+        return this;
+    }
 
+    protected ListView setSingleSelect(boolean isSingleSelect) {
         this.isSingleSelect = isSingleSelect;
-        this.selectedItems = new ArrayList<>();
-        this.selectedIndices = new ArrayList<>();
+        return this;
     }
 
     public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {

@@ -24,13 +24,14 @@ public class MicrochipGroupListView extends ListView {
     private boolean canCreate;
 
     public MicrochipGroupListView(MicrochipsMenuScreen screen, Microchips microchips, int x, int y) {
-        super(screen,
-                x, y,
-                TEXTURE, 0, 0, 160, 178,
-                8, 26,
-                160, 0, 139, 26,
-                createItems(screen, microchips), 8,
-                true);
+        super(screen);
+
+        this.setPosition(x, y)
+                .setTexture(TEXTURE, 0, 0, 160, 178)
+                .setListPosition(8, 26)
+                .setScrollbar(139, 26, 160, 0, 14, 144)
+                .setList(createItems(screen, microchips), 8)
+                .setSingleSelect(true);
 
         // Set various variables
         this.title = new TranslatableText("microchip.menu.groupTitle");

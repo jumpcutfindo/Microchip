@@ -29,13 +29,14 @@ public class MicrochipsListView extends ListView {
     private final IconButton editGroupButton, deleteGroupButton, moveMicrochipsButton, deleteMicrochipsButton;
     private final LiteralText title;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int x, int y) {
-        super(screen,
-                x, y,
-                TEXTURE, 0, 0, 216, 178,
-                8, 26,
-                216, 0, 195, 26,
-                createItems(screen, microchipGroup), 4,
-                false);
+        super(screen);
+
+        this.setPosition(x, y)
+                .setTexture(TEXTURE, 0, 0, 216, 178)
+                .setListPosition(8, 26)
+                .setScrollbar(195, 26, 216, 0, 14, 144)
+                .setList(createItems(screen, microchipGroup), 4)
+                .setSingleSelect(false);
 
         this.group = microchipGroup;
 
