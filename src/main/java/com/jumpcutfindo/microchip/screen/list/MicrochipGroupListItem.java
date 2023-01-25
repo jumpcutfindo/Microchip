@@ -17,9 +17,7 @@ public class MicrochipGroupListItem extends ListItem {
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int index) {
         super(screen);
 
-        this.setBackground(GROUP_LIST_ITEMS_TEXTURE, 0, 178, 124, 18)
-                .setHoveredCoords(0, 178)
-                .setSelectedCoords(0, 196);
+        this.setBackground(GROUP_LIST_ITEMS_TEXTURE, 0, 178, 124, 18);
 
         this.microchipGroup = microchipGroup;
         this.index = index;
@@ -45,6 +43,11 @@ public class MicrochipGroupListItem extends ListItem {
         super.renderBackground(matrices, x, y, mouseX, mouseY);
 
         screen.drawTexture(matrices, x + 1, y + 1, this.microchipGroup.getColor().ordinal() * 16, 214, 16, 16);
+    }
+
+    @Override
+    public void renderSelectedBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        screen.drawTexture(matrices, x, y, u, v + height, this.width, this.height);
     }
 
     @Override

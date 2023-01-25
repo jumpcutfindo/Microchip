@@ -8,12 +8,12 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
+
 public abstract class ListItem {
     protected MicrochipsMenuScreen screen;
     private Identifier texture;
     protected int u, v, width, height;
-    protected int hoverU, hoverV;
-    protected int selectedU, selectedV;
     protected boolean isSelected;
 
     public ListItem(MicrochipsMenuScreen screen) {
@@ -26,18 +26,6 @@ public abstract class ListItem {
         this.v = v;
         this.width = width;
         this.height = height;
-        return this;
-    }
-
-    protected ListItem setHoveredCoords(int u, int v) {
-        this.hoverU = u;
-        this.hoverV = v;
-        return this;
-    }
-
-    protected ListItem setSelectedCoords(int u, int v) {
-        this.selectedU = u;
-        this.selectedV = v;
         return this;
     }
 
@@ -64,17 +52,25 @@ public abstract class ListItem {
 
         if (isSelected) {
             // Selected
-            screen.drawTexture(matrices, x, y, this.selectedU, this.selectedV, this.width, this.height);
+            renderSelectedBackground(matrices, x, y, mouseX, mouseY);
             return;
         }
 
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             // Hovered
-            screen.drawTexture(matrices, x, y, this.hoverU, this.hoverV, this.width, this.height);
+            renderHoveredBackground(matrices, x, y, mouseX, mouseY);
         } else {
             // Normal
             screen.drawTexture(matrices, x, y, this.u, this.v, this.width, this.height);
         }
+    }
+
+    public void renderSelectedBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        screen.drawTexture(matrices, x, y, this.u, this.v, this.width, this.height);
+    }
+
+    public void renderHoveredBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        screen.drawTexture(matrices, x, y, this.u, this.v, this.width, this.height);
     }
 
 

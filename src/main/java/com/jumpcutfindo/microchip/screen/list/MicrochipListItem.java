@@ -34,9 +34,7 @@ public class MicrochipListItem extends ListItem {
     public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip) {
         super(screen);
 
-        this.setBackground(MicrochipsListView.TEXTURE, 0, 178, 180, 36)
-                .setHoveredCoords(0, 178)
-                .setSelectedCoords(0, 178);
+        this.setBackground(MicrochipsListView.TEXTURE, 0, 178, 180, 36);
 
         this.group = group;
         this.microchip = microchip;
