@@ -10,6 +10,10 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 
+/**
+ * An item that can be used by ListView. Note that this takes in the x, y position values so that dynamic updating
+ * of the position is possible.
+ */
 public abstract class ListItem {
     protected MicrochipsMenuScreen screen;
     private Identifier texture;
