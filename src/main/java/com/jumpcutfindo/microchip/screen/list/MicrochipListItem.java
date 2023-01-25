@@ -90,10 +90,11 @@ public class MicrochipListItem extends ListItem {
         if (this.entity != null) this.drawEntity(x, y);
         else {
             RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
+            ScreenUtils.setShaderColor(this.group.getColor(), true);
             screen.drawTexture(matrices, x + 4, y + 4, 0, 214, 28, 28);
         }
 
-        ScreenUtils.setShaderColor(this.group.getColor(), false);
+        ScreenUtils.setShaderColor(this.group.getColor(), true);
         super.renderBackground(matrices, x, y, mouseX, mouseY);
     }
 
