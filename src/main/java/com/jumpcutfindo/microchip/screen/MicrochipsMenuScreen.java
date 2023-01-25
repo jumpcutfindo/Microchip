@@ -281,9 +281,9 @@ public class MicrochipsMenuScreen extends Screen {
         return isWithin(mouseX, mouseY, getMicrochipListX(), getListY(), this.microchipsList.getTextureWidth(), this.microchipsList.getTextureHeight());
     }
 
-    public static boolean isWithin(double x, double y, int textureX, int textureY, int textureWidth, int textureHeight) {
-        return x >= textureX && x < textureX + textureWidth
-                && y >= textureY && y < textureY + textureHeight;
+    public static boolean isWithin(double mouseX, double mouseY, int boundX, int boundY, int boundWidth, int boundHeight) {
+        return mouseX >= boundX && mouseX < boundX + boundWidth
+                && mouseY >= boundY && mouseY < boundY + boundHeight;
     }
 
     public static void setShaderColor(GroupColor groupColor, boolean shouldIgnoreGray) {
