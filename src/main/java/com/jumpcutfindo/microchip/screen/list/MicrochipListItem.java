@@ -118,7 +118,7 @@ public class MicrochipListItem extends ListItem {
     private void drawTooltips(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (screen.isWindowOpen()) return;
 
-        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x, y, 180, 36)) {
+        if (MicrochipsMenuScreen.isWithin(mouseX, mouseY, x + 4, y + 4, 28, 28)) {
             if (this.entity == null) {
                 screen.renderTooltip(matrices, new TranslatableText("microchip.menu.listItem.outOfRange.tooltip"), mouseX, mouseY);
             }
