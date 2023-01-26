@@ -82,7 +82,7 @@ public class MicrochipInfoWindow extends Window {
 
         this.statusDisplayCount = 5;
         this.entityStatuses = new ArrayList<>();
-        ClientNetworkSender.requestEntityStatuses(this.microchip.getEntityId());
+        ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
 
         this.selectedTab = Tab.STATUS;
     }
