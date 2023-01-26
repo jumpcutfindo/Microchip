@@ -151,16 +151,7 @@ public class ServerNetworkReceiver implements ModInitializer {
             LivingEntity target = (LivingEntity) player.getWorld().getEntity(entityId);
 
             if (target != null) {
-                Collection<StatusEffectInstance> effects = target.getStatusEffects();
-                PacketByteBuf buffer = PacketByteBufs.create();
-                buffer.writeCollection(effects, ((packetByteBuf, statusEffectInstance) -> {
-                    NbtCompound nbt = new NbtCompound();
-                    nbt = statusEffectInstance.writeNbt(nbt);
-
-                    packetByteBuf.writeNbt(nbt);
-                }));
-
-                ServerPlayNetworking.send(player, NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, buffer);
+                ServerNetworkSender.sendEntityStatusesResponse(player, target.getStatusEffects());
             }
         }));
     }
