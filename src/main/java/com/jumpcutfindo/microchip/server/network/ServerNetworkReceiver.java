@@ -37,6 +37,11 @@ public class ServerNetworkReceiver implements ModInitializer {
 
     private static void initializeListeners() {
         onGlowEntity();
+        onLocateEntity();
+        onTeleportToEntity();
+        onHealEntity();
+        onKillEntity();
+
         onAddEntityToGroup();
         onMoveEntitiesBetweenGroups();
         onRemoveEntitiesFromGroup();
@@ -55,6 +60,30 @@ public class ServerNetworkReceiver implements ModInitializer {
 
             LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
             if (entity != null) entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 40, 1), player);
+        }));
+    }
+
+    private static void onLocateEntity() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_LOCATE_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
+
+        }));
+    }
+
+    private static void onTeleportToEntity() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_TELEPORT_TO_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
+
+        }));
+    }
+
+    private static void onHealEntity() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_HEAL_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
+
+        }));
+    }
+
+    private static void onKillEntity() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_KILL_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
+
         }));
     }
 
