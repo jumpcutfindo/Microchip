@@ -56,11 +56,15 @@ public class MicrochipInfoWindow extends Window {
     );
 
     private final List<ButtonWidget.PressAction> buttonActions = List.of(
-            (locateButton) -> {},
+            (locateButton) -> {
+                ClientNetworkSender.EntityActions.locateEntity(entity);
+            },
             (teleportToButton) -> {},
             (healButton) -> {},
             (killButton) -> {}
     );
+
+    private List<ButtonWidget> entityActionButtons;
     private int timeSinceStatusRetrieved = 0;
 
     private final float entityModelSize;
@@ -85,6 +89,21 @@ public class MicrochipInfoWindow extends Window {
         ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
 
         this.selectedTab = Tab.STATUS;
+    }
+
+    @Override
+    public void setPos(int x, int y) {
+        super.setPos(x, y);
+
+        this.entityActionButtons = new ArrayList<>();
+
+        // Create buttons only after position is set
+        for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
+            int xOffset = 77;
+            int yOffset = 24;
+            ButtonWidget buttonWidget = new ButtonWidget(x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset , 75, 20, new TranslatableText(buttonTranslatableKeys.get(i)), buttonActions.get(i));
+            entityActionButtons.add(buttonWidget);
+        }
     }
 
     @Override
@@ -211,13 +230,7 @@ public class MicrochipInfoWindow extends Window {
     private void drawActionTab(MatrixStack matrices, int mouseX, int mouseY) {
         screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
 
-        int xOffset = 77;
-        int yOffset = 24;
-
-        for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
-            ButtonWidget buttonWidget = new ButtonWidget(x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset , 75, 20, new TranslatableText(buttonTranslatableKeys.get(i)), buttonActions.get(i));
-            buttonWidget.render(matrices, mouseX, mouseY, 0);
-        }
+        for (ButtonWidget entityActionButton : entityActionButtons) entityActionButton.render(matrices, mouseX, mouseY, 0);
     }
 
     private void drawTooltips(MatrixStack matrices, int mouseX, int mouseY) {
@@ -317,6 +330,10 @@ public class MicrochipInfoWindow extends Window {
                 return true;
             }
             tabVerticalOffset += 29;
+        }
+
+        if (selectedTab == Tab.ACTIONS) {
+            for (ButtonWidget entityActionButton : entityActionButtons) return entityActionButton.mouseClicked(mouseX, mouseY, button);
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
