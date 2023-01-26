@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.UUID;
@@ -82,19 +83,25 @@ public class ClientNetworkSender {
         }
 
         public static void locateEntity(LivingEntity entity) {
-
+            sendSimpleEntityPacket(NetworkConstants.PACKET_LOCATE_ENTITY_ID, entity);
         }
 
         public static void teleportToEntity(LivingEntity entity) {
-
+            sendSimpleEntityPacket(NetworkConstants.PACKET_TELEPORT_TO_ENTITY_ID, entity);
         }
 
         public static void healEntity(LivingEntity entity) {
-
+            sendSimpleEntityPacket(NetworkConstants.PACKET_HEAL_ENTITY_ID, entity);
         }
 
         public static void killEntity(LivingEntity entity) {
+            sendSimpleEntityPacket(NetworkConstants.PACKET_KILL_ENTITY_ID, entity);
+        }
 
+        private static void sendSimpleEntityPacket(Identifier packetId, LivingEntity entity) {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeUuid(entity.getUuid());
+            ClientPlayNetworking.send(packetId, buffer);
         }
     }
 
