@@ -1,11 +1,10 @@
 package com.jumpcutfindo.microchip.client;
 
-import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.TagResult;
 import com.jumpcutfindo.microchip.helper.Tagger;
-import com.jumpcutfindo.microchip.screen.list.MicrochipListItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,11 +14,8 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class ClientTagger {
 
@@ -33,8 +29,8 @@ public class ClientTagger {
             Microchips microchips = Tagger.getMicrochips(player);
 
             if (Tagger.canTag(player, entity)) {
-                ClientNetworker.sendAddEntityToGroupPacket(microchips.getDefaultGroup().getId(), entity.getUuid());
-                ClientNetworker.sendGlowPacket(entity);
+                ClientNetworkSender.sendAddEntityToGroupPacket(microchips.getDefaultGroup().getId(), entity.getUuid());
+                ClientNetworkSender.sendGlowPacket(entity);
             } else {
                 return TagResult.DUPLICATE;
             }

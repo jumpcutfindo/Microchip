@@ -1,33 +1,18 @@
-package com.jumpcutfindo.microchip.client;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+package com.jumpcutfindo.microchip.client.network;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
-import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
-
-import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.network.PacketByteBuf;
 
-public class ClientNetworker implements ClientModInitializer {
+import java.util.List;
+import java.util.UUID;
 
-    @Override
-    public void onInitializeClient() {
-        onReceiveEntityStatusesPacket();
-    }
-
+public class ClientNetworkSender {
     public static void sendGlowPacket(LivingEntity entity) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(entity.getUuid());
@@ -54,7 +39,6 @@ public class ClientNetworker implements ClientModInitializer {
         ClientPlayNetworking.send(NetworkConstants.PACKET_MOVE_ENTITIES_ID, buffer);
     }
 
-
     public static void sendRemoveEntitiesFromGroupPacket(UUID groupId, List<UUID> microchipIds) {
         Gson gson = new Gson();
         String microchipIdsSerialized = gson.toJson(microchipIds);
@@ -72,6 +56,10 @@ public class ClientNetworker implements ClientModInitializer {
         buffer.writeInt(color.ordinal());
 
         ClientPlayNetworking.send(NetworkConstants.PACKET_CREATE_GROUP_ID, buffer);
+    }
+
+    public static void sendRequestToUpdateMicrochips() {
+        ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
     }
 
     public static void sendUpdateGroupPacket(MicrochipGroup group, String groupName, GroupColor color) {
@@ -95,20 +83,5 @@ public class ClientNetworker implements ClientModInitializer {
         buffer.writeUuid(entityId);
 
         ClientPlayNetworking.send(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, buffer);
-    }
-
-    public static void sendRequestToUpdateMicrochips() {
-        ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
-    }
-
-    public static void onReceiveEntityStatusesPacket() {
-        ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, (client, handler, buf, responseSender) -> {
-
-            Collection<StatusEffectInstance> entityStatuses = buf.readCollection((size) -> new ArrayList<>(), (packetByteBuf -> StatusEffectInstance.fromNbt(packetByteBuf.readNbt())));
-
-            if (client.currentScreen instanceof MicrochipsMenuScreen screen && screen.getActiveWindow() instanceof MicrochipInfoWindow infoWindow) {
-                infoWindow.setEntityStatuses(entityStatuses);
-            }
-        });
     }
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
-import com.jumpcutfindo.microchip.client.ClientNetworker;
+import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
@@ -192,10 +192,10 @@ public class MicrochipModifyGroupWindow extends Window {
     }
 
     private void createGroup() {
-        ClientNetworker.sendCreateGroupPacket(this.groupNameField.getText(), this.selectedColor.getColor());
+        ClientNetworkSender.sendCreateGroupPacket(this.groupNameField.getText(), this.selectedColor.getColor());
     }
 
     private void updateGroup(MicrochipGroup group) {
-        ClientNetworker.sendUpdateGroupPacket(group, this.groupNameField.getText(), this.selectedColor.getColor());
+        ClientNetworkSender.sendUpdateGroupPacket(group, this.groupNameField.getText(), this.selectedColor.getColor());
     }
 }

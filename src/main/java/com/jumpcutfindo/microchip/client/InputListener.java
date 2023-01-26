@@ -1,5 +1,6 @@
 package com.jumpcutfindo.microchip.client;
 
+import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.helper.TagResult;
@@ -47,7 +48,7 @@ public class InputListener implements ClientModInitializer {
                 }
             }
             while (guiBinding.wasPressed() && client.player != null) {
-                ClientNetworker.sendRequestToUpdateMicrochips();
+                ClientNetworkSender.sendRequestToUpdateMicrochips();
                 client.setScreen(new MicrochipsMenuScreen(client.player));
             }
         });

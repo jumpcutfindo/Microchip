@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
-import com.jumpcutfindo.microchip.client.ClientNetworker;
+import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.StringUtils;
@@ -82,7 +82,7 @@ public class MicrochipInfoWindow extends Window {
 
         this.statusDisplayCount = 5;
         this.entityStatuses = new ArrayList<>();
-        ClientNetworker.sendRequestForEntityStatuses(this.microchip.getEntityId());
+        ClientNetworkSender.sendRequestForEntityStatuses(this.microchip.getEntityId());
 
         this.selectedTab = Tab.STATUS;
     }

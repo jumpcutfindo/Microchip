@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
-import com.jumpcutfindo.microchip.client.ClientNetworker;
+import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
@@ -124,7 +124,7 @@ public class MicrochipsListView extends ListView {
 
     private void onDeleteGroup() {
         if (group.isDefault()) return;
-        ClientNetworker.sendDeleteGroupPacket(this.group.getId());
+        ClientNetworkSender.sendDeleteGroupPacket(this.group.getId());
     }
 
     private void onMoveMicrochips() {
@@ -134,7 +134,7 @@ public class MicrochipsListView extends ListView {
     private void onDeleteMicrochips() {
         if (!this.isAnySelected()) return;
         List<UUID> microchipIds = getSelectedIds();
-        ClientNetworker.sendRemoveEntitiesFromGroupPacket(this.group.getId(), microchipIds);
+        ClientNetworkSender.sendRemoveEntitiesFromGroupPacket(this.group.getId(), microchipIds);
     }
 
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {

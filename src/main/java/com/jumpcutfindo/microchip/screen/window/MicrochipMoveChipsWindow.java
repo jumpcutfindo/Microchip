@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
-import com.jumpcutfindo.microchip.client.ClientNetworker;
+import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
@@ -76,7 +76,7 @@ public class MicrochipMoveChipsWindow extends Window {
         MicrochipGroup toGroup = getToGroup();
         if (toGroup == null) return;
 
-        ClientNetworker.sendMoveEntitiesPacket(fromGroup.getId(), toGroup.getId(), this.selectedMicrochips);
+        ClientNetworkSender.sendMoveEntitiesPacket(fromGroup.getId(), toGroup.getId(), this.selectedMicrochips);
         this.screen.setActiveWindow(null);
     }
 

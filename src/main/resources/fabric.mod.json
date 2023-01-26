@@ -24,7 +24,7 @@
     ],
     "client": [
       "com.jumpcutfindo.microchip.client.InputListener",
-      "com.jumpcutfindo.microchip.client.ClientNetworker"
+      "com.jumpcutfindo.microchip.client.network.ClientNetworkReceiver"
     ],
     "cardinal-components": [
       "com.jumpcutfindo.microchip.data.MicrochipComponents"
