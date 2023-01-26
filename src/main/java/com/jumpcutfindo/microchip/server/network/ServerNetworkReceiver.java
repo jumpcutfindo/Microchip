@@ -1,4 +1,4 @@
-package com.jumpcutfindo.microchip.server;
+package com.jumpcutfindo.microchip.server.network;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -12,7 +12,6 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipEntityData;
 import com.jumpcutfindo.microchip.data.Microchips;
-import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.Tagger;
 
 import net.fabricmc.api.ModInitializer;
@@ -23,27 +22,33 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 
-public class ServerNetworker implements ModInitializer {
+/**
+ * Instantiates the listeners for packets from the client.
+ * Two types of requests are considered: requests that do not need a response, and requests that do. We segregate them
+ * by their naming -- requests that require responses are specifically indicated as such. Those that do not should not
+ * contain the word "request" in the method name.
+ */
+public class ServerNetworkReceiver implements ModInitializer {
     @Override
     public void onInitialize() {
         initializeListeners();
     }
 
     private static void initializeListeners() {
-        onGlowEntityPacket();
+        onGlowEntity();
         onAddEntityToGroup();
         onMoveEntitiesBetweenGroups();
         onRemoveEntitiesFromGroup();
         onCreateGroup();
         onUpdateGroup();
         onDeleteGroup();
+
         onRequestEntityStatuses();
-        onUpdateMicrochips();
+        onRequestUpdateMicrochips();
     }
 
-    private static void onGlowEntityPacket() {
+    private static void onGlowEntity() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_GLOW_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
             UUID entityId = buf.readUuid();
             if (entityId == null) return;
@@ -147,7 +152,7 @@ public class ServerNetworker implements ModInitializer {
         }));
     }
 
-    private static void onUpdateMicrochips() {
+    private static void onRequestUpdateMicrochips() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, ((server, player, handler, buf, responseSender) -> {
             Microchips microchips = Tagger.getMicrochips(player);
             List<Microchip> microchipList = microchips.getAllMicrochips();

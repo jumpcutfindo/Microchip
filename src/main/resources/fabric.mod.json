@@ -20,7 +20,7 @@
   "entrypoints": {
     "main": [
       "com.jumpcutfindo.microchip.MicrochipMod",
-      "com.jumpcutfindo.microchip.server.ServerNetworker"
+      "com.jumpcutfindo.microchip.server.network.ServerNetworkReceiver"
     ],
     "client": [
       "com.jumpcutfindo.microchip.client.InputListener",
