@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class ClientNetworkSender {
-    public static void sendGlowPacket(LivingEntity entity) {
+    public static void glowEntity(LivingEntity entity) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(entity.getUuid());
         ClientPlayNetworking.send(NetworkConstants.PACKET_GLOW_ENTITY_ID, buffer);
     }
 
-    public static void sendAddEntityToGroupPacket(UUID groupId, UUID entityId) {
+    public static void addEntityToGroup(UUID groupId, UUID entityId) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(groupId);
         buffer.writeUuid(entityId);
@@ -27,7 +27,7 @@ public class ClientNetworkSender {
         ClientPlayNetworking.send(NetworkConstants.PACKET_ADD_ENTITY_TO_GROUP_ID, buffer);
     }
 
-    public static void sendMoveEntitiesPacket(UUID fromGroup, UUID toGroup, List<UUID> microchipIds) {
+    public static void moveEntitiesBetweenGroups(UUID fromGroup, UUID toGroup, List<UUID> microchipIds) {
         Gson gson = new Gson();
         String microchipIdsSerialized = gson.toJson(microchipIds);
 
@@ -39,7 +39,7 @@ public class ClientNetworkSender {
         ClientPlayNetworking.send(NetworkConstants.PACKET_MOVE_ENTITIES_ID, buffer);
     }
 
-    public static void sendRemoveEntitiesFromGroupPacket(UUID groupId, List<UUID> microchipIds) {
+    public static void removeEntitiesFromGroup(UUID groupId, List<UUID> microchipIds) {
         Gson gson = new Gson();
         String microchipIdsSerialized = gson.toJson(microchipIds);
 
@@ -50,7 +50,7 @@ public class ClientNetworkSender {
         ClientPlayNetworking.send(NetworkConstants.PACKET_REMOVE_ENTITY_FROM_GROUP_ID, buffer);
     }
 
-    public static void sendCreateGroupPacket(String groupName, GroupColor color) {
+    public static void createGroup(String groupName, GroupColor color) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeString(groupName);
         buffer.writeInt(color.ordinal());
@@ -58,11 +58,7 @@ public class ClientNetworkSender {
         ClientPlayNetworking.send(NetworkConstants.PACKET_CREATE_GROUP_ID, buffer);
     }
 
-    public static void sendRequestToUpdateMicrochips() {
-        ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
-    }
-
-    public static void sendUpdateGroupPacket(MicrochipGroup group, String groupName, GroupColor color) {
+    public static void updateGroup(MicrochipGroup group, String groupName, GroupColor color) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(group.getId());
         buffer.writeString(groupName);
@@ -71,14 +67,18 @@ public class ClientNetworkSender {
         ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_GROUP_ID, buffer);
     }
 
-    public static void sendDeleteGroupPacket(UUID groupId) {
+    public static void deleteGroup(UUID groupId) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(groupId);
 
         ClientPlayNetworking.send(NetworkConstants.PACKET_DELETE_GROUP_ID, buffer);
     }
 
-    public static void sendRequestForEntityStatuses(UUID entityId) {
+    public static void requestMicrochipsUpdate() {
+        ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
+    }
+
+    public static void requestEntityStatuses(UUID entityId) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(entityId);
 

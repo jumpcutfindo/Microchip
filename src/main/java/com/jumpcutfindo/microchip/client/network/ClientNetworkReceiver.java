@@ -13,10 +13,10 @@ import java.util.Collection;
 public class ClientNetworkReceiver implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        onReceiveEntityStatusesPacket();
+        onEntityStatusesResponse();
     }
 
-    public static void onReceiveEntityStatusesPacket() {
+    public static void onEntityStatusesResponse() {
         ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, (client, handler, buf, responseSender) -> {
 
             Collection<StatusEffectInstance> entityStatuses = buf.readCollection((size) -> new ArrayList<>(), (packetByteBuf -> StatusEffectInstance.fromNbt(packetByteBuf.readNbt())));

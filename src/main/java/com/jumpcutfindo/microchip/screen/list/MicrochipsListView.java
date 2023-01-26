@@ -124,7 +124,7 @@ public class MicrochipsListView extends ListView {
 
     private void onDeleteGroup() {
         if (group.isDefault()) return;
-        ClientNetworkSender.sendDeleteGroupPacket(this.group.getId());
+        ClientNetworkSender.deleteGroup(this.group.getId());
     }
 
     private void onMoveMicrochips() {
@@ -134,7 +134,7 @@ public class MicrochipsListView extends ListView {
     private void onDeleteMicrochips() {
         if (!this.isAnySelected()) return;
         List<UUID> microchipIds = getSelectedIds();
-        ClientNetworkSender.sendRemoveEntitiesFromGroupPacket(this.group.getId(), microchipIds);
+        ClientNetworkSender.removeEntitiesFromGroup(this.group.getId(), microchipIds);
     }
 
     private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
