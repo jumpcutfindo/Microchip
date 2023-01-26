@@ -80,6 +80,22 @@ public class ClientNetworkSender {
             buffer.writeUuid(entity.getUuid());
             ClientPlayNetworking.send(NetworkConstants.PACKET_GLOW_ENTITY_ID, buffer);
         }
+
+        public static void locateEntity(LivingEntity entity) {
+
+        }
+
+        public static void teleportToEntity(LivingEntity entity) {
+
+        }
+
+        public static void healEntity(LivingEntity entity) {
+
+        }
+
+        public static void killEntity(LivingEntity entity) {
+
+        }
     }
 
     public static final class RequestActions {
