@@ -29,7 +29,7 @@ public class ClientTagger {
             Microchips microchips = Tagger.getMicrochips(player);
 
             if (Tagger.canTag(player, entity)) {
-                ClientNetworkSender.GroupActions.addEntityToGroup(microchips.getDefaultGroup().getId(), entity.getUuid());
+                ClientNetworkSender.MicrochipsActions.addEntityToGroup(microchips.getDefaultGroup().getId(), entity.getUuid());
                 ClientNetworkSender.EntityActions.glowEntity(entity);
             } else {
                 return TagResult.DUPLICATE;

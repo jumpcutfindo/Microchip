@@ -76,7 +76,7 @@ public class MicrochipMoveChipsWindow extends Window {
         MicrochipGroup toGroup = getToGroup();
         if (toGroup == null) return;
 
-        ClientNetworkSender.GroupActions.moveEntitiesBetweenGroups(fromGroup.getId(), toGroup.getId(), this.selectedMicrochips);
+        ClientNetworkSender.MicrochipsActions.moveEntitiesBetweenGroups(fromGroup.getId(), toGroup.getId(), this.selectedMicrochips);
         this.screen.setActiveWindow(null);
     }
 

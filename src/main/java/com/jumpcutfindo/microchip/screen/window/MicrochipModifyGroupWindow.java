@@ -192,10 +192,10 @@ public class MicrochipModifyGroupWindow extends Window {
     }
 
     private void createGroup() {
-        ClientNetworkSender.GroupActions.createGroup(this.groupNameField.getText(), this.selectedColor.getColor());
+        ClientNetworkSender.MicrochipsActions.createGroup(this.groupNameField.getText(), this.selectedColor.getColor());
     }
 
     private void updateGroup(MicrochipGroup group) {
-        ClientNetworkSender.GroupActions.updateGroup(group, this.groupNameField.getText(), this.selectedColor.getColor());
+        ClientNetworkSender.MicrochipsActions.updateGroup(group, this.groupNameField.getText(), this.selectedColor.getColor());
     }
 }

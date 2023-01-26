@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class ClientNetworkSender {
-    public static final class GroupActions {
+    public static final class MicrochipsActions {
         public static void addEntityToGroup(UUID groupId, UUID entityId) {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeUuid(groupId);
@@ -68,6 +68,10 @@ public class ClientNetworkSender {
 
             ClientPlayNetworking.send(NetworkConstants.PACKET_DELETE_GROUP_ID, buffer);
         }
+
+        public static void updateMicrochips() {
+            ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
+        }
     }
 
     public static final class EntityActions {
@@ -79,9 +83,6 @@ public class ClientNetworkSender {
     }
 
     public static final class RequestActions {
-        public static void requestMicrochipsUpdate() {
-            ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
-        }
 
         public static void requestEntityStatuses(UUID entityId) {
             PacketByteBuf buffer = PacketByteBufs.create();

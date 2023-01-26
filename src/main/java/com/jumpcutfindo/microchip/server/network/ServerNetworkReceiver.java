@@ -45,7 +45,7 @@ public class ServerNetworkReceiver implements ModInitializer {
         onDeleteGroup();
 
         onRequestEntityStatuses();
-        onRequestUpdateMicrochips();
+        onUpdateMicrochips();
     }
 
     private static void onGlowEntity() {
@@ -131,6 +131,19 @@ public class ServerNetworkReceiver implements ModInitializer {
         }));
     }
 
+    private static void onUpdateMicrochips() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, ((server, player, handler, buf, responseSender) -> {
+            Microchips microchips = Tagger.getMicrochips(player);
+            List<Microchip> microchipList = microchips.getAllMicrochips();
+            microchipList.forEach(microchip -> {
+                LivingEntity entity = (LivingEntity) player.getWorld().getEntity(microchip.getEntityId());
+                if (entity != null) microchip.setEntityData(MicrochipEntityData.from(entity));
+            });
+
+            microchips.sync();
+        }));
+    }
+
     private static void onRequestEntityStatuses() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, ((server, player, handler, buf, responseSender) -> {
             UUID entityId = buf.readUuid();
@@ -149,19 +162,6 @@ public class ServerNetworkReceiver implements ModInitializer {
 
                 ServerPlayNetworking.send(player, NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, buffer);
             }
-        }));
-    }
-
-    private static void onRequestUpdateMicrochips() {
-        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, ((server, player, handler, buf, responseSender) -> {
-            Microchips microchips = Tagger.getMicrochips(player);
-            List<Microchip> microchipList = microchips.getAllMicrochips();
-            microchipList.forEach(microchip -> {
-                LivingEntity entity = (LivingEntity) player.getWorld().getEntity(microchip.getEntityId());
-                if (entity != null) microchip.setEntityData(MicrochipEntityData.from(entity));
-            });
-
-            microchips.sync();
         }));
     }
 }
