@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.projectile.SpectralArrowEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 
@@ -65,7 +66,15 @@ public class ServerNetworkReceiver implements ModInitializer {
 
     private static void onLocateEntity() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_LOCATE_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
+            UUID entityId = buf.readUuid();
+            if (entityId == null) return;
 
+            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
+            if (entity == null) return;
+
+            // Apply a glowing effect to the entity for 60 seconds
+            StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.GLOWING, 1200, 0);
+            entity.addStatusEffect(statusEffectInstance, player);
         }));
     }
 
