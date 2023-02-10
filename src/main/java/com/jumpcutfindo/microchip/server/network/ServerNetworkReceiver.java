@@ -1,10 +1,5 @@
 package com.jumpcutfindo.microchip.server.network;
 
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
@@ -13,16 +8,15 @@ import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipEntityData;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Tagger;
-
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.projectile.SpectralArrowEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Instantiates the listeners for packets from the client.
@@ -80,7 +74,14 @@ public class ServerNetworkReceiver implements ModInitializer {
 
     private static void onTeleportToEntity() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_TELEPORT_TO_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
+            UUID entityId = buf.readUuid();
+            if (entityId == null) return;
 
+            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
+            if (entity == null) return;
+
+            // Teleport the player to the entity
+            player.requestTeleport(entity.getX(), entity.getY(), entity.getZ());
         }));
     }
 
