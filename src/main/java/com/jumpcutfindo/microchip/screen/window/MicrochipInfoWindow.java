@@ -41,7 +41,7 @@ import net.minecraft.util.math.Vec3f;
 public class MicrochipInfoWindow extends Window {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_info_window.png");
 
-    private final Microchip microchip;
+    private Microchip microchip;
     private final GroupColor color;
     private Tab selectedTab;
     private final int statusDisplayCount;
@@ -57,11 +57,17 @@ public class MicrochipInfoWindow extends Window {
 
     private final List<ButtonWidget.PressAction> buttonActions = List.of(
             (locateButton) -> {
-                ClientNetworkSender.EntityActions.locateEntity(entity);
+                ClientNetworkSender.EntityActions.locateEntity(microchip);
             },
-            (teleportToButton) -> {},
-            (healButton) -> {},
-            (killButton) -> {}
+            (teleportToButton) -> {
+                ClientNetworkSender.EntityActions.teleportToEntity(microchip);
+            },
+            (healButton) -> {
+                ClientNetworkSender.EntityActions.healEntity(microchip);
+            },
+            (killButton) -> {
+                ClientNetworkSender.EntityActions.killEntity(microchip);
+            }
     );
 
     private List<ButtonWidget> entityActionButtons;

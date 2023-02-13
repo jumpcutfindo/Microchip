@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.client.network;
 import com.google.gson.Gson;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -82,25 +83,29 @@ public class ClientNetworkSender {
             ClientPlayNetworking.send(NetworkConstants.PACKET_GLOW_ENTITY_ID, buffer);
         }
 
-        public static void locateEntity(LivingEntity entity) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_LOCATE_ENTITY_ID, entity);
+        public static void glowEntity(Microchip microchip) {
+            sendSimpleEntityPacket(NetworkConstants.PACKET_GLOW_ENTITY_ID, microchip.getEntityId());
         }
 
-        public static void teleportToEntity(LivingEntity entity) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_TELEPORT_TO_ENTITY_ID, entity);
+        public static void locateEntity(Microchip microchip) {
+            sendSimpleEntityPacket(NetworkConstants.PACKET_LOCATE_ENTITY_ID, microchip.getEntityId());
         }
 
-        public static void healEntity(LivingEntity entity) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_HEAL_ENTITY_ID, entity);
+        public static void teleportToEntity(Microchip microchip) {
+            sendSimpleEntityPacket(NetworkConstants.PACKET_TELEPORT_TO_ENTITY_ID, microchip.getEntityId());
         }
 
-        public static void killEntity(LivingEntity entity) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_KILL_ENTITY_ID, entity);
+        public static void healEntity(Microchip microchip) {
+            sendSimpleEntityPacket(NetworkConstants.PACKET_HEAL_ENTITY_ID, microchip.getEntityId());
         }
 
-        private static void sendSimpleEntityPacket(Identifier packetId, LivingEntity entity) {
+        public static void killEntity(Microchip microchip) {
+            sendSimpleEntityPacket(NetworkConstants.PACKET_KILL_ENTITY_ID, microchip.getEntityId());
+        }
+
+        private static void sendSimpleEntityPacket(Identifier packetId, UUID entityId) {
             PacketByteBuf buffer = PacketByteBufs.create();
-            buffer.writeUuid(entity.getUuid());
+            buffer.writeUuid(entityId);
             ClientPlayNetworking.send(packetId, buffer);
         }
     }
