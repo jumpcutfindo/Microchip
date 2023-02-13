@@ -95,6 +95,8 @@ public class ServerNetworkReceiver implements ModInitializer {
 
             if (entity == null) return;
 
+            entity.setHealth(entity.getMaxHealth());
+            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.heal.applied", entity.getDisplayName()), false);
         }));
     }
 
