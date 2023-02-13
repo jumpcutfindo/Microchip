@@ -13,6 +13,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.TranslatableText;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -51,48 +53,57 @@ public class ServerNetworkReceiver implements ModInitializer {
     private static void onGlowEntity() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_GLOW_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
             UUID entityId = buf.readUuid();
-            if (entityId == null) return;
+            LivingEntity entity = findEntity(player, entityId);
 
-            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
-            if (entity != null) entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 40, 1), player);
+            if (entity == null) return;
+
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 40, 1), player);
         }));
     }
 
     private static void onLocateEntity() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_LOCATE_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
             UUID entityId = buf.readUuid();
-            if (entityId == null) return;
+            LivingEntity entity = findEntity(player, entityId);
 
-            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
             if (entity == null) return;
 
             // Apply a glowing effect to the entity for 60 seconds
             StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.GLOWING, 1200, 0);
             entity.addStatusEffect(statusEffectInstance, player);
+            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.locate.applied", entity.getDisplayName()), false);
         }));
     }
 
     private static void onTeleportToEntity() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_TELEPORT_TO_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
             UUID entityId = buf.readUuid();
-            if (entityId == null) return;
+            LivingEntity entity = findEntity(player, entityId);
 
-            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
             if (entity == null) return;
 
             // Teleport the player to the entity
             player.requestTeleport(entity.getX(), entity.getY(), entity.getZ());
+            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.teleportTo.applied", player.getDisplayName(), entity.getDisplayName(), entity.getX(), entity.getY(), entity.getZ()), false);
         }));
     }
 
     private static void onHealEntity() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_HEAL_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
+            UUID entityId = buf.readUuid();
+            LivingEntity entity = findEntity(player, entityId);
+
+            if (entity == null) return;
 
         }));
     }
 
     private static void onKillEntity() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_KILL_ENTITY_ID, ((server, player, handler, buf, responseSender) -> {
+            UUID entityId = buf.readUuid();
+            LivingEntity entity = findEntity(player, entityId);
+
+            if (entity == null) return;
 
         }));
     }
@@ -193,5 +204,15 @@ public class ServerNetworkReceiver implements ModInitializer {
                 ServerNetworkSender.sendEntityStatusesResponse(player, target.getStatusEffects());
             }
         }));
+    }
+
+    private static LivingEntity findEntity(ServerPlayerEntity player, UUID entityId) {
+        if (entityId != null) {
+            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
+            if (entity != null) return entity;
+        }
+
+        player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.cannotFindMob"), false);
+        return null;
     }
 }

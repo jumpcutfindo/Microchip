@@ -39,10 +39,15 @@
     "microchip.menu.microchipInfo.actionTab": "Actions",
     "microchip.menu.microchipInfo.actionTab.locate": "Locate",
     "microchip.menu.microchipInfo.actionTab.locate.tooltip": "Applies Glowing effect to the mob for 60s",
+    "microchip.menu.microchipInfo.actionTab.locate.applied": "Applied Glowing effect to %s for 60s",
     "microchip.menu.microchipInfo.actionTab.teleportTo": "Teleport To",
     "microchip.menu.microchipInfo.actionTab.teleportTo.tooltip": "Teleports you to the last seen location of the mob",
+    "microchip.menu.microchipInfo.actionTab.teleportTo.applied": "Teleported %s to %s (XYZ: %d / %d / %d)",
     "microchip.menu.microchipInfo.actionTab.heal": "Heal",
     "microchip.menu.microchipInfo.actionTab.heal.tooltip": "Heals the mob fully",
+    "microchip.menu.microchipInfo.actionTab.heal.applied": "Healed %s to full health",
     "microchip.menu.microchipInfo.actionTab.kill": "Kill",
-    "microchip.menu.microchipInfo.actionTab.kill.tooltip": "Kills the mob"
+    "microchip.menu.microchipInfo.actionTab.kill.tooltip": "Kills the mob",
+    "microchip.menu.microchipInfo.actionTab.kill.applied": "Killed %s",
+    "microchip.menu.microchipInfo.actionTab.cannotFindMob": "Unable to find selected mob"
 }
