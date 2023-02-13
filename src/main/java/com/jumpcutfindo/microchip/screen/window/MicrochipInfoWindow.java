@@ -333,7 +333,9 @@ public class MicrochipInfoWindow extends Window {
         }
 
         if (selectedTab == Tab.ACTIONS) {
-            for (ButtonWidget entityActionButton : entityActionButtons) return entityActionButton.mouseClicked(mouseX, mouseY, button);
+            for (ButtonWidget entityActionButton : entityActionButtons) {
+                if (entityActionButton.mouseClicked(mouseX, mouseY, button)) return true;
+            }
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
