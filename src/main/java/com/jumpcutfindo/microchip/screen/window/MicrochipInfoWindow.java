@@ -362,6 +362,7 @@ public class MicrochipInfoWindow extends Window {
                 if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
                     MicrochipEntityData data = microchip.getEntityData();
                     screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
+                    MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 }
             }
             case ACTIONS -> {
