@@ -7,6 +7,7 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipEntityData;
 import com.jumpcutfindo.microchip.data.Microchips;
+import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -84,7 +85,7 @@ public class ServerNetworkReceiver implements ModInitializer {
 
             // Teleport the player to the entity
             player.requestTeleport(entity.getX(), entity.getY(), entity.getZ());
-            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.teleportTo.applied", player.getDisplayName(), entity.getDisplayName(), entity.getX(), entity.getY(), entity.getZ()), false);
+            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.teleportTo.applied", player.getDisplayName(), entity.getDisplayName(), StringUtils.coordinatesAsFancyText(entity.getX(), entity.getY(), entity.getZ())), false);
         }));
     }
 
