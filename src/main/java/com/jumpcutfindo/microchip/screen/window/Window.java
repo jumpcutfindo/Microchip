@@ -62,8 +62,11 @@ public abstract class Window {
     public abstract boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY);
 
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        if (!ScreenUtils.isWithin(mouseX, mouseY, x, y, width, height)) screen.setActiveWindow(null);
-        return true;
+        if (!ScreenUtils.isWithin(mouseX, mouseY, x, y, width, height)) {
+            screen.setActiveWindow(null);
+            return true;
+        }
+        return false;
     }
 
     public abstract boolean keyPressed(int keyCode, int scanCode, int modifiers);
