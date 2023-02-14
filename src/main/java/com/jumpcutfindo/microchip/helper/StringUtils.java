@@ -13,7 +13,7 @@ public class StringUtils {
         return Texts.bracketed(new TranslatableText("chat.coordinates", x, y, z)).styled((style) -> {
             Style textStyled = style.withColor(Formatting.GREEN);
             ClickEvent.Action command = ClickEvent.Action.SUGGEST_COMMAND;
-            return textStyled.withClickEvent(new ClickEvent(command, String.format("/tp @s %.2f %.2f %.2f", x, y, z))).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip")));
+            return textStyled.withClickEvent(new ClickEvent(command, String.format("/tp @s %d %d %d", (int) x, (int) y, (int) z))).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip")));
         });
     }
 }
