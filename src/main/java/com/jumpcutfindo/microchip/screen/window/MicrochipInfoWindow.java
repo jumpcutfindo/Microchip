@@ -212,24 +212,37 @@ public class MicrochipInfoWindow extends Window {
         int effectsOffset = 0;
         int statusEffectBgOffset = 0;
         Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator();
+
+        // Draw status effect backgrounds
         for (int i = 0; i < statusDisplayCount; i++) {
-            // Draw background
             RenderSystem.setShaderTexture(0, TEXTURE);
             screen.drawTexture(matrices, x + 7 + statusEffectBgOffset, y + 170, 168, 137, 22, 22);
             statusEffectBgOffset += 24;
-
-            // Draw effect
-            if (iterator.hasNext()) {
-                StatusEffectInstance instance = iterator.next();
-                StatusEffect statusEffect = instance.getEffectType();
-                Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
-                RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
-                DrawableHelper.drawSprite(matrices, x + 9 + effectsOffset, y + 172, 0, 18, 18, sprite);
-            }
-
-            effectsOffset += 24;
         }
-        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("+%d", Math.max(this.entityStatuses.size() - statusDisplayCount, 0))), (float) (x + 9 + effectsOffset), (float) (y + 177), 0xFFFFFF);
+
+        int displayedStatuses = 0;
+        int activeStatusCount = 0;
+        while (iterator.hasNext()) {
+            StatusEffectInstance instance = iterator.next();
+            int timeRemaining = instance.getDuration() - timeSinceStatusRetrieved;
+            boolean isActive = timeRemaining > 0;
+
+            if (isActive) {
+                activeStatusCount++;
+                 if (displayedStatuses < statusDisplayCount) {
+                     // Draw the status
+                     StatusEffect statusEffect = instance.getEffectType();
+                     Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
+                     RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
+                     DrawableHelper.drawSprite(matrices, x + 9 + effectsOffset, y + 172, 0, 18, 18, sprite);
+
+                     effectsOffset += 24;
+                     displayedStatuses++;
+                 }
+            }
+        }
+
+        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("+%d", Math.max(activeStatusCount - displayedStatuses, 0))), (float) (x + 132), (float) (y + 177), 0xFFFFFF);
     }
 
     private void drawActionTab(MatrixStack matrices, int mouseX, int mouseY) {
@@ -264,30 +277,36 @@ public class MicrochipInfoWindow extends Window {
             Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator();
             int effectsOffset = 0;
 
-            for (int i = 0; i < statusDisplayCount; i++) {
-                if (iterator.hasNext()) {
-                    StatusEffectInstance instance = iterator.next();
-                    StatusEffect statusEffect = instance.getEffectType();
-                    if (ScreenUtils.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
-                        Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved)));
-                        Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
-                        screen.renderTooltip(matrices, text, mouseX, mouseY);
-                    }
+            int displayedStatuses = 0;
+            int activeStatusCount = 0;
+            List<Text> undisplayedStatuses = new ArrayList<>();
+            while (iterator.hasNext()) {
+                StatusEffectInstance instance = iterator.next();
+                StatusEffect statusEffect = instance.getEffectType();
+                int timeRemaining = instance.getDuration() - timeSinceStatusRetrieved;
+                boolean isActive = timeRemaining > 0;
 
-                    effectsOffset += 24;
+                if (isActive) {
+                    activeStatusCount++;
+                    if (displayedStatuses < statusDisplayCount) {
+                        // Draw the status tooltip
+                        if (ScreenUtils.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
+                            Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(timeRemaining)));
+                            Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
+                            screen.renderTooltip(matrices, text, mouseX, mouseY);
+
+                        }
+                        effectsOffset += 24;
+                        displayedStatuses++;
+                    } else {
+                        TranslatableText statusName = new TranslatableText(instance.getTranslationKey());
+                        statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(timeRemaining))));
+                        undisplayedStatuses.add(statusName);
+                    }
                 }
             }
-
-            // Draw tooltips for extra statuses
-            if (ScreenUtils.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
-                List<Text> statuses = new ArrayList<>();
-                while (iterator.hasNext()) {
-                    StatusEffectInstance instance = iterator.next();
-                    TranslatableText statusName = new TranslatableText(instance.getTranslationKey());
-                    statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getDuration() - timeSinceStatusRetrieved))));
-                    statuses.add(statusName);
-                }
-                screen.renderTooltip(matrices, statuses, mouseX, mouseY);
+            if (ScreenUtils.isWithin(mouseX, mouseY, x + 129, y + 172, 18, 18)) {
+                screen.renderTooltip(matrices, undisplayedStatuses, mouseX, mouseY);
             }
         }
         case ACTIONS -> {
