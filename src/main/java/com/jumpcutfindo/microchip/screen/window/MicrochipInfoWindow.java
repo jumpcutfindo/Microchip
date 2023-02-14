@@ -9,6 +9,7 @@ import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.data.MicrochipEntityData;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
@@ -340,7 +341,8 @@ public class MicrochipInfoWindow extends Window {
             case STATUS -> {
                 // Coordinates to chat
                 if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
-                    screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", microchip.getEntityData().getDisplayName(), StringUtils.coordinatesAsFancyText(entity.getX(), entity.getY(), entity.getZ())), false);
+                    MicrochipEntityData data = microchip.getEntityData();
+                    screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
                 }
             }
             case ACTIONS -> {
