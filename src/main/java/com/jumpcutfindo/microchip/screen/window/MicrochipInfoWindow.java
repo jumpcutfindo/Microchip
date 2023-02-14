@@ -362,14 +362,6 @@ public class MicrochipInfoWindow extends Window {
         return new ArrayList<>();
     }
 
-    private static Text getFancyCoordinatesText(double x, double y, double z) {
-        return Texts.bracketed(new TranslatableText("chat.coordinates", x, y, z)).styled((style) -> {
-            Style var10000 = style.withColor(Formatting.GREEN);
-            ClickEvent.Action var10003 = ClickEvent.Action.SUGGEST_COMMAND;
-            return var10000.withClickEvent(new ClickEvent(var10003, String.format("/tp @s %.2f %.2f %.2f", x, y, z))).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip")));
-        });
-    }
-
     private static void drawLookingEntity(LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
         float f = (float)Math.atan((double)(mouseX / 40.0F));
         float g = (float)Math.atan((double)(mouseY / 40.0F));
