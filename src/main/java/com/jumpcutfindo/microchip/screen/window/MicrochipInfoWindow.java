@@ -30,9 +30,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringHelper;
 import net.minecraft.util.math.Quaternion;
@@ -338,9 +336,17 @@ public class MicrochipInfoWindow extends Window {
             tabVerticalOffset += 29;
         }
 
-        if (selectedTab == Tab.ACTIONS) {
-            for (ButtonWidget entityActionButton : entityActionButtons) {
-                if (entityActionButton.mouseClicked(mouseX, mouseY, button)) return true;
+        switch (selectedTab) {
+            case STATUS -> {
+                // Coordinates to chat
+                if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
+                    screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", microchip.getEntityData().getDisplayName(), StringUtils.coordinatesAsFancyText(entity.getX(), entity.getY(), entity.getZ())), false);
+                }
+            }
+            case ACTIONS -> {
+                for (ButtonWidget entityActionButton : entityActionButtons) {
+                    if (entityActionButton.mouseClicked(mouseX, mouseY, button)) return true;
+                }
             }
         }
 

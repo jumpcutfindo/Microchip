@@ -33,6 +33,7 @@
 
     "microchip.menu.microchipInfo.windowTitle": "Microchip",
     "microchip.menu.microchipInfo.statusTab": "Status",
+    "microchip.menu.microchipInfo.statusTab.clickLocation.message": "%s can be found at %s",
     "microchip.menu.microchipInfo.statusTab.health": "Health",
     "microchip.menu.microchipInfo.statusTab.armor": "Armor",
     "microchip.menu.microchipInfo.statusTab.effects": "Effects",
@@ -42,7 +43,7 @@
     "microchip.menu.microchipInfo.actionTab.locate.applied": "Applied Glowing effect to %s for 60s",
     "microchip.menu.microchipInfo.actionTab.teleportTo": "Teleport To",
     "microchip.menu.microchipInfo.actionTab.teleportTo.tooltip": "Teleports you to the last seen location of the mob",
-    "microchip.menu.microchipInfo.actionTab.teleportTo.applied": "Teleported %s to %s (XYZ: %d / %d / %d)",
+    "microchip.menu.microchipInfo.actionTab.teleportTo.applied": "Teleported %s to %s",
     "microchip.menu.microchipInfo.actionTab.heal": "Heal",
     "microchip.menu.microchipInfo.actionTab.heal.tooltip": "Heals the mob fully",
     "microchip.menu.microchipInfo.actionTab.heal.applied": "Healed %s to full health",
