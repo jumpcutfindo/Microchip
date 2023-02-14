@@ -5,6 +5,7 @@ import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.TagResult;
 import com.jumpcutfindo.microchip.helper.Tagger;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,10 +20,10 @@ import java.util.UUID;
 
 public class ClientTagger {
 
-    public static TagResult tag(World world, PlayerEntity player) {
-        LivingEntity entity = Looker.getLookingAt(world, player);
+    public static TagResult tag(PlayerEntity player) {
+        List<Entity> entityList = Looker.getLookingAt(player);
 
-        if (entity == null) {
+        if (entityList.size() == 0 || !(entityList.get(0) instanceof LivingEntity entity)) {
             return TagResult.NOTHING;
         } else {
             Tagger.LOGGER.info("Found an entity to tag!");

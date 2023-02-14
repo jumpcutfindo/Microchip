@@ -39,7 +39,7 @@ public class InputListener implements ClientModInitializer {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (tagBinding.wasPressed() && client.player != null) {
-                TagResult result = ClientTagger.tag(client.world, client.player);
+                TagResult result = ClientTagger.tag(client.player);
 
                 switch (result) {
                 case ADDED -> client.player.sendMessage(new TranslatableText("microchip.action.tag.added"), false);
