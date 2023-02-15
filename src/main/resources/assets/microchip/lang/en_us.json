@@ -33,7 +33,7 @@
 
     "microchip.menu.microchipInfo.windowTitle": "Microchip",
     "microchip.menu.microchipInfo.statusTab": "Status",
-    "microchip.menu.microchipInfo.statusTab.clickLocation.message": "%s can be found at %s",
+    "microchip.menu.microchipInfo.statusTab.clickLocation.message": "%s was last seen at %s",
     "microchip.menu.microchipInfo.statusTab.health": "Health",
     "microchip.menu.microchipInfo.statusTab.armor": "Armor",
     "microchip.menu.microchipInfo.statusTab.effects": "Effects",
