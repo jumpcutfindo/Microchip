@@ -346,6 +346,14 @@ public class MicrochipInfoWindow extends Window {
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        // Coordinates to chat
+        if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
+            MicrochipEntityData data = microchip.getEntityData();
+            screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
+            MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            return true;
+        }
+
         int tabVerticalOffset = 0;
         for (Tab tab : Tab.values()) {
             if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
@@ -358,12 +366,7 @@ public class MicrochipInfoWindow extends Window {
 
         switch (selectedTab) {
             case STATUS -> {
-                // Coordinates to chat
-                if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
-                    MicrochipEntityData data = microchip.getEntityData();
-                    screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
-                    MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                }
+
             }
             case ACTIONS -> {
                 for (ButtonWidget entityActionButton : entityActionButtons) {
