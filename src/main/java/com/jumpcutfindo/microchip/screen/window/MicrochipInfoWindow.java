@@ -7,6 +7,7 @@ import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipEntityData;
+import com.jumpcutfindo.microchip.helper.StatUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
@@ -25,6 +26,8 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -197,14 +200,22 @@ public class MicrochipInfoWindow extends Window {
         screen.drawTexture(matrices, x + 152 - offset - 1, y + 117, 168, 128, 9, 9);
 
         // Draw stats
+        int statsOffset = 0;
         // Armor
         RenderSystem.setShaderTexture(0, TEXTURE);
-        int statsOffset = 0;
         screen.drawTexture(matrices, x + 7 + statsOffset, y + 142, 177, 128, 9, 9);
         statsOffset += 12;
         String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
         screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 7 + statsOffset, y + 143, 0xFFFFFF);
         statsOffset += armorString.length() * 5 + 5;
+
+        // Speed
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        screen.drawTexture(matrices, x + 7 + statsOffset, y + 142, 186, 128, 9, 9);
+        statsOffset += 12;
+        String speedString = this.entity == null ? "?" : String.format("%.2f m/s", StatUtils.calculateMaxSpeed((float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED), entityStatuses.containsKey(StatusEffects.SPEED) ? entityStatuses.get(StatusEffects.SPEED).getAmplifier() : 0));
+        screen.getTextRenderer().drawWithShadow(matrices, speedString, x + 7 + statsOffset, y + 143, 0xFFFFFF);
+        statsOffset += speedString.length() * 5 + 5;
 
         // Draw status effects
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -464,6 +475,10 @@ public class MicrochipInfoWindow extends Window {
 
         public String getTranslationKey() {
             return statusEffectInstance.getTranslationKey();
+        }
+
+        public int getAmplifier() {
+            return statusEffectInstance.getAmplifier();
         }
     }
 
