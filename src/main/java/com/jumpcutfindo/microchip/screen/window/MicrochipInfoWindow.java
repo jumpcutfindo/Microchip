@@ -1,9 +1,6 @@
 package com.jumpcutfindo.microchip.screen.window;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
@@ -46,7 +43,8 @@ public class MicrochipInfoWindow extends Window {
     private Tab selectedTab;
     private final int statusDisplayCount;
     private LivingEntity entity;
-    private Collection<StatusEffectInstance> entityStatuses;
+
+    private Map<StatusEffect, StatusEffectWrapper> entityStatuses;
 
     private final List<String> buttonTranslatableKeys = List.of(
             "microchip.menu.microchipInfo.actionTab.locate",
@@ -91,7 +89,7 @@ public class MicrochipInfoWindow extends Window {
         }
 
         this.statusDisplayCount = 5;
-        this.entityStatuses = new ArrayList<>();
+        this.entityStatuses = new HashMap<>();
         ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
 
         this.selectedTab = Tab.STATUS;
@@ -215,7 +213,7 @@ public class MicrochipInfoWindow extends Window {
 
         int effectsOffset = 0;
         int statusEffectBgOffset = 0;
-        Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator();
+        Iterator<StatusEffectWrapper> iterator = this.entityStatuses.values().iterator();
 
         // Draw status effect backgrounds
         for (int i = 0; i < statusDisplayCount; i++) {
@@ -227,11 +225,8 @@ public class MicrochipInfoWindow extends Window {
         int displayedStatuses = 0;
         int activeStatusCount = 0;
         while (iterator.hasNext()) {
-            StatusEffectInstance instance = iterator.next();
-            int timeRemaining = instance.getDuration() - timeSinceStatusRetrieved;
-            boolean isActive = timeRemaining > 0;
-
-            if (isActive) {
+            StatusEffectWrapper instance = iterator.next();
+            if (!instance.hasExpired(timeSinceStatusRetrieved)) {
                 activeStatusCount++;
                  if (displayedStatuses < statusDisplayCount) {
                      // Draw the status
@@ -278,24 +273,22 @@ public class MicrochipInfoWindow extends Window {
         switch (selectedTab) {
         case STATUS -> {
             // Draw tooltips for drawn statuses
-            Iterator<StatusEffectInstance> iterator = this.entityStatuses.iterator();
+            Iterator<StatusEffectWrapper> iterator = this.entityStatuses.values().iterator();
             int effectsOffset = 0;
 
             int displayedStatuses = 0;
             int activeStatusCount = 0;
             List<Text> undisplayedStatuses = new ArrayList<>();
             while (iterator.hasNext()) {
-                StatusEffectInstance instance = iterator.next();
+                StatusEffectWrapper instance = iterator.next();
                 StatusEffect statusEffect = instance.getEffectType();
-                int timeRemaining = instance.getDuration() - timeSinceStatusRetrieved;
-                boolean isActive = timeRemaining > 0;
 
-                if (isActive) {
+                if (!instance.hasExpired(timeSinceStatusRetrieved)) {
                     activeStatusCount++;
                     if (displayedStatuses < statusDisplayCount) {
                         // Draw the status tooltip
                         if (ScreenUtils.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
-                            Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(timeRemaining)));
+                            Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved))));
                             Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
                             screen.renderTooltip(matrices, text, mouseX, mouseY);
 
@@ -304,7 +297,7 @@ public class MicrochipInfoWindow extends Window {
                         displayedStatuses++;
                     } else {
                         TranslatableText statusName = new TranslatableText(instance.getTranslationKey());
-                        statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(timeRemaining))));
+                        statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved)))));
                         undisplayedStatuses.add(statusName);
                     }
                 }
@@ -444,8 +437,34 @@ public class MicrochipInfoWindow extends Window {
     }
 
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
-        this.entityStatuses = entityStatuses;
+        entityStatuses.forEach(statusEffectInstance -> {
+            this.entityStatuses.put(statusEffectInstance.getEffectType(), new StatusEffectWrapper(statusEffectInstance));
+        });
+
         timeSinceStatusRetrieved = 0;
+    }
+
+    private class StatusEffectWrapper {
+        private final StatusEffectInstance statusEffectInstance;
+        public StatusEffectWrapper(StatusEffectInstance statusEffectInstance) {
+            this.statusEffectInstance = statusEffectInstance;
+        }
+
+        public boolean hasExpired(int timeSince) {
+            return timeSince > statusEffectInstance.getDuration();
+        }
+
+        public StatusEffect getEffectType() {
+            return statusEffectInstance.getEffectType();
+        }
+
+        public int getRemainingTime(int timeSince) {
+            return statusEffectInstance.getDuration() - timeSince;
+        }
+
+        public String getTranslationKey() {
+            return statusEffectInstance.getTranslationKey();
+        }
     }
 
     private enum Tab {
