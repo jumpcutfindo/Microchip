@@ -67,22 +67,24 @@ public class MicrochipListItem extends ListItem {
         String entityHealthString = this.entity == null ? "?" : Integer.toString((int) this.entity.getHealth());
 
         // Draw entity health
+        String healthString = String.format("%s/%d", entityHealthString, (int) microchip.getEntityData().getMaxHealth());
+        int offset = healthString.length() * 6 + 1;
+        screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 178 - offset, y + 21, 0xFFFFFF);
+        int healthIconOffset = offset + 1;
+
         RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
         if (this.entity != null) {
             if (this.entity.getHealth() > this.entity.getMaxHealth() / 2) {
-                screen.drawTexture(matrices, x + 168, y + 20, 180, 183, 9, 9);
+                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 183, 9, 9);
             } else if (this.entity.getHealth() > this.entity.getMaxHealth() / 4) {
-                screen.drawTexture(matrices, x + 168, y + 20, 189, 183, 9, 9);
+                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 189, 183, 9, 9);
             } else {
-                screen.drawTexture(matrices, x + 168, y + 20, 198, 183, 9, 9);
+                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 198, 183, 9, 9);
             }
         } else {
-            screen.drawTexture(matrices, x + 168, y + 20, 180, 183, 9, 9);
+            screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 183, 9, 9);
         }
 
-        String healthString = String.format("%s/%d", entityHealthString, (int) microchip.getEntityData().getMaxHealth());
-        int offset = healthString.length() * 5 + healthString.length() - 1;
-        screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 168 - offset - 3, y + 21, 0xFFFFFF);
 
         drawButton(matrices, x + 172, y + 3, mouseX, mouseY);
         drawTooltips(matrices, x, y, mouseX, mouseY);

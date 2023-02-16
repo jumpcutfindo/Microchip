@@ -192,10 +192,10 @@ public class MicrochipInfoWindow extends Window {
 
         String healthString = this.entity == null ? "?" : Integer.toString((int) health);
         String healthDisplayString = String.format("%s/%d", healthString, (int) microchip.getEntityData().getMaxHealth());
-        int offset = healthDisplayString.length() * 5 + healthDisplayString.length() - 1;
-        screen.getTextRenderer().drawWithShadow(matrices, healthDisplayString, x + 152 - offset - 3, y + 118, 0xFFFFFF);
+        int offset = healthDisplayString.length() * 6 + 1;
+        screen.getTextRenderer().drawWithShadow(matrices, healthDisplayString, x + 162 - offset, y + 118, 0xFFFFFF);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 152, y + 117, 168, 128, 9, 9);
+        screen.drawTexture(matrices, x + 152 - offset - 1, y + 117, 168, 128, 9, 9);
 
         // Draw armor
         screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.armor"), (float) (x + 7), (float) (y + 143), 0xFFFFFF);
