@@ -30,6 +30,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
@@ -197,15 +198,18 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderTexture(0, TEXTURE);
         screen.drawTexture(matrices, x + 152 - offset - 1, y + 117, 168, 128, 9, 9);
 
-        // Draw armor
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.armor"), (float) (x + 7), (float) (y + 143), 0xFFFFFF);
-        String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
-        int armorStringOffset = armorString.length() * 5 + armorString.length() - 1;
-        screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 152 - armorStringOffset - 3, y + 143, 0xFFFFFF);
+        // Draw stats
+        // Armor
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 152, y + 142, 177, 128, 9, 9);
+        int statsOffset = 0;
+        screen.drawTexture(matrices, x + 7 + statsOffset, y + 142, 177, 128, 9, 9);
+        statsOffset += 12;
+        String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
+        screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 7 + statsOffset, y + 143, 0xFFFFFF);
+        statsOffset += armorString.length() * 5 + 5;
 
         // Draw status effects
+        RenderSystem.setShaderTexture(0, TEXTURE);
         screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (x + 7), (float) (y + 158), 0xFFFFFF);
         StatusEffectSpriteManager statusEffectSpriteManager = MinecraftClient.getInstance().getStatusEffectSpriteManager();
 
