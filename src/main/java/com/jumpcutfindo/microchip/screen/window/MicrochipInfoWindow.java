@@ -184,38 +184,30 @@ public class MicrochipInfoWindow extends Window {
     private void drawStatusTab(MatrixStack matrices, int mouseX, int mouseY) {
         screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
 
-        // Draw health
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.health"), (float) (x + 7), (float) (y + 118), 0xFFFFFF);
+        // Draw health and armor
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         float health = this.entity == null ? 0.0f : this.entity.getHealth();
         screen.drawTexture(matrices, x + 7, y + 130, 0, 200, 154, 5);
         screen.drawTexture(matrices, x + 7, y + 130, 0, 205, (int) ((health / microchip.getEntityData().getMaxHealth()) * 154), 5);
 
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        screen.drawTexture(matrices, x + 7, y + 117, 168, 128, 9, 9);
         String healthString = this.entity == null ? "?" : Integer.toString((int) health);
         String healthDisplayString = String.format("%s/%d", healthString, (int) microchip.getEntityData().getMaxHealth());
-        int offset = healthDisplayString.length() * 6 + 1;
-        screen.getTextRenderer().drawWithShadow(matrices, healthDisplayString, x + 162 - offset, y + 118, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, healthDisplayString, x + 19, y + 118, 0xFFFFFF);
+
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 152 - offset - 1, y + 117, 168, 128, 9, 9);
+        screen.drawTexture(matrices, x + 19 + healthDisplayString.length() * 7, y + 117, 177, 128, 9, 9);
+        String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
+        screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 19 + healthDisplayString.length() * 7 + 12, y + 118, 0xFFFFFF);
 
         // Draw stats
-        int statsOffset = 0;
-        // Armor
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 7 + statsOffset, y + 142, 177, 128, 9, 9);
-        statsOffset += 12;
-        String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
-        screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 7 + statsOffset, y + 143, 0xFFFFFF);
-        statsOffset += armorString.length() * 5 + 5;
-
         // Speed
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 7 + statsOffset, y + 142, 186, 128, 9, 9);
-        statsOffset += 12;
+        screen.drawTexture(matrices, x + 7 , y + 142, 186, 128, 9, 9);
         String speedString = this.entity == null ? "?" : String.format("%.2f m/s", StatUtils.calculateMaxSpeed((float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED), entityStatuses.containsKey(StatusEffects.SPEED) ? entityStatuses.get(StatusEffects.SPEED).getAmplifier() : 0));
-        screen.getTextRenderer().drawWithShadow(matrices, speedString, x + 7 + statsOffset, y + 143, 0xFFFFFF);
-        statsOffset += speedString.length() * 5 + 5;
+        screen.getTextRenderer().drawWithShadow(matrices, speedString, x + 19, y + 143, 0xFFFFFF);
 
         // Draw status effects
         RenderSystem.setShaderTexture(0, TEXTURE);
