@@ -10,6 +10,7 @@ import com.jumpcutfindo.microchip.data.MicrochipEntityData;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
+import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.InfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -42,28 +43,6 @@ public class MicrochipInfoWindow extends Window {
 
     private InfoTab statusTab, actionsTab;
 
-    private final List<String> buttonTranslatableKeys = List.of(
-            "microchip.menu.microchipInfo.actionTab.locate",
-            "microchip.menu.microchipInfo.actionTab.teleportTo",
-            "microchip.menu.microchipInfo.actionTab.heal",
-            "microchip.menu.microchipInfo.actionTab.kill"
-    );
-
-    private final List<ButtonWidget.PressAction> buttonActions = List.of(
-            (locateButton) -> {
-                ClientNetworkSender.EntityActions.locateEntity(microchip);
-            },
-            (teleportToButton) -> {
-                ClientNetworkSender.EntityActions.teleportToEntity(microchip);
-            },
-            (healButton) -> {
-                ClientNetworkSender.EntityActions.healEntity(microchip);
-            },
-            (killButton) -> {
-                ClientNetworkSender.EntityActions.killEntity(microchip);
-            }
-    );
-
     private List<ButtonWidget> entityActionButtons;
     private int timeSinceStatusRetrieved = 0;
 
@@ -83,18 +62,8 @@ public class MicrochipInfoWindow extends Window {
 
         this.selectedTab = Tab.STATUS;
 
-        this.entityActionButtons = new ArrayList<>();
-
-        // Create buttons only after position is set
-        for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
-            int xOffset = 77;
-            int yOffset = 24;
-            ButtonWidget buttonWidget = new ButtonWidget(x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset , 75, 20, new TranslatableText(buttonTranslatableKeys.get(i)), buttonActions.get(i));
-            entityActionButtons.add(buttonWidget);
-        }
-
-        // Create tabs only after position is set
         this.statusTab = new StatusInfoTab(screen, microchip, color, entity, x, y, 5);
+        this.actionsTab = new ActionsInfoTab(screen, microchip, color, entity, x, y);
 
         ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
     }
@@ -172,9 +141,7 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private void drawActionTab(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
-
-        for (ButtonWidget entityActionButton : entityActionButtons) entityActionButton.render(matrices, mouseX, mouseY, 0);
+        actionsTab.renderContent(matrices, mouseX, mouseY);
     }
 
     private void drawTooltips(MatrixStack matrices, int mouseX, int mouseY) {
@@ -202,14 +169,7 @@ public class MicrochipInfoWindow extends Window {
             statusTab.renderTooltips(matrices, mouseX, mouseY);
         }
         case ACTIONS -> {
-            int xOffset = 77;
-            int yOffset = 24;
-
-            for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
-                if (ScreenUtils.isWithin(mouseX, mouseY, x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset, 75, 20)) {
-                    screen.renderTooltip(matrices, new TranslatableText(buttonTranslatableKeys.get(i) + ".tooltip"), mouseX, mouseY);
-                }
-            }
+            actionsTab.renderTooltips(matrices, mouseX, mouseY);
         }
         }
 
