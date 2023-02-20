@@ -1,7 +1,5 @@
 package com.jumpcutfindo.microchip.screen.window;
 
-import java.util.*;
-
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
@@ -14,9 +12,7 @@ import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.InfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
@@ -27,10 +23,15 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class MicrochipInfoWindow extends Window {
     public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_info_window.png");
@@ -38,13 +39,11 @@ public class MicrochipInfoWindow extends Window {
 
     private Microchip microchip;
     private final GroupColor color;
-    private Tab selectedTab;
     private LivingEntity entity;
 
-    private InfoTab statusTab, actionsTab;
-
-    private List<ButtonWidget> entityActionButtons;
-    private int timeSinceStatusRetrieved = 0;
+    private InfoTab activeTab;
+    private final InfoTab statusTab, actionsTab;
+    private final int tabCount = 2;
 
     private final float entityModelSize;
     public MicrochipInfoWindow(MicrochipsMenuScreen screen, int x, int y, Microchip microchip, LivingEntity entity, GroupColor color) {
@@ -60,10 +59,10 @@ public class MicrochipInfoWindow extends Window {
             this.entityModelSize = 0;
         }
 
-        this.selectedTab = Tab.STATUS;
-
         this.statusTab = new StatusInfoTab(screen, microchip, color, entity, x, y, 5);
         this.actionsTab = new ActionsInfoTab(screen, microchip, color, entity, x, y);
+
+        this.activeTab = statusTab;
 
         ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
     }
@@ -76,12 +75,7 @@ public class MicrochipInfoWindow extends Window {
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
         this.drawIdentityCard(matrices, mouseX, mouseY);
 
-        // Draw tabs according to selection
-        switch (selectedTab) {
-            case STATUS -> drawStatusTab(matrices, mouseX, mouseY);
-            case ACTIONS -> drawActionTab(matrices, mouseX, mouseY);
-        }
-
+        this.activeTab.renderContent(matrices, mouseX, mouseY);
         this.drawTabs(matrices, mouseX, mouseY);
         this.drawTooltips(matrices, mouseX, mouseY);
     }
@@ -118,11 +112,9 @@ public class MicrochipInfoWindow extends Window {
 
         int tabVerticalOffset = 0;
         int tabIconVerticalOffset = 0;
-        for (int i = 0; i < Tab.values().length; i++) {
-            Tab tab = Tab.values()[i];
-
+        for (int i = 0; i < tabCount; i++) {
             ScreenUtils.setShaderColor(color, false);
-            if (tab == selectedTab) {
+            if (activeTab.equals(getTabs().get(i))) {
                 screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62 + (i == 0 ? 0 : 27), 32, 29);
             } else {
                 screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 200, 62 + (i == 0 ? 0 : 27), 32, 29);
@@ -134,14 +126,6 @@ public class MicrochipInfoWindow extends Window {
             tabVerticalOffset += 29;
             tabIconVerticalOffset += 31;
         }
-    }
-
-    private void drawStatusTab(MatrixStack matrices, int mouseX, int mouseY) {
-        statusTab.renderContent(matrices, mouseX, mouseY);
-    }
-
-    private void drawActionTab(MatrixStack matrices, int mouseX, int mouseY) {
-        actionsTab.renderContent(matrices, mouseX, mouseY);
     }
 
     private void drawTooltips(MatrixStack matrices, int mouseX, int mouseY) {
@@ -164,16 +148,8 @@ public class MicrochipInfoWindow extends Window {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
         }
 
-        switch (selectedTab) {
-        case STATUS -> {
-            statusTab.renderTooltips(matrices, mouseX, mouseY);
-        }
-        case ACTIONS -> {
-            actionsTab.renderTooltips(matrices, mouseX, mouseY);
-        }
-        }
-
-
+        // Active tab
+        activeTab.renderTooltips(matrices, mouseX, mouseY);
     }
 
     private String getCoordinates() {
@@ -207,23 +183,16 @@ public class MicrochipInfoWindow extends Window {
         }
 
         int tabVerticalOffset = 0;
-        for (Tab tab : Tab.values()) {
+        for (InfoTab tab : getTabs()) {
             if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
-                selectedTab = tab;
+                activeTab = tab;
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             }
             tabVerticalOffset += 29;
         }
 
-        switch (selectedTab) {
-            case STATUS -> {
-                statusTab.mouseClicked(mouseX, mouseY, button);
-            }
-            case ACTIONS -> {
-                actionsTab.mouseClicked(mouseX, mouseY, button);
-            }
-        }
+        activeTab.mouseClicked(mouseX, mouseY, button);
 
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -241,6 +210,10 @@ public class MicrochipInfoWindow extends Window {
     @Override
     public List<ClickableWidget> getWidgets() {
         return new ArrayList<>();
+    }
+
+    private List<InfoTab> getTabs() {
+        return List.of(statusTab, actionsTab);
     }
 
     private static void drawLookingEntity(LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
@@ -291,9 +264,5 @@ public class MicrochipInfoWindow extends Window {
 
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
         if (this.statusTab != null) ((StatusInfoTab) this.statusTab).setEntityStatuses(entityStatuses);
-    }
-
-    private enum Tab {
-        STATUS, ACTIONS
     }
 }
