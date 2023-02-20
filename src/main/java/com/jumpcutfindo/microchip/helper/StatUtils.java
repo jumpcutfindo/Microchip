@@ -8,7 +8,8 @@ public class StatUtils {
      * @return The maximum possible movement speed of the mob.
      */
     public static float calculateMaxSpeed(float baseSpeed, int speedEffectLevel) {
-        return (baseSpeed * 43.17f) + (baseSpeed * 43.17f * (speedEffectLevel * 0.2f));
+        float baseBlockSpeed = baseSpeed * 43.17f;
+        return baseBlockSpeed + baseBlockSpeed * (speedEffectLevel * 0.2f);
     }
 
     /**
