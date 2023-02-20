@@ -5,6 +5,7 @@ import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.StatUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
+import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
@@ -31,8 +32,8 @@ public class StatusInfoTab extends InfoTab {
     private final int statusDisplayCount;
     private int timeSinceStatusRetrieved = 0;
 
-    public StatusInfoTab(MicrochipsMenuScreen screen, Microchip microchip, GroupColor color, LivingEntity entity, int x, int y, int statusDisplayCount) {
-        super(screen, microchip, color, entity, x, y);
+    public StatusInfoTab(MicrochipsMenuScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int statusDisplayCount) {
+        super(screen, window, microchip, color, entity);
         this.entityStatuses = new HashMap<>();
 
         this.statusDisplayCount = statusDisplayCount;
@@ -40,36 +41,36 @@ public class StatusInfoTab extends InfoTab {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
+        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), this.color.getShadowColor());
 
         // Draw health and armor
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         float health = this.entity == null ? 0.0f : this.entity.getHealth();
-        screen.drawTexture(matrices, x + 7, y + 130, 0, 200, 154, 5);
-        screen.drawTexture(matrices, x + 7, y + 130, 0, 205, (int) ((health / microchip.getEntityData().getMaxHealth()) * 154), 5);
+        screen.drawTexture(matrices, window.getX() + 7, window.getY() + 130, 0, 200, 154, 5);
+        screen.drawTexture(matrices, window.getX() + 7, window.getY() + 130, 0, 205, (int) ((health / microchip.getEntityData().getMaxHealth()) * 154), 5);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 7, y + 117, 168, 128, 9, 9);
+        screen.drawTexture(matrices, window.getX() + 7, window.getY() + 117, 168, 128, 9, 9);
         String healthString = this.entity == null ? "?" : Integer.toString((int) health);
         String healthDisplayString = String.format("%s/%d", healthString, (int) microchip.getEntityData().getMaxHealth());
-        screen.getTextRenderer().drawWithShadow(matrices, healthDisplayString, x + 19, y + 118, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, healthDisplayString, window.getX() + 19, window.getY() + 118, 0xFFFFFF);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 19 + healthDisplayString.length() * 7, y + 117, 177, 128, 9, 9);
+        screen.drawTexture(matrices, window.getX() + 19 + healthDisplayString.length() * 7, window.getY() + 117, 177, 128, 9, 9);
         String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
-        screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 19 + healthDisplayString.length() * 7 + 12, y + 118, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, armorString, window.getX() + 19 + healthDisplayString.length() * 7 + 12, window.getY() + 118, 0xFFFFFF);
 
         // Draw stats
         // Speed
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 7 , y + 142, 186, 128, 9, 9);
+        screen.drawTexture(matrices, window.getX() + 7 , window.getY() + 142, 186, 128, 9, 9);
         String speedString = this.entity == null ? "?" : String.format("%.2f m/s", StatUtils.calculateMaxSpeed((float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED), entityStatuses.containsKey(StatusEffects.SPEED) ? entityStatuses.get(StatusEffects.SPEED).getAmplifier() : 0));
-        screen.getTextRenderer().drawWithShadow(matrices, speedString, x + 19, y + 143, 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, speedString, window.getX() + 19, window.getY() + 143, 0xFFFFFF);
 
         // Draw status effects
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (x + 7), (float) (y + 158), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (window.getX() + 7), (float) (window.getY() + 158), 0xFFFFFF);
         StatusEffectSpriteManager statusEffectSpriteManager = MinecraftClient.getInstance().getStatusEffectSpriteManager();
 
         int effectsOffset = 0;
@@ -79,7 +80,7 @@ public class StatusInfoTab extends InfoTab {
         // Draw status effect backgrounds
         for (int i = 0; i < statusDisplayCount; i++) {
             RenderSystem.setShaderTexture(0, TEXTURE);
-            screen.drawTexture(matrices, x + 7 + statusEffectBgOffset, y + 170, 168, 137, 22, 22);
+            screen.drawTexture(matrices, window.getX() + 7 + statusEffectBgOffset, window.getY() + 170, 168, 137, 22, 22);
             statusEffectBgOffset += 24;
         }
 
@@ -94,7 +95,7 @@ public class StatusInfoTab extends InfoTab {
                     StatusEffect statusEffect = instance.getEffectType();
                     Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
                     RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
-                    DrawableHelper.drawSprite(matrices, x + 9 + effectsOffset, y + 172, 0, 18, 18, sprite);
+                    DrawableHelper.drawSprite(matrices, window.getX() + 9 + effectsOffset, window.getY() + 172, 0, 18, 18, sprite);
 
                     effectsOffset += 24;
                     displayedStatuses++;
@@ -102,7 +103,7 @@ public class StatusInfoTab extends InfoTab {
             }
         }
 
-        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("+%d", Math.max(activeStatusCount - displayedStatuses, 0))), (float) (x + 132), (float) (y + 177), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("+%d", Math.max(activeStatusCount - displayedStatuses, 0))), (float) (window.getX() + 132), (float) (window.getY() + 177), 0xFFFFFF);
 
     }
 
@@ -123,7 +124,7 @@ public class StatusInfoTab extends InfoTab {
                 activeStatusCount++;
                 if (displayedStatuses < statusDisplayCount) {
                     // Draw the status tooltip
-                    if (ScreenUtils.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
+                    if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 9 + effectsOffset, window.getY() + 172, 18, 18)) {
                         Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved))));
                         Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
                         screen.renderTooltip(matrices, text, mouseX, mouseY);
@@ -138,7 +139,7 @@ public class StatusInfoTab extends InfoTab {
                 }
             }
         }
-        if (ScreenUtils.isWithin(mouseX, mouseY, x + 129, y + 172, 18, 18)) {
+        if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 129, window.getY() + 172, 18, 18)) {
             screen.renderTooltip(matrices, undisplayedStatuses, mouseX, mouseY);
         }
     }

@@ -5,6 +5,7 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
+import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -40,11 +41,11 @@ public class ActionsInfoTab extends InfoTab {
     private final int buttonCount = 4;
     private final ArrayList<ButtonWidget> entityActionButtons;
 
-    public ActionsInfoTab(MicrochipsMenuScreen screen, Microchip microchip, GroupColor color, LivingEntity entity, int x, int y) {
-        super(screen, microchip, color, entity, x, y);
+    public ActionsInfoTab(MicrochipsMenuScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int x, int y) {
+        super(screen, window, microchip, color, entity);
 
         this.entityActionButtons = new ArrayList<>();
-        for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
+        for (int i = 0; i < buttonCount; i++) {
             int xOffset = 77;
             int yOffset = 24;
             ButtonWidget buttonWidget = new ButtonWidget(x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset , 75, 20, new TranslatableText(buttonTranslatableKeys.get(i)), buttonActions.get(i));
@@ -54,9 +55,16 @@ public class ActionsInfoTab extends InfoTab {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
+        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), this.color.getShadowColor());
 
-        for (ButtonWidget entityActionButton : entityActionButtons) entityActionButton.render(matrices, mouseX, mouseY, 0);
+        for (int i = 0; i < buttonCount; i++) {
+            ButtonWidget entityActionButton = entityActionButtons.get(i);
+            int xOffset = 77;
+            int yOffset = 24;
+            entityActionButton.x = window.getX() + 7 + (i % 2) * xOffset;
+            entityActionButton.y = window.getY() + 118 + (i / 2) * yOffset;
+            entityActionButton.render(matrices, mouseX, mouseY, 0);
+        }
     }
 
     @Override
@@ -65,7 +73,7 @@ public class ActionsInfoTab extends InfoTab {
         int yOffset = 24;
 
         for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
-            if (ScreenUtils.isWithin(mouseX, mouseY, x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset, 75, 20)) {
+            if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 7 + (i % 2) * xOffset, window.getY() + 118 + (i / 2) * yOffset, 75, 20)) {
                 screen.renderTooltip(matrices, new TranslatableText(buttonTranslatableKeys.get(i) + ".tooltip"), mouseX, mouseY);
             }
         }

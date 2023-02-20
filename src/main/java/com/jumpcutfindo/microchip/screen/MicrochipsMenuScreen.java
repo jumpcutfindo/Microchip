@@ -86,6 +86,7 @@ public class MicrochipsMenuScreen extends Screen {
         this.microchipsList.renderItems(matrices, mouseX, mouseY);
 
         if (this.activeWindow != null) {
+            this.activeWindow.setPos(this.getWindowX(this.activeWindow.getWidth()), this.getWindowY(this.activeWindow.getHeight()));
             this.activeWindow.render(matrices, mouseX, mouseY);
         }
     }

@@ -59,12 +59,17 @@ public class MicrochipInfoWindow extends Window {
             this.entityModelSize = 0;
         }
 
-        this.statusTab = new StatusInfoTab(screen, microchip, color, entity, x, y, 5);
-        this.actionsTab = new ActionsInfoTab(screen, microchip, color, entity, x, y);
+        this.statusTab = new StatusInfoTab(screen, this, microchip, color, entity, 5);
+        this.actionsTab = new ActionsInfoTab(screen, this, microchip, color, entity, x, y);
 
         this.activeTab = statusTab;
 
         ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
+    }
+
+    @Override
+    public void setPos(int x, int y) {
+        super.setPos(x, y);
     }
 
     @Override
