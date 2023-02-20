@@ -2,11 +2,12 @@ package com.jumpcutfindo.microchip.screen.window.info;
 
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 
-public abstract class InfoTab {
+public abstract class InfoTab implements Interactable {
     final MicrochipsMenuScreen screen;
     final Microchip microchip;
     final GroupColor color;

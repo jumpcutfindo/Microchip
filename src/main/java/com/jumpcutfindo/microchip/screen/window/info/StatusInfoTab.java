@@ -156,6 +156,31 @@ public class StatusInfoTab extends InfoTab {
         timeSinceStatusRetrieved = 0;
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        return false;
+    }
+
     private static class StatusEffectWrapper {
         private final StatusEffectInstance statusEffectInstance;
         public StatusEffectWrapper(StatusEffectInstance statusEffectInstance) {
