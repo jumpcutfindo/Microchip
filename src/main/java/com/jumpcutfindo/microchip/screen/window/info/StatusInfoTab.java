@@ -1,5 +1,6 @@
 package com.jumpcutfindo.microchip.screen.window.info;
 
+import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.StatUtils;
@@ -17,8 +18,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.HorseEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -33,12 +34,15 @@ public class StatusInfoTab extends InfoTab {
     private Map<StatusEffect, StatusEffectWrapper> entityStatuses;
     private final int statusDisplayCount;
     private int timeSinceStatusRetrieved = 0;
+    private int breedingAge;
 
     public StatusInfoTab(MicrochipsMenuScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int statusDisplayCount) {
         super(screen, window, microchip, color, entity);
         this.entityStatuses = new HashMap<>();
 
         this.statusDisplayCount = statusDisplayCount;
+
+        ClientNetworkSender.RequestActions.requestEntityData(this.microchip.getEntityId());
     }
 
     @Override
@@ -80,6 +84,14 @@ public class StatusInfoTab extends InfoTab {
             String jumpString = String.format("%.2fm", StatUtils.calculateMaxJumpHeightWithJumpStrength((float) ((HorseEntity) entity).getJumpStrength()));
             screen.getTextRenderer().drawWithShadow(matrices, jumpString, window.getX() + statOffset + 19, window.getY() + 143, 0xFFFFFF);
             statOffset += jumpString.length() * 6 + 12;
+        }
+
+        if (hasBreeding()) {
+            RenderSystem.setShaderTexture(0, TEXTURE);
+            screen.drawTexture(matrices, window.getX() + statOffset + 7 , window.getY() + 142, 204, 128, 9, 9);
+            String breedString = StringHelper.formatTicks(breedingAge);
+            screen.getTextRenderer().drawWithShadow(matrices, breedString, window.getX() + statOffset + 19, window.getY() + 143, 0xFFFFFF);
+            statOffset += breedString.length() * 6 + 12;
         }
 
         // Draw status effects
@@ -161,6 +173,7 @@ public class StatusInfoTab extends InfoTab {
     @Override
     public void tick() {
         timeSinceStatusRetrieved++;
+        if (breedingAge > 0) breedingAge--;
     }
 
     @Override
@@ -205,7 +218,11 @@ public class StatusInfoTab extends InfoTab {
     }
 
     private boolean hasBreeding() {
-        return entity instanceof TameableEntity;
+        return entity instanceof AnimalEntity;
+    }
+
+    public void setBreedingAge(int breedingAge) {
+        this.breedingAge = breedingAge;
     }
 
     private static class StatusEffectWrapper {
