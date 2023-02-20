@@ -1,8 +1,15 @@
 package com.jumpcutfindo.microchip.screen;
 
 import java.util.List;
+import java.util.UUID;
 
+import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
+import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.data.MicrochipComponents;
+import com.jumpcutfindo.microchip.helper.Looker;
+import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
+import net.minecraft.entity.LivingEntity;
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
@@ -31,7 +38,6 @@ public class MicrochipsMenuScreen extends Screen {
     private Microchips microchips;
 
     private List<MicrochipGroup> microchipGroups;
-    private int groupCount, chipCount;
     private int selectedGroup;
 
     private MicrochipGroupListView microchipGroupList;
@@ -42,8 +48,6 @@ public class MicrochipsMenuScreen extends Screen {
         super(new TranslatableText("microchip.menu.title"));
         this.microchipEntityHelper = new MicrochipEntityHelper();
         this.microchips = Tagger.getMicrochips(player);
-        this.groupCount = this.microchips.getGroupCount();
-        this.chipCount = this.microchips.getChipCount();
 
         this.selectedGroup = 0;
 
@@ -219,8 +223,6 @@ public class MicrochipsMenuScreen extends Screen {
 
     public void refreshScreen(RefreshType refreshType) {
         this.microchips = Tagger.getMicrochips(client.player);
-        this.groupCount = this.microchips.getGroupCount();
-        this.chipCount = this.microchips.getChipCount();
         this.microchipGroups = this.microchips.getAllGroups();
 
         switch (refreshType) {
@@ -259,6 +261,17 @@ public class MicrochipsMenuScreen extends Screen {
         else {
             return ScreenUtils.isWithin(x, y, this.activeWindow.getX(), this.activeWindow.getY(), this.activeWindow.getWidth(), this.activeWindow.getHeight());
         }
+    }
+
+    public boolean setDisplayForEntity(PlayerEntity player, LivingEntity entity) {
+        UUID entityId = entity.getUuid();
+        Microchips microchips = Tagger.getMicrochips(player);
+        MicrochipGroup group = microchips.getGroupOf(entityId);
+        if (group == null) return false;
+        Microchip microchip = group.getMicrochips().stream().filter(m -> m.getEntityId().equals(entityId)).toList().get(0);
+
+        setActiveWindow(new MicrochipInfoWindow(this, this.getWindowX(MicrochipInfoWindow.WIDTH), this.getWindowY(MicrochipInfoWindow.HEIGHT), microchip, ClientTagger.getEntity(player.getWorld(), player.getPos(), entityId), group.getColor()));
+        return true;
     }
 
     public boolean isWindowOpen() {
