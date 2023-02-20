@@ -112,11 +112,11 @@ public class ClientNetworkSender {
 
     public static final class RequestActions {
 
-        public static void requestEntityStatuses(UUID entityId) {
+        public static void requestEntityData(UUID entityId) {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeUuid(entityId);
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, buffer);
+            ClientPlayNetworking.send(NetworkConstants.PACKET_REQUEST_ENTITY_DATA_ID, buffer);
         }
     }
 

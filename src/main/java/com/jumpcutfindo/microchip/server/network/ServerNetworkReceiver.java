@@ -47,7 +47,7 @@ public class ServerNetworkReceiver implements ModInitializer {
         onUpdateGroup();
         onDeleteGroup();
 
-        onRequestEntityStatuses();
+        onRequestEntityData();
         onUpdateMicrochips();
     }
 
@@ -199,14 +199,14 @@ public class ServerNetworkReceiver implements ModInitializer {
         }));
     }
 
-    private static void onRequestEntityStatuses() {
-        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, ((server, player, handler, buf, responseSender) -> {
+    private static void onRequestEntityData() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_DATA_ID, ((server, player, handler, buf, responseSender) -> {
             UUID entityId = buf.readUuid();
 
             LivingEntity target = (LivingEntity) player.getWorld().getEntity(entityId);
 
             if (target != null) {
-                ServerNetworkSender.sendEntityStatusesResponse(player, target.getStatusEffects());
+                ServerNetworkSender.sendEntityDataResponse(player, target);
             }
         }));
     }

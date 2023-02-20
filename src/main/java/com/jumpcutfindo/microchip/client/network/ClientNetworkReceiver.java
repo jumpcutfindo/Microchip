@@ -13,13 +13,14 @@ import java.util.Collection;
 public class ClientNetworkReceiver implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        onEntityStatusesResponse();
+        onEntityDataResponse();
     }
 
-    public static void onEntityStatusesResponse() {
-        ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_STATUSES_ID, (client, handler, buf, responseSender) -> {
+    public static void onEntityDataResponse() {
+        ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_DATA_ID, (client, handler, buf, responseSender) -> {
 
             Collection<StatusEffectInstance> entityStatuses = buf.readCollection((size) -> new ArrayList<>(), (packetByteBuf -> StatusEffectInstance.fromNbt(packetByteBuf.readNbt())));
+            int breedingAge = buf.readInt();
 
             if (client.currentScreen instanceof MicrochipsMenuScreen screen && screen.getActiveWindow() instanceof MicrochipInfoWindow infoWindow) {
                 infoWindow.setEntityStatuses(entityStatuses);
