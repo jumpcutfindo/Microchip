@@ -24,6 +24,7 @@ public class ClientNetworkReceiver implements ClientModInitializer {
 
             if (client.currentScreen instanceof MicrochipsMenuScreen screen && screen.getActiveWindow() instanceof MicrochipInfoWindow infoWindow) {
                 infoWindow.setEntityStatuses(entityStatuses);
+                infoWindow.setBreedingAge(breedingAge);
             }
         });
     }

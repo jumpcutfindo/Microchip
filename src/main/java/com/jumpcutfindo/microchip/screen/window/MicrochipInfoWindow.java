@@ -63,8 +63,6 @@ public class MicrochipInfoWindow extends Window {
         this.actionsTab = new ActionsInfoTab(screen, this, microchip, color, entity, x, y);
 
         this.activeTab = statusTab;
-
-        ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
     }
 
     @Override
@@ -269,5 +267,9 @@ public class MicrochipInfoWindow extends Window {
 
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
         if (this.statusTab != null) ((StatusInfoTab) this.statusTab).setEntityStatuses(entityStatuses);
+    }
+
+    public void setBreedingAge(int breedingAge) {
+        if (this.statusTab != null) ((StatusInfoTab) this.statusTab).setBreedingAge(breedingAge);
     }
 }
