@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen.list;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -16,7 +17,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-public abstract class ListView {
+public abstract class ListView implements Interactable {
     protected final MicrochipsMenuScreen screen;
 
     // Texture position

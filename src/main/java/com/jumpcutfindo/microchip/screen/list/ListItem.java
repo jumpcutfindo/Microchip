@@ -1,5 +1,6 @@
 package com.jumpcutfindo.microchip.screen.list;
 
+import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,7 +15,7 @@ import java.util.List;
  * An item that can be used by ListView. Note that this takes in the x, y position values so that dynamic updating
  * of the position is possible.
  */
-public abstract class ListItem {
+public abstract class ListItem implements Interactable {
     protected MicrochipsMenuScreen screen;
     private Identifier texture;
     protected int u, v, width, height;

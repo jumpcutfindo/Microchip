@@ -205,4 +205,29 @@ public class MicrochipListItem extends ListItem {
 
         helper.populateWithEntity(player, microchip, this::setEntity);
     }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        return false;
+    }
 }

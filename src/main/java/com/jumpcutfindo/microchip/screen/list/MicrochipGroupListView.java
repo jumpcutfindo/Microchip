@@ -66,6 +66,16 @@ public class MicrochipGroupListView extends ListView {
         return flag;
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        return false;
+    }
+
     public void setTexture(Identifier texture) {
         this.texture = texture;
     }

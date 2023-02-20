@@ -1,5 +1,6 @@
 package com.jumpcutfindo.microchip.screen.component;
 
+import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -11,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
 
-public class IconButton {
+public class IconButton implements Interactable {
     private final MicrochipsMenuScreen screen;
     private final int x, y;
     private final int u, v;
@@ -76,6 +77,16 @@ public class IconButton {
         return disabled;
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return false;
+    }
+
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!isDisabled() && isMouseWithin(mouseX, mouseY)) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -83,6 +94,16 @@ public class IconButton {
             return true;
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
         return false;
     }
 

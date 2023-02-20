@@ -114,6 +114,16 @@ public class MicrochipsListView extends ListView {
         }
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        return false;
+    }
+
     private List<UUID> getSelectedIds() {
         return this.getSelectedItems().stream().map(item -> ((MicrochipListItem) item).getMicrochip().getEntityId()).toList();
     }

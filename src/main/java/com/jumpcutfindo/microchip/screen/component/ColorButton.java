@@ -2,6 +2,7 @@ package com.jumpcutfindo.microchip.screen.component;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,7 +15,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class ColorButton {
+public class ColorButton implements Interactable {
     public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
     private final MicrochipsMenuScreen screen;
     private final int width, height;
@@ -66,7 +67,8 @@ public class ColorButton {
         return false;
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, width, height)) {
             this.isSelected = !this.isSelected;
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
@@ -82,5 +84,25 @@ public class ColorButton {
 
     private boolean isMouseWithin(int mouseX, int mouseY) {
         return ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        return false;
     }
 }

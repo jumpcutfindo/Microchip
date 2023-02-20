@@ -2,6 +2,7 @@ package com.jumpcutfindo.microchip.screen.window;
 
 import java.util.List;
 
+import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -11,7 +12,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-public abstract class Window {
+public abstract class Window implements Interactable {
     protected MicrochipsMenuScreen screen;
     protected int x, y;
     protected int width, height;
