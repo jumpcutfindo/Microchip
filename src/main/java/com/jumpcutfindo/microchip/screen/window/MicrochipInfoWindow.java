@@ -218,12 +218,10 @@ public class MicrochipInfoWindow extends Window {
 
         switch (selectedTab) {
             case STATUS -> {
-
+                statusTab.mouseClicked(mouseX, mouseY, button);
             }
             case ACTIONS -> {
-                for (ButtonWidget entityActionButton : entityActionButtons) {
-                    if (entityActionButton.mouseClicked(mouseX, mouseY, button)) return true;
-                }
+                actionsTab.mouseClicked(mouseX, mouseY, button);
             }
         }
 

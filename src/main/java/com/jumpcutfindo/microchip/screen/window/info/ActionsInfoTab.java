@@ -88,6 +88,9 @@ public class ActionsInfoTab extends InfoTab {
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        for (ButtonWidget entityActionButton : entityActionButtons) {
+            if (entityActionButton.mouseClicked(mouseX, mouseY, button)) return true;
+        }
         return false;
     }
 
