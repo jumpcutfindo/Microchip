@@ -149,14 +149,6 @@ public class StatusInfoTab extends InfoTab {
         timeSinceStatusRetrieved++;
     }
 
-    public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
-        entityStatuses.forEach(statusEffectInstance -> {
-            this.entityStatuses.put(statusEffectInstance.getEffectType(), new StatusEffectWrapper(statusEffectInstance));
-        });
-
-        timeSinceStatusRetrieved = 0;
-    }
-
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         return false;
@@ -180,6 +172,14 @@ public class StatusInfoTab extends InfoTab {
     @Override
     public boolean charTyped(char chr, int modifiers) {
         return false;
+    }
+
+    public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
+        entityStatuses.forEach(statusEffectInstance -> {
+            this.entityStatuses.put(statusEffectInstance.getEffectType(), new StatusEffectWrapper(statusEffectInstance));
+        });
+
+        timeSinceStatusRetrieved = 0;
     }
 
     private static class StatusEffectWrapper {
