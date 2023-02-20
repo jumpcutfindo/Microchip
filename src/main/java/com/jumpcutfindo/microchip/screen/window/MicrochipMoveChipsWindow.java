@@ -19,19 +19,17 @@ import net.minecraft.util.Identifier;
 
 public class MicrochipMoveChipsWindow extends Window {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_move_chips.png");
+    public static final int WIDTH = 160, HEIGHT = 200;
     private MicrochipGroupListView listView;
     private final MicrochipGroup fromGroup;
     private List<UUID> selectedMicrochips;
 
     private ButtonWidget submitButton;
 
-    public MicrochipMoveChipsWindow(MicrochipsMenuScreen screen, Microchips microchips, MicrochipGroup fromGroup, List<UUID> selectedMicrochips) {
-        super(screen, new TranslatableText("microchip.menu.moveChips.windowTitle"));
+    public MicrochipMoveChipsWindow(MicrochipsMenuScreen screen, int x, int y, Microchips microchips, MicrochipGroup fromGroup, List<UUID> selectedMicrochips) {
+        super(screen, new TranslatableText("microchip.menu.moveChips.windowTitle"), WIDTH, HEIGHT, x, y);
         this.fromGroup = fromGroup;
         this.selectedMicrochips = selectedMicrochips;
-
-        this.width = 160;
-        this.height = 200;
 
         // Create list and set parameters
         this.listView = new MicrochipGroupListView(screen, microchips, this.x, this.y);
@@ -42,6 +40,12 @@ public class MicrochipMoveChipsWindow extends Window {
 
         // Create button
         this.submitButton = new ButtonWidget(x, y, 64, 20, new TranslatableText("microchip.menu.moveChips.submitButton"), (widget) -> this.moveMicrochips());
+
+        this.listView.x = x;
+        this.listView.y = y;
+
+        this.submitButton.x = x + 88;
+        this.submitButton.y = y + 174;
     }
 
     @Override
@@ -55,16 +59,6 @@ public class MicrochipMoveChipsWindow extends Window {
 
         this.submitButton.active = this.listView.getSelectedItems().size() > 0;
         this.submitButton.renderButton(matrices, mouseX, mouseY, 0);
-    }
-
-    @Override
-    public void setPos(int x, int y) {
-        super.setPos(x, y);
-        this.listView.x = x;
-        this.listView.y = y;
-
-        this.submitButton.x = x + 88;
-        this.submitButton.y = y + 174;
     }
 
     @Override

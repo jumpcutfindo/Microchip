@@ -86,9 +86,6 @@ public class MicrochipsMenuScreen extends Screen {
         this.microchipsList.renderItems(matrices, mouseX, mouseY);
 
         if (this.activeWindow != null) {
-            int windowX = (this.width - this.activeWindow.getWidth()) / 2;
-            int windowY = (this.height - this.activeWindow.getHeight()) / 2;
-            this.activeWindow.setPos(windowX, windowY);
             this.activeWindow.render(matrices, mouseX, mouseY);
         }
     }
@@ -190,6 +187,14 @@ public class MicrochipsMenuScreen extends Screen {
         if (window == null) return;
 
         this.activeWindow.getWidgets().forEach(this::addSelectableChild);
+    }
+
+    public int getWindowX(int windowWidth) {
+        return (this.width - windowWidth) / 2;
+    }
+
+    public int getWindowY(int windowHeight) {
+        return (this.height - windowHeight) / 2;
     }
 
     public void setSelectedGroup(int index) {

@@ -21,6 +21,8 @@ import net.minecraft.util.Identifier;
 
 public class MicrochipModifyGroupWindow extends Window {
     public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
+    public static final int WIDTH = 138, HEIGHT = 121;
+
     private final MicrochipGroup group;
     private TextFieldWidget groupNameField;
     private ButtonWidget submitButton;
@@ -28,12 +30,9 @@ public class MicrochipModifyGroupWindow extends Window {
     private List<ColorButton> colorButtons;
     private ColorButton selectedColor;
 
-    public MicrochipModifyGroupWindow(MicrochipsMenuScreen screen, MicrochipGroup group) {
-        super(screen, getTitle(group));
+    public MicrochipModifyGroupWindow(MicrochipsMenuScreen screen, int x, int y, MicrochipGroup group) {
+        super(screen, getTitle(group), WIDTH, HEIGHT, x, y);
         this.group = group;
-
-        this.width = 138;
-        this.height = 121;
 
         // Create text field
         this.groupNameField = new TextFieldWidget(screen.getTextRenderer(), 0, 0, 124, 18, new TranslatableText("microchip.menu.createGroup.textWidget"));
@@ -77,11 +76,11 @@ public class MicrochipModifyGroupWindow extends Window {
     }
 
     public static MicrochipModifyGroupWindow createEditWindow(MicrochipsMenuScreen screen, MicrochipGroup group) {
-        return new MicrochipModifyGroupWindow(screen, group);
+        return new MicrochipModifyGroupWindow(screen, screen.getWindowX(MicrochipModifyGroupWindow.WIDTH), screen.getWindowY(MicrochipModifyGroupWindow.HEIGHT), group);
     }
 
     public static MicrochipModifyGroupWindow createCreateWindow(MicrochipsMenuScreen screen) {
-        return new MicrochipModifyGroupWindow(screen, null);
+        return new MicrochipModifyGroupWindow(screen, screen.getWindowX(MicrochipModifyGroupWindow.WIDTH), screen.getWindowY(MicrochipModifyGroupWindow.HEIGHT), null);
     }
 
     private static TranslatableText getTitle(MicrochipGroup group) {

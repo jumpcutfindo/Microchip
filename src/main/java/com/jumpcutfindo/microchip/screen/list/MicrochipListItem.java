@@ -108,7 +108,7 @@ public class MicrochipListItem extends ListItem {
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY) {
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            screen.setActiveWindow(new MicrochipInfoWindow(screen, this.microchip, this.entity, this.group.getColor()));
+            screen.setActiveWindow(new MicrochipInfoWindow(screen, screen.getWindowX(MicrochipInfoWindow.WIDTH), screen.getWindowY(MicrochipInfoWindow.HEIGHT), this.microchip, this.entity, this.group.getColor()));
             return true;
         }
 

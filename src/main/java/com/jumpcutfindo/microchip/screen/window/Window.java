@@ -17,12 +17,18 @@ public abstract class Window {
     protected int width, height;
     protected Text title;
     protected int titleX, titleY;
-    public Window(MicrochipsMenuScreen screen, Text title) {
+    public Window(MicrochipsMenuScreen screen, Text title, int width, int height, int x, int y) {
         this.screen = screen;
         this.title = title;
 
         this.titleX = 7;
         this.titleY = 9;
+
+        this.width = width;
+        this.height = height;
+
+        this.x = x;
+        this.y = y;
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY) {

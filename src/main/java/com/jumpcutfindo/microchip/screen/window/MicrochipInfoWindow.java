@@ -7,14 +7,14 @@ import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipEntityData;
-import com.jumpcutfindo.microchip.helper.StatUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
+import com.jumpcutfindo.microchip.screen.window.infotab.InfoTab;
+import com.jumpcutfindo.microchip.screen.window.infotab.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.DiffuseLighting;
@@ -22,32 +22,25 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.StringHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
 public class MicrochipInfoWindow extends Window {
-    protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_info_window.png");
+    public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_info_window.png");
+    public static final int WIDTH = 168, HEIGHT = 200;
 
     private Microchip microchip;
     private final GroupColor color;
     private Tab selectedTab;
-    private final int statusDisplayCount;
     private LivingEntity entity;
 
-    private Map<StatusEffect, StatusEffectWrapper> entityStatuses;
+    private InfoTab statusTab, actionsTab;
 
     private final List<String> buttonTranslatableKeys = List.of(
             "microchip.menu.microchipInfo.actionTab.locate",
@@ -75,11 +68,8 @@ public class MicrochipInfoWindow extends Window {
     private int timeSinceStatusRetrieved = 0;
 
     private final float entityModelSize;
-    public MicrochipInfoWindow(MicrochipsMenuScreen screen, Microchip microchip, LivingEntity entity, GroupColor color) {
-        super(screen, new TranslatableText("microchip.menu.microchipInfo.windowTitle"));
-
-        this.width = 168;
-        this.height = 200;
+    public MicrochipInfoWindow(MicrochipsMenuScreen screen, int x, int y, Microchip microchip, LivingEntity entity, GroupColor color) {
+        super(screen, new TranslatableText("microchip.menu.microchipInfo.windowTitle"), 168, 200, x, y);
 
         this.microchip = microchip;
         this.entity = entity;
@@ -91,16 +81,7 @@ public class MicrochipInfoWindow extends Window {
             this.entityModelSize = 0;
         }
 
-        this.statusDisplayCount = 5;
-        this.entityStatuses = new HashMap<>();
-        ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
-
         this.selectedTab = Tab.STATUS;
-    }
-
-    @Override
-    public void setPos(int x, int y) {
-        super.setPos(x, y);
 
         this.entityActionButtons = new ArrayList<>();
 
@@ -111,6 +92,11 @@ public class MicrochipInfoWindow extends Window {
             ButtonWidget buttonWidget = new ButtonWidget(x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset , 75, 20, new TranslatableText(buttonTranslatableKeys.get(i)), buttonActions.get(i));
             entityActionButtons.add(buttonWidget);
         }
+
+        // Create tabs only after position is set
+        this.statusTab = new StatusInfoTab(screen, microchip, color, entity, x, y, 5);
+
+        ClientNetworkSender.RequestActions.requestEntityStatuses(this.microchip.getEntityId());
     }
 
     @Override
@@ -182,69 +168,7 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private void drawStatusTab(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (x + 7), (float) (y + 105), this.color.getShadowColor());
-
-        // Draw health and armor
-        RenderSystem.setShaderTexture(0, TEXTURE);
-
-        float health = this.entity == null ? 0.0f : this.entity.getHealth();
-        screen.drawTexture(matrices, x + 7, y + 130, 0, 200, 154, 5);
-        screen.drawTexture(matrices, x + 7, y + 130, 0, 205, (int) ((health / microchip.getEntityData().getMaxHealth()) * 154), 5);
-
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 7, y + 117, 168, 128, 9, 9);
-        String healthString = this.entity == null ? "?" : Integer.toString((int) health);
-        String healthDisplayString = String.format("%s/%d", healthString, (int) microchip.getEntityData().getMaxHealth());
-        screen.getTextRenderer().drawWithShadow(matrices, healthDisplayString, x + 19, y + 118, 0xFFFFFF);
-
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 19 + healthDisplayString.length() * 7, y + 117, 177, 128, 9, 9);
-        String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
-        screen.getTextRenderer().drawWithShadow(matrices, armorString, x + 19 + healthDisplayString.length() * 7 + 12, y + 118, 0xFFFFFF);
-
-        // Draw stats
-        // Speed
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, x + 7 , y + 142, 186, 128, 9, 9);
-        String speedString = this.entity == null ? "?" : String.format("%.2f m/s", StatUtils.calculateMaxSpeed((float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED), entityStatuses.containsKey(StatusEffects.SPEED) ? entityStatuses.get(StatusEffects.SPEED).getAmplifier() : 0));
-        screen.getTextRenderer().drawWithShadow(matrices, speedString, x + 19, y + 143, 0xFFFFFF);
-
-        // Draw status effects
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (x + 7), (float) (y + 158), 0xFFFFFF);
-        StatusEffectSpriteManager statusEffectSpriteManager = MinecraftClient.getInstance().getStatusEffectSpriteManager();
-
-        int effectsOffset = 0;
-        int statusEffectBgOffset = 0;
-        Iterator<StatusEffectWrapper> iterator = this.entityStatuses.values().iterator();
-
-        // Draw status effect backgrounds
-        for (int i = 0; i < statusDisplayCount; i++) {
-            RenderSystem.setShaderTexture(0, TEXTURE);
-            screen.drawTexture(matrices, x + 7 + statusEffectBgOffset, y + 170, 168, 137, 22, 22);
-            statusEffectBgOffset += 24;
-        }
-
-        int displayedStatuses = 0;
-        int activeStatusCount = 0;
-        while (iterator.hasNext()) {
-            StatusEffectWrapper instance = iterator.next();
-            if (!instance.hasExpired(timeSinceStatusRetrieved)) {
-                activeStatusCount++;
-                 if (displayedStatuses < statusDisplayCount) {
-                     // Draw the status
-                     StatusEffect statusEffect = instance.getEffectType();
-                     Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
-                     RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
-                     DrawableHelper.drawSprite(matrices, x + 9 + effectsOffset, y + 172, 0, 18, 18, sprite);
-
-                     effectsOffset += 24;
-                     displayedStatuses++;
-                 }
-            }
-        }
-
-        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("+%d", Math.max(activeStatusCount - displayedStatuses, 0))), (float) (x + 132), (float) (y + 177), 0xFFFFFF);
+        statusTab.renderContent(matrices, mouseX, mouseY);
     }
 
     private void drawActionTab(MatrixStack matrices, int mouseX, int mouseY) {
@@ -275,39 +199,7 @@ public class MicrochipInfoWindow extends Window {
 
         switch (selectedTab) {
         case STATUS -> {
-            // Draw tooltips for drawn statuses
-            Iterator<StatusEffectWrapper> iterator = this.entityStatuses.values().iterator();
-            int effectsOffset = 0;
-
-            int displayedStatuses = 0;
-            int activeStatusCount = 0;
-            List<Text> undisplayedStatuses = new ArrayList<>();
-            while (iterator.hasNext()) {
-                StatusEffectWrapper instance = iterator.next();
-                StatusEffect statusEffect = instance.getEffectType();
-
-                if (!instance.hasExpired(timeSinceStatusRetrieved)) {
-                    activeStatusCount++;
-                    if (displayedStatuses < statusDisplayCount) {
-                        // Draw the status tooltip
-                        if (ScreenUtils.isWithin(mouseX, mouseY, x + 9 + effectsOffset, y + 172, 18, 18)) {
-                            Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved))));
-                            Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
-                            screen.renderTooltip(matrices, text, mouseX, mouseY);
-
-                        }
-                        effectsOffset += 24;
-                        displayedStatuses++;
-                    } else {
-                        TranslatableText statusName = new TranslatableText(instance.getTranslationKey());
-                        statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved)))));
-                        undisplayedStatuses.add(statusName);
-                    }
-                }
-            }
-            if (ScreenUtils.isWithin(mouseX, mouseY, x + 129, y + 172, 18, 18)) {
-                screen.renderTooltip(matrices, undisplayedStatuses, mouseX, mouseY);
-            }
+            statusTab.renderTooltips(matrices, mouseX, mouseY);
         }
         case ACTIONS -> {
             int xOffset = 77;
@@ -331,7 +223,7 @@ public class MicrochipInfoWindow extends Window {
 
     @Override
     public void tick() {
-        timeSinceStatusRetrieved++;
+        if (this.statusTab != null) this.statusTab.tick();
     }
 
     @Override
@@ -440,38 +332,7 @@ public class MicrochipInfoWindow extends Window {
     }
 
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
-        entityStatuses.forEach(statusEffectInstance -> {
-            this.entityStatuses.put(statusEffectInstance.getEffectType(), new StatusEffectWrapper(statusEffectInstance));
-        });
-
-        timeSinceStatusRetrieved = 0;
-    }
-
-    private class StatusEffectWrapper {
-        private final StatusEffectInstance statusEffectInstance;
-        public StatusEffectWrapper(StatusEffectInstance statusEffectInstance) {
-            this.statusEffectInstance = statusEffectInstance;
-        }
-
-        public boolean hasExpired(int timeSince) {
-            return timeSince > statusEffectInstance.getDuration();
-        }
-
-        public StatusEffect getEffectType() {
-            return statusEffectInstance.getEffectType();
-        }
-
-        public int getRemainingTime(int timeSince) {
-            return statusEffectInstance.getDuration() - timeSince;
-        }
-
-        public String getTranslationKey() {
-            return statusEffectInstance.getTranslationKey();
-        }
-
-        public int getAmplifier() {
-            return statusEffectInstance.getAmplifier();
-        }
+        if (this.statusTab != null) ((StatusInfoTab) this.statusTab).setEntityStatuses(entityStatuses);
     }
 
     private enum Tab {

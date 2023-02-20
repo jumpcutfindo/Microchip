@@ -128,7 +128,7 @@ public class MicrochipsListView extends ListView {
     }
 
     private void onMoveMicrochips() {
-        this.screen.setActiveWindow(new MicrochipMoveChipsWindow(screen, screen.getMicrochips(), this.group, getSelectedIds()));
+        this.screen.setActiveWindow(new MicrochipMoveChipsWindow(screen, screen.getWindowX(MicrochipMoveChipsWindow.WIDTH), screen.getWindowY(MicrochipMoveChipsWindow.HEIGHT), screen.getMicrochips(), this.group, getSelectedIds()));
     }
 
     private void onDeleteMicrochips() {
