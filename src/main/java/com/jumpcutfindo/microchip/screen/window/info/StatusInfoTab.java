@@ -17,6 +17,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.passive.HorseEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -63,10 +65,22 @@ public class StatusInfoTab extends InfoTab {
 
         // Draw stats
         // Speed
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.drawTexture(matrices, window.getX() + 7 , window.getY() + 142, 186, 128, 9, 9);
-        String speedString = this.entity == null ? "?" : String.format("%.2f m/s", StatUtils.calculateMaxSpeed((float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED), entityStatuses.containsKey(StatusEffects.SPEED) ? entityStatuses.get(StatusEffects.SPEED).getAmplifier() : 0));
-        screen.getTextRenderer().drawWithShadow(matrices, speedString, window.getX() + 19, window.getY() + 143, 0xFFFFFF);
+        int statOffset = 0;
+        if (hasSpeed()) {
+            RenderSystem.setShaderTexture(0, TEXTURE);
+            screen.drawTexture(matrices, window.getX() + statOffset + 7 , window.getY() + 142, 186, 128, 9, 9);
+            String speedString = String.format("%.2fm/s", StatUtils.calculateMaxSpeed((float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED), entityStatuses.containsKey(StatusEffects.SPEED) ? entityStatuses.get(StatusEffects.SPEED).getAmplifier() : 0));
+            screen.getTextRenderer().drawWithShadow(matrices, speedString, window.getX() + statOffset + 19, window.getY() + 143, 0xFFFFFF);
+            statOffset += speedString.length() * 6 + 12;
+        }
+
+        if (hasJump()) {
+            RenderSystem.setShaderTexture(0, TEXTURE);
+            screen.drawTexture(matrices, window.getX() + statOffset + 7 , window.getY() + 142, 195, 128, 9, 9);
+            String jumpString = String.format("%.2fm", StatUtils.calculateMaxJumpHeightWithJumpStrength((float) ((HorseEntity) entity).getJumpStrength()));
+            screen.getTextRenderer().drawWithShadow(matrices, jumpString, window.getX() + statOffset + 19, window.getY() + 143, 0xFFFFFF);
+            statOffset += jumpString.length() * 6 + 12;
+        }
 
         // Draw status effects
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -180,6 +194,18 @@ public class StatusInfoTab extends InfoTab {
         });
 
         timeSinceStatusRetrieved = 0;
+    }
+
+    private boolean hasSpeed() {
+        return entity instanceof HorseEntity;
+    }
+
+    private boolean hasJump() {
+        return entity instanceof HorseEntity;
+    }
+
+    private boolean hasBreeding() {
+        return entity instanceof TameableEntity;
     }
 
     private static class StatusEffectWrapper {
