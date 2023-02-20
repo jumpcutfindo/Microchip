@@ -1,4 +1,4 @@
-package com.jumpcutfindo.microchip.screen.window.infotab;
+package com.jumpcutfindo.microchip.screen.window.info;
 
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;

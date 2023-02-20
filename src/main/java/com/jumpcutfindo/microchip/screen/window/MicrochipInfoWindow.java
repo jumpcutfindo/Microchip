@@ -10,8 +10,8 @@ import com.jumpcutfindo.microchip.data.MicrochipEntityData;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
-import com.jumpcutfindo.microchip.screen.window.infotab.InfoTab;
-import com.jumpcutfindo.microchip.screen.window.infotab.StatusInfoTab;
+import com.jumpcutfindo.microchip.screen.window.info.InfoTab;
+import com.jumpcutfindo.microchip.screen.window.info.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
