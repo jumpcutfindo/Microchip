@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen.window.info;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
+import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
@@ -41,7 +42,7 @@ public class ActionsInfoTab extends InfoTab {
     private final int buttonCount = 4;
     private final ArrayList<ButtonWidget> entityActionButtons;
 
-    public ActionsInfoTab(MicrochipsMenuScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int x, int y) {
+    public ActionsInfoTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int x, int y) {
         super(screen, window, microchip, color, entity);
 
         this.entityActionButtons = new ArrayList<>();

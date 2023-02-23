@@ -6,6 +6,8 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipEntityData;
 import com.jumpcutfindo.microchip.helper.StringUtils;
+import com.jumpcutfindo.microchip.helper.Tagger;
+import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
@@ -46,7 +48,7 @@ public class MicrochipInfoWindow extends Window {
     private final int tabCount = 2;
 
     private final float entityModelSize;
-    public MicrochipInfoWindow(MicrochipsMenuScreen screen, int x, int y, Microchip microchip, LivingEntity entity, GroupColor color) {
+    public MicrochipInfoWindow(MicrochipScreen screen, int x, int y, Microchip microchip, LivingEntity entity, GroupColor color) {
         super(screen, new TranslatableText("microchip.menu.microchipInfo.windowTitle"), 168, 200, x, y);
 
         this.microchip = microchip;

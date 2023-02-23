@@ -4,6 +4,7 @@ import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.StatUtils;
+import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
@@ -36,7 +37,7 @@ public class StatusInfoTab extends InfoTab {
     private int timeSinceStatusRetrieved = 0;
     private int breedingAge;
 
-    public StatusInfoTab(MicrochipsMenuScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int statusDisplayCount) {
+    public StatusInfoTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int statusDisplayCount) {
         super(screen, window, microchip, color, entity);
         this.entityStatuses = new HashMap<>();
 
