@@ -1,33 +1,23 @@
 package com.jumpcutfindo.microchip.screen;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
 import com.jumpcutfindo.microchip.data.Microchip;
-import com.jumpcutfindo.microchip.data.MicrochipComponents;
-import com.jumpcutfindo.microchip.helper.Looker;
-import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
-import net.minecraft.entity.LivingEntity;
-import org.lwjgl.glfw.GLFW;
-
-import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
 import com.jumpcutfindo.microchip.screen.list.MicrochipsListView;
-import com.jumpcutfindo.microchip.screen.window.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.GameRenderer;
+import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
+import java.util.UUID;
 
 public class MicrochipsMenuScreen extends MicrochipScreen {
     public static final Identifier BUTTONS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
@@ -88,18 +78,11 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
         this.microchipGroupList.renderItems(matrices, mouseX, mouseY);
         this.microchipsList.renderItems(matrices, mouseX, mouseY);
 
-        if (this.activeWindow != null) {
-            this.activeWindow.setPos(this.getWindowX(this.activeWindow.getWidth()), this.getWindowY(this.activeWindow.getHeight()));
-            this.activeWindow.render(matrices, mouseX, mouseY);
-        }
+        super.render(matrices, mouseX, mouseY, delta);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.activeWindow != null) {
-            return this.activeWindow.mouseClicked((int) mouseX, (int) mouseY, button);
-        }
-
         if (isMouseInGroupList(mouseX, mouseY)) {
             return this.microchipGroupList.mouseClicked((int) mouseX, (int) mouseY, button);
         }
@@ -113,10 +96,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (this.activeWindow != null) {
-            return this.activeWindow.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
-        }
-
         if (isMouseInGroupList(mouseX, mouseY)) {
             return this.microchipGroupList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
@@ -130,10 +109,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if (this.activeWindow != null) {
-            return this.activeWindow.mouseScrolled(mouseX, mouseY, amount);
-        }
-
         if (isMouseInGroupList(mouseX, mouseY)) {
             return this.microchipGroupList.mouseScrolled(mouseX, mouseY, amount);
         }
@@ -143,47 +118,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
         }
 
         return super.mouseScrolled(mouseX, mouseY, amount);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.activeWindow != null) {
-            this.activeWindow = null;
-            return true;
-        }
-
-        if (this.activeWindow != null) {
-           return this.activeWindow.keyPressed(keyCode, scanCode, modifiers);
-        }
-
-        return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public boolean charTyped(char chr, int modifiers) {
-        if (this.activeWindow != null) {
-            return this.activeWindow.charTyped(chr, modifiers);
-        }
-
-        return super.charTyped(chr, modifiers);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (this.activeWindow != null) this.activeWindow.tick();
-    }
-
-    public Window getActiveWindow() {
-        return activeWindow;
-    }
-
-    public int getWindowX(int windowWidth) {
-        return (this.width - windowWidth) / 2;
-    }
-
-    public int getWindowY(int windowHeight) {
-        return (this.height - windowHeight) / 2;
     }
 
     public void setSelectedGroup(int index) {
@@ -232,13 +166,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
         }
     }
 
-    public boolean isBlockedByWindow(int x, int y) {
-        if (this.activeWindow == null) return false;
-        else {
-            return ScreenUtils.isWithin(x, y, this.activeWindow.getX(), this.activeWindow.getY(), this.activeWindow.getWidth(), this.activeWindow.getHeight());
-        }
-    }
-
     public boolean setDisplayForEntity(PlayerEntity player, LivingEntity entity) {
         UUID entityId = entity.getUuid();
         Microchips microchips = Tagger.getMicrochips(player);
@@ -248,10 +175,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
 
         setActiveWindow(new MicrochipInfoWindow(this, this.getWindowX(MicrochipInfoWindow.WIDTH), this.getWindowY(MicrochipInfoWindow.HEIGHT), microchip, ClientTagger.getEntity(player.getWorld(), player.getPos(), entityId), group.getColor()));
         return true;
-    }
-
-    public boolean isWindowOpen() {
-        return this.activeWindow != null;
     }
 
     protected int getGroupListX() {
