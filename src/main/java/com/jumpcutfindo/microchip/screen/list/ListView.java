@@ -147,6 +147,10 @@ public abstract class ListView implements Interactable {
                 return true;
             }
 
+            if (item.mouseClicked(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+                return true;
+            }
+
             offsetY += item.getHeight();
         }
 
