@@ -72,6 +72,7 @@ public abstract class Window implements Interactable {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!ScreenUtils.isWithin(mouseX, mouseY, x, y, width, height)) {
             screen.setActiveWindow(null);
+            if (screen.isStandalone()) screen.close();
             return true;
         }
         return false;

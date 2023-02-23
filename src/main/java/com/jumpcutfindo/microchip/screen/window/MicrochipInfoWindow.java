@@ -292,9 +292,10 @@ public class MicrochipInfoWindow extends Window {
         if (group == null) return;
 
         Microchip microchip = microchips.getMicrochipOf(entityId);
-        if (microchip != null) return;
+        if (microchip == null) return;
 
         MicrochipScreen screen = new MicrochipScreen(Text.of(""));
+        screen.setStandalone(true);
         MicrochipInfoWindow infoWindow = new MicrochipInfoWindow(screen, screen.getWindowX(MicrochipInfoWindow.WIDTH), screen.getWindowY(MicrochipInfoWindow.HEIGHT), microchip, entity, group.getColor());
 
         screen.setActiveWindow(infoWindow);

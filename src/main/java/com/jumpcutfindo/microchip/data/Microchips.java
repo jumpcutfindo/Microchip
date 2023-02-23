@@ -56,10 +56,9 @@ public abstract class Microchips implements Component {
     }
 
     public Microchip getMicrochipOf(UUID entityId) {
-        List<MicrochipGroup> groups = getAllGroups();
-        if (groups.size() == 0) return null;
+        MicrochipGroup group = getGroupOf(entityId);
+        if (group == null) return null;
 
-        MicrochipGroup group = groups.get(0);
         List<Microchip> microchips = group.getMicrochipsWithIds(List.of(entityId));
 
         if (microchips.size() == 0) return null;

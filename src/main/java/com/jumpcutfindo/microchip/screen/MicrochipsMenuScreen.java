@@ -63,11 +63,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
     }
 
     @Override
-    public boolean shouldPause() {
-        return false;
-    }
-
-    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (hasUpdates()) refreshScreen(RefreshType.BOTH);
 

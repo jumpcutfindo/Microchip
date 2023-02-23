@@ -16,8 +16,22 @@ import org.lwjgl.glfw.GLFW;
  */
 public class MicrochipScreen extends Screen {
     Window activeWindow;
+    boolean isStandalone;
     public MicrochipScreen(Text title) {
         super(title);
+    }
+
+    public void setStandalone(boolean standalone) {
+        isStandalone = standalone;
+    }
+
+    public boolean isStandalone() {
+        return isStandalone;
+    }
+
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 
     @Override
@@ -58,6 +72,7 @@ public class MicrochipScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.activeWindow != null) {
+            if (isStandalone) close();
             this.activeWindow = null;
             return true;
         }
