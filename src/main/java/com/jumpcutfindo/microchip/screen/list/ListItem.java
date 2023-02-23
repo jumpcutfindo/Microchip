@@ -15,7 +15,7 @@ import java.util.List;
  * An item that can be used by ListView. Note that this takes in the x, y position values so that dynamic updating
  * of the position is possible.
  */
-public abstract class ListItem implements Interactable {
+public abstract class ListItem {
     protected MicrochipsMenuScreen screen;
     private Identifier texture;
     protected int u, v, width, height;
@@ -77,7 +77,6 @@ public abstract class ListItem implements Interactable {
     public void renderHoveredBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         screen.drawTexture(matrices, x, y, this.u, this.v, this.width, this.height);
     }
-
 
     public abstract void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY);
 

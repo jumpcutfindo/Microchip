@@ -54,29 +54,4 @@ public class MicrochipGroupListItem extends ListItem {
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         screen.getTextRenderer().draw(matrices, new LiteralText(this.microchipGroup.getDisplayName()), (float) (x + 19), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
     }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return false;
-    }
-
-    @Override
-    public boolean charTyped(char chr, int modifiers) {
-        return false;
-    }
 }
