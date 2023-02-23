@@ -3,8 +3,10 @@ package com.jumpcutfindo.microchip.client;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.helper.Looker;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.helper.TagResult;
@@ -53,40 +55,34 @@ public class InputListener implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (tagBinding.wasPressed() && client.player != null) {
-                tagEntity(client);
-            }
-
-            while (guiBinding.wasPressed() && client.player != null) {
-                openMicrochipsMenu(client);
-            }
-
-            while(mobInfoBinding.wasPressed() && client.player != null) {
-                openMicrochipInfoWindow(client);
+            if (client.player != null) {
+                while (tagBinding.wasPressed()) tagEntity(client.player);
+                while (guiBinding.wasPressed()) openMicrochipsMenu(client, client.player);
+                while (mobInfoBinding.wasPressed()) openMicrochipInfoWindow(client, client.player);
             }
         });
     }
 
-    public static void tagEntity(MinecraftClient client) {
-        TagResult result = ClientTagger.tag(client.player);
+    public static void tagEntity(ClientPlayerEntity player) {
+        TagResult result = ClientTagger.tag(player);
 
         switch (result) {
-            case ADDED -> client.player.sendMessage(new TranslatableText("microchip.action.tag.added"), false);
-            case DUPLICATE -> client.player.sendMessage(new TranslatableText("microchip.action.tag.duplicate"), false);
-            case NOTHING -> client.player.sendMessage(new TranslatableText("microchip.action.tag.nothing"), false);
+            case ADDED -> player.sendMessage(new TranslatableText("microchip.action.tag.added"), false);
+            case DUPLICATE -> player.sendMessage(new TranslatableText("microchip.action.tag.duplicate"), false);
+            case NOTHING -> player.sendMessage(new TranslatableText("microchip.action.tag.nothing"), false);
         }
     }
 
-    public static void openMicrochipsMenu(MinecraftClient client) {
+    public static void openMicrochipsMenu(MinecraftClient client, ClientPlayerEntity player) {
         ClientNetworkSender.MicrochipsActions.updateMicrochips();
-        client.setScreen(new MicrochipsMenuScreen(client.player));
+        client.setScreen(new MicrochipsMenuScreen(player));
     }
 
-    public static void openMicrochipInfoWindow(MinecraftClient client) {
-        MicrochipsMenuScreen screen = new MicrochipsMenuScreen(client.player);
+    public static void openMicrochipInfoWindow(MinecraftClient client, ClientPlayerEntity player) {
+        MicrochipsMenuScreen screen = new MicrochipsMenuScreen(player);
 
-        List<Entity> entities = Looker.getLookingAt(client.player);
-        if (entities.size() > 0 && entities.get(0) instanceof LivingEntity livingEntity && screen.setDisplayForEntity(client.player, livingEntity)) {
+        List<Entity> entities = Looker.getLookingAt(player);
+        if (entities.size() > 0 && entities.get(0) instanceof LivingEntity livingEntity && screen.setDisplayForEntity(player, livingEntity)) {
             client.setScreen(screen);
         }
     }
