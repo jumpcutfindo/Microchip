@@ -29,7 +29,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class MicrochipsMenuScreen extends Screen {
+public class MicrochipsMenuScreen extends MicrochipScreen {
     public static final Identifier BUTTONS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
 
     private final int titleX, titleY;
@@ -43,7 +43,6 @@ public class MicrochipsMenuScreen extends Screen {
     private MicrochipGroupListView microchipGroupList;
     private MicrochipsListView microchipsList;
 
-    private Window activeWindow;
     public MicrochipsMenuScreen(PlayerEntity player) {
         super(new TranslatableText("microchip.menu.title"));
         this.microchipEntityHelper = new MicrochipEntityHelper();
@@ -93,12 +92,6 @@ public class MicrochipsMenuScreen extends Screen {
             this.activeWindow.setPos(this.getWindowX(this.activeWindow.getWidth()), this.getWindowY(this.activeWindow.getHeight()));
             this.activeWindow.render(matrices, mouseX, mouseY);
         }
-    }
-
-    public void drawBackgroundGradient(MatrixStack matrices) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
     }
 
     @Override
@@ -185,15 +178,6 @@ public class MicrochipsMenuScreen extends Screen {
         return activeWindow;
     }
 
-    public void setActiveWindow(Window window) {
-        this.clearChildren();
-        this.activeWindow = window;
-
-        if (window == null) return;
-
-        this.activeWindow.getWidgets().forEach(this::addSelectableChild);
-    }
-
     public int getWindowX(int windowWidth) {
         return (this.width - windowWidth) / 2;
     }
@@ -206,14 +190,6 @@ public class MicrochipsMenuScreen extends Screen {
         this.selectedGroup = index;
         // Only refresh microchips since the selection changed
         this.refreshScreen(RefreshType.MICROCHIPS);
-    }
-
-    public PlayerEntity getPlayer() {
-        return client.player;
-    }
-
-    public TextRenderer getTextRenderer() {
-        return this.textRenderer;
     }
 
     private boolean hasUpdates() {
