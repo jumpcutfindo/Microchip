@@ -47,8 +47,8 @@ public class MicrochipsListView extends ListView {
             this.title = new LiteralText("");
         }
 
-        this.titleX = 7;
-        this.titleY = 10    ;
+        this.titleX = 22;
+        this.titleY = 10;
 
         this.editGroupButton = new IconButton(screen, x + 154, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
         this.deleteGroupButton = new IconButton(screen, x + 182, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
@@ -66,6 +66,12 @@ public class MicrochipsListView extends ListView {
 
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.group.getColor().getShadowColor());
+
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        ScreenUtils.setShaderColor(group.getColor(), false);
+        RenderSystem.setShaderTexture(0, MicrochipGroupListView.TEXTURE);
+        screen.drawTexture(matrices, x + 5, y + 6, group.getColor().ordinal() * 16, 214, 16, 16);
     }
 
     @Override
