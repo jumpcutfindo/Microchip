@@ -12,6 +12,7 @@ import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.InfoTab;
+import com.jumpcutfindo.microchip.screen.window.info.InventoryTab;
 import com.jumpcutfindo.microchip.screen.window.info.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
@@ -49,8 +50,8 @@ public class MicrochipInfoWindow extends Window {
     private LivingEntity entity;
 
     private InfoTab activeTab;
-    private final InfoTab statusTab, actionsTab;
-    private final int tabCount = 2;
+    private final InfoTab statusTab, actionsTab, inventoryTab;
+    private final int tabCount = 3;
 
     private final float entityModelSize;
     public MicrochipInfoWindow(MicrochipScreen screen, int x, int y, Microchip microchip, LivingEntity entity, GroupColor color) {
@@ -68,6 +69,7 @@ public class MicrochipInfoWindow extends Window {
 
         this.statusTab = new StatusInfoTab(screen, this, microchip, color, entity, 5);
         this.actionsTab = new ActionsInfoTab(screen, this, microchip, color, entity, x, y);
+        this.inventoryTab = new InventoryTab(screen, this, microchip, color, entity);
 
         this.activeTab = statusTab;
     }
@@ -101,7 +103,7 @@ public class MicrochipInfoWindow extends Window {
         // Draw entity background, then entity, then the main UI
         if (this.entity != null) drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
         else {
-            screen.drawTexture(matrices, x + 18, y + 40, 0, 215, 28, 28);
+            screen.drawTexture(matrices, x + 18, y + 40, 214, 0, 28, 28);
         }
 
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -121,20 +123,18 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         int tabVerticalOffset = 0;
-        int tabIconVerticalOffset = 0;
         for (int i = 0; i < tabCount; i++) {
             ScreenUtils.setShaderColor(color, false);
             if (activeTab.equals(getTabs().get(i))) {
-                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62 + (i == 0 ? 0 : 27), 32, 29);
+                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62 + (i == 0 ? 0 : 28), 32, 28);
             } else {
-                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 200, 62 + (i == 0 ? 0 : 27), 32, 29);
+                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 200, 62 + (i == 0 ? 0 : 28), 32, 28);
             }
 
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            screen.drawTexture(matrices, x + 171, y + 100 + tabIconVerticalOffset, 214 + i * 18, 0, 18, 18);
+            screen.drawTexture(matrices, x + 171, y + 100 + tabVerticalOffset, i * 18, 215, 18, 18);
 
-            tabVerticalOffset += 29;
-            tabIconVerticalOffset += 31;
+            tabVerticalOffset += 30;
         }
     }
 
@@ -223,7 +223,7 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private List<InfoTab> getTabs() {
-        return List.of(statusTab, actionsTab);
+        return List.of(statusTab, actionsTab, inventoryTab);
     }
 
     private static void drawLookingEntity(LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
