@@ -83,6 +83,8 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+
         if (isMouseInGroupList(mouseX, mouseY)) {
             return this.microchipGroupList.mouseClicked((int) mouseX, (int) mouseY, button);
         }
@@ -91,11 +93,13 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
             return this.microchipsList.mouseClicked((int) mouseX, (int) mouseY, button);
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return false;
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) return true;
+
         if (isMouseInGroupList(mouseX, mouseY)) {
             return this.microchipGroupList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
@@ -104,11 +108,13 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
             return this.microchipsList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        return false;
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if (super.mouseScrolled(mouseX, mouseY, amount)) return true;
+
         if (isMouseInGroupList(mouseX, mouseY)) {
             return this.microchipGroupList.mouseScrolled(mouseX, mouseY, amount);
         }
@@ -116,8 +122,7 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
         if (isMouseInMicrochipList(mouseX, mouseY)) {
             return this.microchipsList.mouseScrolled(mouseX, mouseY, amount);
         }
-
-        return super.mouseScrolled(mouseX, mouseY, amount);
+        return false;
     }
 
     public void setSelectedGroup(int index) {
