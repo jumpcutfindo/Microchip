@@ -2,6 +2,7 @@ package com.jumpcutfindo.microchip.client;
 
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.helper.Looker;
+import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -79,11 +80,6 @@ public class InputListener implements ClientModInitializer {
     }
 
     public static void openMicrochipInfoWindow(MinecraftClient client, ClientPlayerEntity player) {
-        MicrochipsMenuScreen screen = new MicrochipsMenuScreen(player);
-
-        List<Entity> entities = Looker.getLookingAt(player);
-        if (entities.size() > 0 && entities.get(0) instanceof LivingEntity livingEntity && screen.setDisplayForEntity(player, livingEntity)) {
-            client.setScreen(screen);
-        }
+        MicrochipInfoWindow.openStandaloneWindow(client, player);
     }
 }

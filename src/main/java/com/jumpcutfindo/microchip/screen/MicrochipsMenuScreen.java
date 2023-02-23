@@ -166,17 +166,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
         }
     }
 
-    public boolean setDisplayForEntity(PlayerEntity player, LivingEntity entity) {
-        UUID entityId = entity.getUuid();
-        Microchips microchips = Tagger.getMicrochips(player);
-        MicrochipGroup group = microchips.getGroupOf(entityId);
-        if (group == null) return false;
-        Microchip microchip = group.getMicrochips().stream().filter(m -> m.getEntityId().equals(entityId)).toList().get(0);
-
-        setActiveWindow(new MicrochipInfoWindow(this, this.getWindowX(MicrochipInfoWindow.WIDTH), this.getWindowY(MicrochipInfoWindow.HEIGHT), microchip, ClientTagger.getEntity(player.getWorld(), player.getPos(), entityId), group.getColor()));
-        return true;
-    }
-
     protected int getGroupListX() {
         return this.x;
     }

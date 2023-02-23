@@ -16,7 +16,7 @@ import org.lwjgl.glfw.GLFW;
  */
 public class MicrochipScreen extends Screen {
     Window activeWindow;
-    protected MicrochipScreen(Text title) {
+    public MicrochipScreen(Text title) {
         super(title);
     }
 

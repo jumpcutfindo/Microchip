@@ -1,10 +1,10 @@
 package com.jumpcutfindo.microchip.screen.window;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
-import com.jumpcutfindo.microchip.data.GroupColor;
-import com.jumpcutfindo.microchip.data.Microchip;
-import com.jumpcutfindo.microchip.data.MicrochipEntityData;
+import com.jumpcutfindo.microchip.data.*;
+import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
@@ -16,16 +16,20 @@ import com.jumpcutfindo.microchip.screen.window.info.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
@@ -34,6 +38,7 @@ import net.minecraft.util.math.Vec3f;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public class MicrochipInfoWindow extends Window {
     public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_info_window.png");
@@ -273,5 +278,26 @@ public class MicrochipInfoWindow extends Window {
 
     public void setBreedingAge(int breedingAge) {
         if (this.statusTab != null) ((StatusInfoTab) this.statusTab).setBreedingAge(breedingAge);
+    }
+
+    public static void openStandaloneWindow(MinecraftClient client, ClientPlayerEntity player) {
+        List<Entity> entities = Looker.getLookingAt(player);
+
+        if (entities.size() == 0 || !(entities.get(0) instanceof LivingEntity entity)) return;
+
+        UUID entityId = entity.getUuid();
+        Microchips microchips = Tagger.getMicrochips(player);
+
+        MicrochipGroup group = microchips.getGroupOf(entityId);
+        if (group == null) return;
+
+        Microchip microchip = microchips.getMicrochipOf(entityId);
+        if (microchip != null) return;
+
+        MicrochipScreen screen = new MicrochipScreen(Text.of(""));
+        MicrochipInfoWindow infoWindow = new MicrochipInfoWindow(screen, screen.getWindowX(MicrochipInfoWindow.WIDTH), screen.getWindowY(MicrochipInfoWindow.HEIGHT), microchip, entity, group.getColor());
+
+        screen.setActiveWindow(infoWindow);
+        client.setScreen(screen);
     }
 }
