@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
+import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -28,21 +30,43 @@ public class InventoryTab extends InfoTab {
         // Draw inventory spaces
         screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
+        int highlightX = -1, highlightY = -1;
+
         RenderSystem.setShaderTexture(0, TEXTURE);
         int xOffset = 12;
         int yOffset = 117;
         for (int i = 0; i < 2; i++) {
-            screen.drawTexture(matrices, window.getX() + xOffset + i * 18, window.getY() + yOffset, 168, 159, 18, 18);
+            int x = window.getX() + xOffset + i * 18;
+            int y = window.getY() + yOffset;
+
+            screen.drawTexture(matrices, x, y, 168, 159, 18, 18);
+            if (ScreenUtils.isWithin(mouseX, mouseY, x, y, 18, 18)) {
+                highlightX = x;
+                highlightY = y;
+            }
         }
 
         for (int i = 0; i < 4; i++) {
-            screen.drawTexture(matrices, window.getX() + xOffset + 54 + i * 18, window.getY() + yOffset, 168, 159, 18, 18);
+            int x = window.getX() + xOffset + 54 + i * 18;
+            int y = window.getY() + yOffset;
+
+            screen.drawTexture(matrices, x, y, 168, 159, 18, 18);
+            if (ScreenUtils.isWithin(mouseX, mouseY, x, y, 18, 18)) {
+                highlightX = x;
+                highlightY = y;
+            }
         }
 
         RenderSystem.setShaderTexture(0, TEXTURE);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
-                screen.drawTexture(matrices, window.getX() + xOffset + j * 18, window.getY() + yOffset + 24 + i * 18, 168, 159, 18, 18);
+                int x = window.getX() + xOffset + j * 18;
+                int y = window.getY() + yOffset + 24 + i * 18;
+                screen.drawTexture(matrices, x, y, 168, 159, 18, 18);
+                if (ScreenUtils.isWithin(mouseX, mouseY, x, y, 18, 18)) {
+                    highlightX = x;
+                    highlightY = y;
+                }
             }
         }
 
@@ -68,6 +92,11 @@ public class InventoryTab extends InfoTab {
                 ItemStack itemStack = inventoryList.get(i);
                 drawItem(itemStack, window.getX() + xOffset + (i % 8) * 18, window.getY() + yOffset + 24 + (i / 8) * 18, Integer.toString(itemStack.getCount()));
             }
+        }
+
+        // Draw highlights
+        if (highlightX != -1 && highlightY != -1) {
+            drawSlotHighlight(matrices, highlightX, highlightY, 1);
         }
     }
 
@@ -118,5 +147,13 @@ public class InventoryTab extends InfoTab {
         this.screen.getItemRenderer().renderGuiItemOverlay(this.screen.getTextRenderer(), stack, x, y, amountText);
 
         this.screen.getItemRenderer().zOffset = 0.0F;
+    }
+
+    private void drawSlotHighlight(MatrixStack matrices, int x, int y, int z) {
+        RenderSystem.disableDepthTest();
+        RenderSystem.colorMask(true, true, true, false);
+        screen.drawGradient(matrices, x + 1, y + 1, x + 17, y + 17, -2130706433, -2130706433, z);
+        RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.enableDepthTest();
     }
 }

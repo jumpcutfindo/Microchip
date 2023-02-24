@@ -106,6 +106,10 @@ public class MicrochipScreen extends Screen {
         this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
     }
 
+    public void drawGradient(MatrixStack matrices, int x, int y, int endX, int endY, int colorStart, int colorEnd, int z) {
+        fillGradient(matrices, x, y, endX, endY, colorStart, colorEnd, z);
+    }
+
     public void setActiveWindow(Window window) {
         this.clearChildren();
         this.activeWindow = window;
