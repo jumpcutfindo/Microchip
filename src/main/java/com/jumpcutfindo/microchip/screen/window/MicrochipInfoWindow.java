@@ -157,6 +157,8 @@ public class MicrochipInfoWindow extends Window {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
         } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 127, 32, 29)) {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
+        } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 158, 32, 29)) {
+            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), mouseX, mouseY);
         }
 
         // Active tab

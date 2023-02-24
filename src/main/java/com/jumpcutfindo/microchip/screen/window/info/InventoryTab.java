@@ -7,14 +7,20 @@ import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.client.item.TooltipData;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTURE;
@@ -89,29 +95,45 @@ public class InventoryTab extends InfoTab {
         screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
         // Draw inventory spaces
-        List<ItemSlot> slots = Stream.of(handSlots, armorSlots, inventorySlots)
-                        .flatMap(Collection::stream).toList();
+        List<ItemSlot> slots = getAllSlots();
 
         int windowX = window.getX();
         int windowY = window.getY();
+
+        RenderSystem.disableDepthTest();
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        RenderSystem.applyModelViewMatrix();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         for (ItemSlot itemSlot : slots) {
             RenderSystem.setShaderTexture(0, TEXTURE);
             int slotX = itemSlot.getX(windowX);
             int slotY = itemSlot.getY(windowY);
 
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
             screen.drawTexture(matrices, slotX, slotY, 168, 159, 18, 18);
 
             ItemStack itemStack = itemSlot.getItemStack();
+
             drawItem(itemStack, slotX + 1, slotY + 1, itemStack.getCount() <= 1 ? "" : Integer.toString(itemStack.getCount()));
 
-            if (itemSlot.isHovered(windowX, windowY, mouseX, mouseY)) drawSlotHighlight(matrices, slotX, slotY, 1);
+            if (itemSlot.isHovered(windowX, windowY, mouseX, mouseY)) drawSlotHighlight(matrices, slotX, slotY, 0);
         }
+
+        matrixStack.pop();
+        RenderSystem.applyModelViewMatrix();
+        RenderSystem.enableDepthTest();
     }
 
     @Override
     public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
-
+        List<ItemSlot> slots = getAllSlots();
+        for (ItemSlot itemSlot : slots) {
+            if (itemSlot.isHovered(window.getX(), window.getY(), mouseX, mouseY)) {
+                drawItemTooltip(matrices, itemSlot.getItemStack(), mouseX, mouseY);
+            }
+        }
     }
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
@@ -143,6 +165,11 @@ public class InventoryTab extends InfoTab {
 
     }
 
+    private List<ItemSlot> getAllSlots() {
+        return Stream.of(handSlots, armorSlots, inventorySlots)
+                .flatMap(Collection::stream).toList();
+    }
+
     public void setInventoryList(List<ItemStack> inventoryList) {
         this.inventoryList = inventoryList;
         populateSlots();
@@ -165,6 +192,10 @@ public class InventoryTab extends InfoTab {
         screen.drawGradient(matrices, x + 1, y + 1, x + 17, y + 17, -2130706433, -2130706433, z);
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();
+    }
+
+    protected void drawItemTooltip(MatrixStack matrices, ItemStack stack, int x, int y) {
+        screen.renderTooltip(matrices, screen.getTooltipFromItem(stack), stack.getTooltipData(), x, y);
     }
 
     private static class ItemSlot {
