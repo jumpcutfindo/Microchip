@@ -7,20 +7,14 @@ import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.item.TooltipData;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTURE;
@@ -44,23 +38,25 @@ public class InventoryTab extends InfoTab {
         int yOffset = 117;
 
         for (int i = 0; i < 2; i++) {
-            int x = xOffset + i * 18;
-            int y = yOffset;
-            handSlots.add(new ItemSlot(x, y));
+            ItemSlot handSlot = new ItemSlot(xOffset + i * 18, yOffset);
+            handSlot.setSpecial(true);
+            handSlot.setSpecialUV(168 + i * 16, 177);
+            handSlots.add(handSlot);
         }
 
         armorSlots = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            int x = xOffset + 54 + i * 18;
-            int y = yOffset;
-            armorSlots.add(new ItemSlot(x, y));
+            ItemSlot armorSlot = new ItemSlot(xOffset + 54 + i * 18, yOffset);
+            armorSlot.setSpecial(true);
+            armorSlot.setSpecialUV(168 + i * 16, 193);
+            armorSlots.add(armorSlot);
         }
 
         inventorySlots = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 int x = xOffset + j * 18;
-                int y = yOffset + 24 + i * 18;
+                int y = yOffset + 32 + i * 18;
                 inventorySlots.add(new ItemSlot(x, y));
             }
         }
@@ -74,10 +70,10 @@ public class InventoryTab extends InfoTab {
                 handIndex++;
             }
 
-            int armorIndex = 0;
+            int armorIndex = 3;
             for (ItemStack itemStack : entity.getArmorItems()) {
                 armorSlots.get(armorIndex).setItemStack(itemStack);
-                armorIndex++;
+                armorIndex--;
             }
 
             int inventoryIndex = 0;
@@ -106,6 +102,8 @@ public class InventoryTab extends InfoTab {
             int slotY = itemSlot.getY(windowY);
 
             screen.drawTexture(matrices, slotX, slotY, 168, 159, 18, 18);
+
+            if (itemSlot.isSpecial() && itemSlot.isEmpty()) screen.drawTexture(matrices, slotX + 1, slotY + 1, itemSlot.getSpecialU(), itemSlot.getSpecialV(), 16, 16);
         }
 
         RenderSystem.disableDepthTest();
@@ -133,7 +131,7 @@ public class InventoryTab extends InfoTab {
     public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
         List<ItemSlot> slots = getAllSlots();
         for (ItemSlot itemSlot : slots) {
-            if (itemSlot.isHovered(window.getX(), window.getY(), mouseX, mouseY)) {
+            if (itemSlot.isHovered(window.getX(), window.getY(), mouseX, mouseY) && !itemSlot.isEmpty()) {
                 drawItemTooltip(matrices, itemSlot.getItemStack(), mouseX, mouseY);
             }
         }
@@ -204,6 +202,8 @@ public class InventoryTab extends InfoTab {
     private static class ItemSlot {
         private final int x, y;
         private ItemStack itemStack;
+        private boolean isSpecial;
+        private int specialU, specialV;
 
         public ItemSlot(int x, int y) {
             this.x = x;
@@ -213,6 +213,15 @@ public class InventoryTab extends InfoTab {
 
         public void setItemStack(ItemStack itemStack) {
             this.itemStack = itemStack;
+        }
+
+        public void setSpecial(boolean special) {
+            isSpecial = special;
+        }
+
+        public void setSpecialUV(int u, int v) {
+            this.specialU = u;
+            this.specialV = v;
         }
 
         public int getX(int windowX) {
@@ -227,8 +236,24 @@ public class InventoryTab extends InfoTab {
             return itemStack;
         }
 
+        public boolean isSpecial() {
+            return isSpecial;
+        }
+
+        public int getSpecialU() {
+            return specialU;
+        }
+
+        public int getSpecialV() {
+            return specialV;
+        }
+
         public boolean isHovered(int windowX, int windowY, int mouseX, int mouseY) {
             return ScreenUtils.isWithin(mouseX, mouseY, getX(windowX), getY(windowY), 18, 18);
+        }
+
+        public boolean isEmpty() {
+            return itemStack.isEmpty();
         }
     }
 }
