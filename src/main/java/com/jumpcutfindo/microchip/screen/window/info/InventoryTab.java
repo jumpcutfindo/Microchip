@@ -7,96 +7,105 @@ import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTURE;
 
 public class InventoryTab extends InfoTab {
     private List<ItemStack> inventoryList;
+    private List<ItemSlot> handSlots, armorSlots, inventorySlots;
 
     public InventoryTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity) {
         super(screen, window, microchip, color, entity);
         this.inventoryList = ImmutableList.of();
+
+        createEmptySlots();
+        populateSlots();
     }
 
-    @Override
-    public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        // Draw inventory spaces
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
+    private void createEmptySlots() {
+        handSlots = new ArrayList<>();
 
-        int highlightX = -1, highlightY = -1;
-
-        RenderSystem.setShaderTexture(0, TEXTURE);
         int xOffset = 12;
         int yOffset = 117;
+
         for (int i = 0; i < 2; i++) {
-            int x = window.getX() + xOffset + i * 18;
-            int y = window.getY() + yOffset;
-
-            screen.drawTexture(matrices, x, y, 168, 159, 18, 18);
-            if (ScreenUtils.isWithin(mouseX, mouseY, x, y, 18, 18)) {
-                highlightX = x;
-                highlightY = y;
-            }
+            int x = xOffset + i * 18;
+            int y = yOffset;
+            handSlots.add(new ItemSlot(x, y));
         }
 
+        armorSlots = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            int x = window.getX() + xOffset + 54 + i * 18;
-            int y = window.getY() + yOffset;
-
-            screen.drawTexture(matrices, x, y, 168, 159, 18, 18);
-            if (ScreenUtils.isWithin(mouseX, mouseY, x, y, 18, 18)) {
-                highlightX = x;
-                highlightY = y;
-            }
+            int x = xOffset + 54 + i * 18;
+            int y = yOffset;
+            armorSlots.add(new ItemSlot(x, y));
         }
 
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        inventorySlots = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
-                int x = window.getX() + xOffset + j * 18;
-                int y = window.getY() + yOffset + 24 + i * 18;
-                screen.drawTexture(matrices, x, y, 168, 159, 18, 18);
-                if (ScreenUtils.isWithin(mouseX, mouseY, x, y, 18, 18)) {
-                    highlightX = x;
-                    highlightY = y;
-                }
+                int x = xOffset + j * 18;
+                int y = yOffset + 24 + i * 18;
+                inventorySlots.add(new ItemSlot(x, y));
             }
         }
+    }
 
-        xOffset += 1;
-        yOffset += 1;
+    private void populateSlots() {
         if (entity != null) {
-            // Draw hand items
-            int handItemOffset = 0;
+            int handIndex = 0;
             for (ItemStack itemStack : entity.getItemsHand()) {
-                drawItem(itemStack, window.getX() + xOffset + handItemOffset * 18, window.getY() + yOffset, "");
-                handItemOffset ++;
+                handSlots.get(handIndex).setItemStack(itemStack);
+                handIndex++;
             }
 
-            // Draw armor items
-            int armorItemOffset = 3;
+            int armorIndex = 0;
             for (ItemStack itemStack : entity.getArmorItems()) {
-                drawItem(itemStack, window.getX() + xOffset + 54 + armorItemOffset * 18, window.getY() + yOffset, "");
-                armorItemOffset --;
+                armorSlots.get(armorIndex).setItemStack(itemStack);
+                armorIndex++;
             }
 
-            // Draw inventory items
-            for (int i = 0; i < inventoryList.size(); i++) {
-                ItemStack itemStack = inventoryList.get(i);
-                drawItem(itemStack, window.getX() + xOffset + (i % 8) * 18, window.getY() + yOffset + 24 + (i / 8) * 18, itemStack.getCount() <= 1 ? "" : Integer.toString(itemStack.getCount()));
+            int inventoryIndex = 0;
+            for (ItemStack itemStack : this.inventoryList) {
+                inventorySlots.get(inventoryIndex).setItemStack(itemStack);
+                inventoryIndex++;
+
+                // TODO: Improve this handling (in the situation where inventory is larger than size 16)
+                if (inventoryIndex >= inventoryList.size()) break;
             }
         }
+    }
+    @Override
+    public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
+        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
-        // Draw highlights
-        if (highlightX != -1 && highlightY != -1) {
-            drawSlotHighlight(matrices, highlightX, highlightY, 1);
+        // Draw inventory spaces
+        List<ItemSlot> slots = Stream.of(handSlots, armorSlots, inventorySlots)
+                        .flatMap(Collection::stream).toList();
+
+        int windowX = window.getX();
+        int windowY = window.getY();
+
+        for (ItemSlot itemSlot : slots) {
+            RenderSystem.setShaderTexture(0, TEXTURE);
+            int slotX = itemSlot.getX(windowX);
+            int slotY = itemSlot.getY(windowY);
+
+            screen.drawTexture(matrices, slotX, slotY, 168, 159, 18, 18);
+
+            ItemStack itemStack = itemSlot.getItemStack();
+            drawItem(itemStack, slotX + 1, slotY + 1, itemStack.getCount() <= 1 ? "" : Integer.toString(itemStack.getCount()));
+
+            if (itemSlot.isHovered(windowX, windowY, mouseX, mouseY)) drawSlotHighlight(matrices, slotX, slotY, 1);
         }
     }
 
@@ -136,6 +145,7 @@ public class InventoryTab extends InfoTab {
 
     public void setInventoryList(List<ItemStack> inventoryList) {
         this.inventoryList = inventoryList;
+        populateSlots();
     }
 
     private void drawItem(ItemStack stack, int x, int y, String amountText) {
@@ -155,5 +165,36 @@ public class InventoryTab extends InfoTab {
         screen.drawGradient(matrices, x + 1, y + 1, x + 17, y + 17, -2130706433, -2130706433, z);
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();
+    }
+
+    private static class ItemSlot {
+        private final int x, y;
+        private ItemStack itemStack;
+
+        public ItemSlot(int x, int y) {
+            this.x = x;
+            this.y = y;
+            this.itemStack = ItemStack.EMPTY;
+        }
+
+        public void setItemStack(ItemStack itemStack) {
+            this.itemStack = itemStack;
+        }
+
+        public int getX(int windowX) {
+            return windowX + x;
+        }
+
+        public int getY(int windowY) {
+            return windowY + y;
+        }
+
+        public ItemStack getItemStack() {
+            return itemStack;
+        }
+
+        public boolean isHovered(int windowX, int windowY, int mouseX, int mouseY) {
+            return ScreenUtils.isWithin(mouseX, mouseY, getX(windowX), getY(windowY), 18, 18);
+        }
     }
 }
