@@ -90,7 +90,7 @@ public class InventoryTab extends InfoTab {
             // Draw inventory items
             for (int i = 0; i < inventoryList.size(); i++) {
                 ItemStack itemStack = inventoryList.get(i);
-                drawItem(itemStack, window.getX() + xOffset + (i % 8) * 18, window.getY() + yOffset + 24 + (i / 8) * 18, Integer.toString(itemStack.getCount()));
+                drawItem(itemStack, window.getX() + xOffset + (i % 8) * 18, window.getY() + yOffset + 24 + (i / 8) * 18, itemStack.getCount() <= 1 ? "" : Integer.toString(itemStack.getCount()));
             }
         }
 
