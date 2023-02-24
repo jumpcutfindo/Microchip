@@ -48,5 +48,6 @@
     "microchip.menu.microchipInfo.actionTab.kill": "Kill",
     "microchip.menu.microchipInfo.actionTab.kill.tooltip": "Kills the mob",
     "microchip.menu.microchipInfo.actionTab.kill.applied": "Killed %s",
-    "microchip.menu.microchipInfo.actionTab.cannotFindMob": "Unable to find selected mob"
+    "microchip.menu.microchipInfo.actionTab.cannotFindMob": "Unable to find selected mob",
+    "microchip.menu.microchipInfo.inventoryTab": "Inventory"
 }

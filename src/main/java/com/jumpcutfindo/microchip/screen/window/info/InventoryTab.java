@@ -6,7 +6,6 @@ import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -26,8 +25,50 @@ public class InventoryTab extends InfoTab {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
+        // Draw inventory spaces
         screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        int xOffset = 12;
+        int yOffset = 117;
+        for (int i = 0; i < 2; i++) {
+            screen.drawTexture(matrices, window.getX() + xOffset + i * 18, window.getY() + yOffset, 168, 159, 18, 18);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            screen.drawTexture(matrices, window.getX() + xOffset + 54 + i * 18, window.getY() + yOffset, 168, 159, 18, 18);
+        }
+
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                screen.drawTexture(matrices, window.getX() + xOffset + j * 18, window.getY() + yOffset + 24 + i * 18, 168, 159, 18, 18);
+            }
+        }
+
+        xOffset += 1;
+        yOffset += 1;
+        if (entity != null) {
+            // Draw hand items
+            int handItemOffset = 0;
+            for (ItemStack itemStack : entity.getItemsHand()) {
+                drawItem(itemStack, window.getX() + xOffset + handItemOffset * 18, window.getY() + yOffset, "");
+                handItemOffset ++;
+            }
+
+            // Draw armor items
+            int armorItemOffset = 3;
+            for (ItemStack itemStack : entity.getArmorItems()) {
+                drawItem(itemStack, window.getX() + xOffset + 54 + armorItemOffset * 18, window.getY() + yOffset, "");
+                armorItemOffset --;
+            }
+
+            // Draw inventory items
+            for (int i = 0; i < inventoryList.size(); i++) {
+                ItemStack itemStack = inventoryList.get(i);
+                drawItem(itemStack, window.getX() + xOffset + (i % 8) * 18, window.getY() + yOffset + 24 + (i / 8) * 18, Integer.toString(itemStack.getCount()));
+            }
+        }
     }
 
     @Override
