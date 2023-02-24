@@ -28,6 +28,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -278,6 +279,10 @@ public class MicrochipInfoWindow extends Window {
 
     public void setBreedingAge(int breedingAge) {
         if (this.statusTab != null) ((StatusInfoTab) this.statusTab).setBreedingAge(breedingAge);
+    }
+
+    public void setInventoryList(List<ItemStack> inventoryList) {
+        if (this.inventoryTab != null) ((InventoryTab) this.inventoryTab).setInventoryList(inventoryList);
     }
 
     public static void openStandaloneWindow(MinecraftClient client, ClientPlayerEntity player) {

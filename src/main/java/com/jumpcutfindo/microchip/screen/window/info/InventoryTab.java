@@ -1,5 +1,6 @@
 package com.jumpcutfindo.microchip.screen.window.info;
 
+import com.google.common.collect.ImmutableList;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
@@ -8,14 +9,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
+
+import java.util.List;
 
 import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTURE;
 
 public class InventoryTab extends InfoTab {
+    private List<ItemStack> inventoryList;
 
     public InventoryTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity) {
         super(screen, window, microchip, color, entity);
+        this.inventoryList = ImmutableList.of();
     }
 
     @Override
@@ -56,5 +62,20 @@ public class InventoryTab extends InfoTab {
     @Override
     public void tick() {
 
+    }
+
+    public void setInventoryList(List<ItemStack> inventoryList) {
+        this.inventoryList = inventoryList;
+    }
+
+    private void drawItem(ItemStack stack, int x, int y, String amountText) {
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.translate(0.0, 0.0, 32.0);
+        RenderSystem.applyModelViewMatrix();
+        this.screen.getItemRenderer().zOffset = 200.0F;
+        this.screen.getItemRenderer().renderInGuiWithOverrides(stack, x, y);
+        this.screen.getItemRenderer().renderGuiItemOverlay(this.screen.getTextRenderer(), stack, x, y, amountText);
+
+        this.screen.getItemRenderer().zOffset = 0.0F;
     }
 }
