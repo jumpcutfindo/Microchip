@@ -48,7 +48,7 @@ public class StatusInfoTab extends InfoTab {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), this.color.getShadowColor());
+        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
         // Draw health and armor
         RenderSystem.setShaderTexture(0, TEXTURE);

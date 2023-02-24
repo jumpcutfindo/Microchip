@@ -56,7 +56,7 @@ public class ActionsInfoTab extends InfoTab {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), this.color.getShadowColor());
+        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
         for (int i = 0; i < buttonCount; i++) {
             ButtonWidget entityActionButton = entityActionButtons.get(i);

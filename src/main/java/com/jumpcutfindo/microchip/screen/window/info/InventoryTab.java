@@ -4,8 +4,13 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.TranslatableText;
+
+import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTURE;
 
 public class InventoryTab extends InfoTab {
 
@@ -15,6 +20,7 @@ public class InventoryTab extends InfoTab {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
+        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
     }
 
