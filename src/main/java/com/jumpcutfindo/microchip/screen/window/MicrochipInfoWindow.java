@@ -51,7 +51,7 @@ public class MicrochipInfoWindow extends Window {
     private LivingEntity entity;
 
     private InfoTab activeTab;
-    private final InfoTab statusTab, actionsTab, inventoryTab;
+    private final InfoTab statusTab, inventoryTab, actionsTab;
     private final int tabCount = 3;
 
     private final float entityModelSize;
@@ -156,9 +156,9 @@ public class MicrochipInfoWindow extends Window {
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96, 32, 29)) {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
         } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 127, 32, 29)) {
-            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
-        } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 158, 32, 29)) {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), mouseX, mouseY);
+        } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 158, 32, 29)) {
+            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
         }
 
         // Active tab
@@ -226,7 +226,7 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private List<InfoTab> getTabs() {
-        return List.of(statusTab, actionsTab, inventoryTab);
+        return List.of(statusTab, inventoryTab, actionsTab);
     }
 
     private static void drawLookingEntity(LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
