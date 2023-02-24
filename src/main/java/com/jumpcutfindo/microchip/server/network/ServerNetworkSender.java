@@ -3,8 +3,11 @@ package com.jumpcutfindo.microchip.server.network;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.passive.AbstractDonkeyEntity;
+import net.minecraft.entity.passive.HorseBaseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -43,6 +46,12 @@ public class ServerNetworkSender {
 
         inventoryNbt.put("Inventory", itemListNbt);
         buffer.writeNbt(inventoryNbt);
+
+        // Entity inventory size
+        int inventorySize = 16;
+        if (entity instanceof InventoryOwner) inventorySize = ((InventoryOwner) entity).getInventory().size();
+        else if (entity instanceof HorseBaseEntity) inventorySize = 15;
+        buffer.writeInt(inventorySize);
 
         ServerPlayNetworking.send(player, NetworkConstants.PACKET_REQUEST_ENTITY_DATA_ID, buffer);
     }

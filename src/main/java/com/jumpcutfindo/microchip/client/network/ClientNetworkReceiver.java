@@ -34,10 +34,12 @@ public class ClientNetworkReceiver implements ClientModInitializer {
                 inventoryNbtList.forEach(element -> inventoryList.add(ItemStack.fromNbt((NbtCompound) element)));
             }
 
+            int inventorySize = buf.readInt();
+
             if (client.currentScreen instanceof MicrochipScreen screen && screen.getActiveWindow() instanceof MicrochipInfoWindow infoWindow) {
                 infoWindow.setEntityStatuses(entityStatuses);
                 infoWindow.setBreedingAge(breedingAge);
-                infoWindow.setInventoryList(inventoryList);
+                infoWindow.setInventoryList(inventoryList, inventorySize);
             }
         });
     }

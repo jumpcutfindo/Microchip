@@ -22,6 +22,7 @@ import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTU
 public class InventoryTab extends InfoTab {
     private List<ItemStack> inventoryList;
     private List<ItemSlot> handSlots, armorSlots, inventorySlots;
+    private int inventorySize;
 
     public InventoryTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity) {
         super(screen, window, microchip, color, entity);
@@ -80,9 +81,12 @@ public class InventoryTab extends InfoTab {
             for (ItemStack itemStack : this.inventoryList) {
                 inventorySlots.get(inventoryIndex).setItemStack(itemStack);
                 inventoryIndex++;
-
                 // TODO: Improve this handling (in the situation where inventory is larger than size 16)
                 if (inventoryIndex >= inventoryList.size()) break;
+            }
+
+            for (int i = 0; i < inventorySlots.size(); i++) {
+                this.inventorySlots.get(i).setDisabled(i >= inventorySize);
             }
         }
     }
@@ -101,7 +105,8 @@ public class InventoryTab extends InfoTab {
             int slotX = itemSlot.getX(windowX);
             int slotY = itemSlot.getY(windowY);
 
-            screen.drawTexture(matrices, slotX, slotY, 168, 159, 18, 18);
+            if (itemSlot.isDisabled()) screen.drawTexture(matrices, slotX, slotY, 186, 159, 18, 18);
+            else screen.drawTexture(matrices, slotX, slotY, 168, 159, 18, 18);
 
             if (itemSlot.isSpecial() && itemSlot.isEmpty()) screen.drawTexture(matrices, slotX + 1, slotY + 1, itemSlot.getSpecialU(), itemSlot.getSpecialV(), 16, 16);
         }
@@ -171,8 +176,9 @@ public class InventoryTab extends InfoTab {
                 .flatMap(Collection::stream).toList();
     }
 
-    public void setInventoryList(List<ItemStack> inventoryList) {
+    public void setInventoryList(List<ItemStack> inventoryList, int inventorySize) {
         this.inventoryList = inventoryList;
+        this.inventorySize = inventorySize;
         populateSlots();
     }
 
@@ -199,10 +205,13 @@ public class InventoryTab extends InfoTab {
         RenderSystem.applyModelViewMatrix();
     }
 
+
     private static class ItemSlot {
         private final int x, y;
         private ItemStack itemStack;
         private boolean isSpecial;
+
+        private boolean isDisabled;
         private int specialU, specialV;
 
         public ItemSlot(int x, int y) {
@@ -217,6 +226,10 @@ public class InventoryTab extends InfoTab {
 
         public void setSpecial(boolean special) {
             isSpecial = special;
+        }
+
+        public void setDisabled(boolean disabled) {
+            isDisabled = disabled;
         }
 
         public void setSpecialUV(int u, int v) {
@@ -238,6 +251,10 @@ public class InventoryTab extends InfoTab {
 
         public boolean isSpecial() {
             return isSpecial;
+        }
+
+        public boolean isDisabled() {
+            return isDisabled;
         }
 
         public int getSpecialU() {

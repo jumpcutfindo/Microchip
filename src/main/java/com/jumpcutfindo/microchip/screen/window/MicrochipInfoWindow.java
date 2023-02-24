@@ -283,8 +283,8 @@ public class MicrochipInfoWindow extends Window {
         if (this.statusTab != null) ((StatusInfoTab) this.statusTab).setBreedingAge(breedingAge);
     }
 
-    public void setInventoryList(List<ItemStack> inventoryList) {
-        if (this.inventoryTab != null) ((InventoryTab) this.inventoryTab).setInventoryList(inventoryList);
+    public void setInventoryList(List<ItemStack> inventoryList, int inventorySize) {
+        if (this.inventoryTab != null) ((InventoryTab) this.inventoryTab).setInventoryList(inventoryList, inventorySize);
     }
 
     public static void openStandaloneWindow(MinecraftClient client, ClientPlayerEntity player) {
