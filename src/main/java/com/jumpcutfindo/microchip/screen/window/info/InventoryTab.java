@@ -100,20 +100,23 @@ public class InventoryTab extends InfoTab {
         int windowX = window.getX();
         int windowY = window.getY();
 
-        RenderSystem.disableDepthTest();
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        RenderSystem.applyModelViewMatrix();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
         for (ItemSlot itemSlot : slots) {
             RenderSystem.setShaderTexture(0, TEXTURE);
             int slotX = itemSlot.getX(windowX);
             int slotY = itemSlot.getY(windowY);
 
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
             screen.drawTexture(matrices, slotX, slotY, 168, 159, 18, 18);
+        }
 
+        RenderSystem.disableDepthTest();
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        matrixStack.translate(0.0f, 0.0f, 200.0f);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        for (ItemSlot itemSlot : slots) {
+            int slotX = itemSlot.getX(windowX);
+            int slotY = itemSlot.getY(windowY);
             ItemStack itemStack = itemSlot.getItemStack();
 
             drawItem(itemStack, slotX + 1, slotY + 1, itemStack.getCount() <= 1 ? "" : Integer.toString(itemStack.getCount()));
@@ -176,14 +179,8 @@ public class InventoryTab extends InfoTab {
     }
 
     private void drawItem(ItemStack stack, int x, int y, String amountText) {
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.translate(0.0, 0.0, 32.0);
-        RenderSystem.applyModelViewMatrix();
-        this.screen.getItemRenderer().zOffset = 200.0F;
         this.screen.getItemRenderer().renderInGuiWithOverrides(stack, x, y);
         this.screen.getItemRenderer().renderGuiItemOverlay(this.screen.getTextRenderer(), stack, x, y, amountText);
-
-        this.screen.getItemRenderer().zOffset = 0.0F;
     }
 
     private void drawSlotHighlight(MatrixStack matrices, int x, int y, int z) {
@@ -195,7 +192,13 @@ public class InventoryTab extends InfoTab {
     }
 
     protected void drawItemTooltip(MatrixStack matrices, ItemStack stack, int x, int y) {
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.translate(0.0, 0.0, 32.0);
+        RenderSystem.applyModelViewMatrix();
         screen.renderTooltip(matrices, screen.getTooltipFromItem(stack), stack.getTooltipData(), x, y);
+
+        matrixStack.translate(0.0, 0.0, -32.0);
+        RenderSystem.applyModelViewMatrix();
     }
 
     private static class ItemSlot {
