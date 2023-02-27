@@ -55,6 +55,21 @@ public abstract class Microchips implements Component {
         return defaultGroup;
     }
 
+    public MicrochipGroup getGroup(UUID groupId) {
+        MicrochipGroup group = null;
+        if (this.defaultGroup.getId().equals(groupId)) group = this.defaultGroup;
+        else {
+            for (MicrochipGroup g : this.userGroups) {
+                if (g.getId().equals(groupId)) {
+                    group = g;
+                    break;
+                }
+            }
+        }
+
+        return group;
+    }
+
     public Microchip getMicrochipOf(UUID entityId) {
         MicrochipGroup group = getGroupOf(entityId);
         if (group == null) return null;
@@ -97,17 +112,7 @@ public abstract class Microchips implements Component {
     }
 
     public boolean updateGroup(UUID groupId, String name, GroupColor color) {
-        MicrochipGroup group = null;
-
-        if (this.defaultGroup.getId().equals(groupId)) group = this.defaultGroup;
-        else {
-            for (MicrochipGroup g : this.userGroups) {
-                if (g.getId().equals(groupId)) {
-                    group = g;
-                    break;
-                }
-            }
-        }
+        MicrochipGroup group = getGroup(groupId);
 
         if (group == null) return false;
 
@@ -160,13 +165,10 @@ public abstract class Microchips implements Component {
     }
 
     public boolean moveBetweenGroups(UUID fromId, UUID toId, List<UUID> microchipIds) {
-        Optional<MicrochipGroup> fromGroupOpt = getAllGroups().stream().filter(g -> g.getId().equals(fromId)).findFirst();
-        Optional<MicrochipGroup> toGroupOpt = getAllGroups().stream().filter(g -> g.getId().equals(toId)).findFirst();
+        MicrochipGroup fromGroup = getGroup(fromId);
+        MicrochipGroup toGroup = getGroup(toId);
 
-        if (fromGroupOpt.isEmpty() || toGroupOpt.isEmpty()) return false;
-
-        MicrochipGroup fromGroup = fromGroupOpt.get();
-        MicrochipGroup toGroup = toGroupOpt.get();
+        if (fromGroup == null || toGroup == null) return false;
 
         List<Microchip> microchips = fromGroup.getMicrochipsWithIds(microchipIds);
         fromGroup.removeAll(microchipIds);
