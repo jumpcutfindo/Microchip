@@ -1,7 +1,6 @@
 package com.jumpcutfindo.microchip.screen.list;
 
-import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
-import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.StringUtils;
@@ -9,7 +8,6 @@ import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
@@ -200,9 +198,7 @@ public class MicrochipListItem extends ListItem {
     }
 
     private void retrieveEntity() {
-        MicrochipEntityHelper helper = screen.getMicrochipEntityHelper();
         PlayerEntity player = this.screen.getPlayer();
-
-        helper.populateWithEntity(player, microchip, this::setEntity);
+        setEntity(ClientTagger.getEntity(player.getWorld(), player.getPos(), microchip.getEntityId()));
     }
 }

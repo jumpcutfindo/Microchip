@@ -1,30 +1,23 @@
 package com.jumpcutfindo.microchip.screen;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
-import com.jumpcutfindo.microchip.client.ClientTagger;
-import com.jumpcutfindo.microchip.client.MicrochipEntityHelper;
-import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
 import com.jumpcutfindo.microchip.screen.list.MicrochipsListView;
-import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
-import java.util.UUID;
 
 public class MicrochipsMenuScreen extends MicrochipScreen {
     public static final Identifier BUTTONS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
 
     private final int titleX, titleY;
     private int x, y;
-    private final MicrochipEntityHelper microchipEntityHelper;
     private Microchips microchips;
 
     private List<MicrochipGroup> microchipGroups;
@@ -35,7 +28,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
 
     public MicrochipsMenuScreen(PlayerEntity player) {
         super(new TranslatableText("microchip.menu.title"));
-        this.microchipEntityHelper = new MicrochipEntityHelper();
         this.microchips = Tagger.getMicrochips(player);
 
         this.selectedGroup = 0;
@@ -52,10 +44,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
         this.y = (this.height - 178) / 2;
 
         this.refreshScreen(RefreshType.BOTH);
-    }
-
-    public MicrochipEntityHelper getMicrochipEntityHelper() {
-        return microchipEntityHelper;
     }
 
     public Microchips getMicrochips() {
