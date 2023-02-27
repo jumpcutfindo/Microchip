@@ -1,29 +1,27 @@
 package com.jumpcutfindo.microchip.data;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
 
 public abstract class Microchips implements Component {
     private static final String DEFAULT_GROUP_NAME = "Uncategorised";
     private MicrochipGroup defaultGroup;
     private List<MicrochipGroup> userGroups;
 
+    private Map<UUID, Microchip> idMap;
+    private Map<Microchip, MicrochipGroup> groupMap;
+
     private int groupCount = 1, chipCount = 0;
     public Microchips() {
         checkAndCreateDefaultGroup();
         checkAndCreateUserGroups();
+        createHelperObjects();
     }
 
     private void checkAndCreateDefaultGroup() {
@@ -38,6 +36,21 @@ public abstract class Microchips implements Component {
         if (this.userGroups == null) {
             this.userGroups = new ArrayList<>();
         }
+    }
+
+    /**
+     * Creates a bunch of helper objects that are meant to improve querying of different items
+     */
+    private void createHelperObjects() {
+        idMap = new HashMap<>();
+        groupMap = new HashMap<>();
+
+        getAllGroups().forEach(group -> {
+            group.getMicrochips().forEach(microchip -> {
+                idMap.put(microchip.getEntityId(), microchip);
+                groupMap.put(microchip, group);
+            });
+        });
     }
 
     public List<MicrochipGroup> getAllGroups() {
@@ -70,19 +83,15 @@ public abstract class Microchips implements Component {
         return group;
     }
 
-    public Microchip getMicrochipOf(UUID entityId) {
-        MicrochipGroup group = getGroupOf(entityId);
-        if (group == null) return null;
+    public MicrochipGroup getGroupOfEntity(UUID entityId) {
+        Microchip microchip = idMap.get(entityId);
+        if (microchip == null) return null;
 
-        List<Microchip> microchips = group.getMicrochipsWithIds(List.of(entityId));
-
-        if (microchips.size() == 0) return null;
-        else return microchips.get(0);
+        return groupMap.get(microchip);
     }
 
-    public MicrochipGroup getGroupOf(UUID entityId) {
-        List<MicrochipGroup> groups = getAllGroups().stream().filter(group -> group.getMicrochips().stream().anyMatch(m -> m.getEntityId().equals(entityId))).toList();
-        return groups.size() != 0 ?  groups.get(0) : null;
+    public Microchip getMicrochipOf(UUID entityId) {
+        return idMap.get(entityId);
     }
 
     private void setUserGroups(List<MicrochipGroup> groups) {
@@ -121,9 +130,17 @@ public abstract class Microchips implements Component {
         return true;
     }
 
-    public boolean deleteGroup(UUID id) {
+    public boolean deleteGroup(UUID groupId) {
+        MicrochipGroup group = getGroup(groupId);
+        if (group == null) return false;
+
         groupCount--;
-        return userGroups.removeIf(group -> group.getId().equals(id));
+        group.getMicrochips().forEach(microchip -> {
+            idMap.remove(microchip.getEntityId());
+            groupMap.remove(microchip);
+        });
+
+        return userGroups.remove(group);
     }
 
     public int getChipCount() {
@@ -135,33 +152,21 @@ public abstract class Microchips implements Component {
     }
 
     public boolean addToGroup(UUID groupId, Microchip microchip) {
-        if (groupId.equals(defaultGroup.getId())) {
-            chipCount++;
-            return defaultGroup.add(microchip);
-        }
-
-        for (MicrochipGroup group : this.userGroups) {
-            if (group.getId().equals(groupId)) {
-                chipCount++;
-                return group.add(microchip);
-            }
-        }
-        return false;
+        MicrochipGroup group = getGroup(groupId);
+        if (group == null) return false;
+        idMap.put(microchip.getEntityId(), microchip);
+        groupMap.put(microchip, group);
+        return group.add(microchip);
     }
 
     public boolean removeFromGroup(UUID groupId, List<UUID> microchipIds) {
-        if (groupId.equals(defaultGroup.getId())) {
-            chipCount--;
-            return defaultGroup.removeAll(microchipIds);
-        }
-
-        for (MicrochipGroup group : this.userGroups) {
-            if (group.getId().equals(groupId)) {
-                chipCount--;
-                return group.removeAll(microchipIds);
-            }
-        }
-        return false;
+        MicrochipGroup group = getGroup(groupId);
+        if (group == null) return false;
+        microchipIds.forEach(id -> {
+            Microchip microchip = idMap.remove(id);
+            groupMap.remove(microchip);
+        });
+        return group.removeAll(microchipIds);
     }
 
     public boolean moveBetweenGroups(UUID fromId, UUID toId, List<UUID> microchipIds) {
@@ -169,6 +174,11 @@ public abstract class Microchips implements Component {
         MicrochipGroup toGroup = getGroup(toId);
 
         if (fromGroup == null || toGroup == null) return false;
+
+        fromGroup.getMicrochips().forEach(microchip -> {
+            groupMap.remove(microchip);
+            groupMap.put(microchip, toGroup);
+        });
 
         List<Microchip> microchips = fromGroup.getMicrochipsWithIds(microchipIds);
         fromGroup.removeAll(microchipIds);
@@ -178,10 +188,7 @@ public abstract class Microchips implements Component {
     }
 
     public List<Microchip> getAllMicrochips() {
-        List<Microchip> microchips = new ArrayList<>(this.defaultGroup.getMicrochips());
-        userGroups.forEach(group -> microchips.addAll(group.getMicrochips()));
-
-        return microchips;
+        return idMap.values().stream().toList();
     }
 
     public abstract void sync();
@@ -211,6 +218,7 @@ public abstract class Microchips implements Component {
         microchips.setUserGroups(groups);
 
         microchips.updateChipCount();
+        microchips.createHelperObjects();
     }
 
     public static NbtCompound toNbt(Microchips microchips) {

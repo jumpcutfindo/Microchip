@@ -1,14 +1,11 @@
 package com.jumpcutfindo.microchip.screen.window;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
-import com.jumpcutfindo.microchip.client.ClientTagger;
-import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.*;
 import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
-import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.InfoTab;
@@ -27,7 +24,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
@@ -295,7 +291,7 @@ public class MicrochipInfoWindow extends Window {
         UUID entityId = entity.getUuid();
         Microchips microchips = Tagger.getMicrochips(player);
 
-        MicrochipGroup group = microchips.getGroupOf(entityId);
+        MicrochipGroup group = microchips.getGroupOfEntity(entityId);
         if (group == null) return;
 
         Microchip microchip = microchips.getMicrochipOf(entityId);
