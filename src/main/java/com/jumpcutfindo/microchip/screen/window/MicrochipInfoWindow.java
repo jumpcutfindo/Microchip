@@ -121,6 +121,8 @@ public class MicrochipInfoWindow extends Window {
 
         int tabVerticalOffset = 0;
         for (int i = 0; i < tabCount; i++) {
+            if (!screen.getPlayer().isCreative() && getTabs().get(i) instanceof InventoryTab) continue;
+
             ScreenUtils.setShaderColor(color, false);
             if (activeTab.equals(getTabs().get(i))) {
                 screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62 + (i == 0 ? 0 : 28), 32, 28);
@@ -153,7 +155,7 @@ public class MicrochipInfoWindow extends Window {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
         } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 127, 32, 29)) {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), mouseX, mouseY);
-        } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 158, 32, 29)) {
+        } else if (screen.getPlayer().isCreative() && ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 158, 32, 29)) {
             screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
         }
 
@@ -193,6 +195,7 @@ public class MicrochipInfoWindow extends Window {
 
         int tabVerticalOffset = 0;
         for (InfoTab tab : getTabs()) {
+            if (!screen.getPlayer().isCreative() && tab instanceof InventoryTab) continue;
             if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
                 activeTab = tab;
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
