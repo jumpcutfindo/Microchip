@@ -85,6 +85,9 @@ public class StatusInfoTab extends InfoTab {
             screen.getTextRenderer().drawWithShadow(matrices, speedString, speedStatX, statY + 1, 0xFFFFFF);
             speedStatWidth = speedString.length() * 6;
             statOffset += speedStatWidth + statGap;
+
+            speedStatX -= 16;
+            speedStatWidth += 16;
         }
 
         if (hasJump()) {
@@ -96,6 +99,9 @@ public class StatusInfoTab extends InfoTab {
             screen.getTextRenderer().drawWithShadow(matrices, jumpString, window.getX() + statOffset + 19, statY + 1, 0xFFFFFF);
             jumpStatWidth = jumpString.length() * 6;
             statOffset += jumpStatWidth + statGap;
+
+            jumpStatX -= 16;
+            jumpStatWidth += 16;
         }
 
         if (hasBreeding()) {
@@ -107,6 +113,9 @@ public class StatusInfoTab extends InfoTab {
             screen.getTextRenderer().drawWithShadow(matrices, breedString, window.getX() + statOffset + 19, statY + 1, 0xFFFFFF);
             breedStatWidth = breedString.length() * 6;
             statOffset += breedStatWidth + statGap;
+
+            breedStatX -= 16;
+            breedStatWidth += 16;
         }
 
         // Draw status effects
