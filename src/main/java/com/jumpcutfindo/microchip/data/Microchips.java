@@ -1,15 +1,13 @@
 package com.jumpcutfindo.microchip.data;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import net.minecraft.nbt.NbtCompound;
+
 import java.lang.reflect.Type;
 import java.util.*;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import dev.onyxstudios.cca.api.v3.component.Component;
-import net.minecraft.nbt.NbtCompound;
-
-public abstract class Microchips implements Component {
+public abstract class Microchips {
     private static final String DEFAULT_GROUP_NAME = "Uncategorised";
     private MicrochipGroup defaultGroup;
     private List<MicrochipGroup> userGroups;
@@ -193,7 +191,6 @@ public abstract class Microchips implements Component {
 
     public abstract void sync();
 
-    @Override
     public void readFromNbt(NbtCompound tag) {
         Gson gson = new Gson();
 
@@ -201,7 +198,6 @@ public abstract class Microchips implements Component {
         Microchips.fromNbt(cpd, this);
     }
 
-    @Override
     public void writeToNbt(NbtCompound tag) {
         NbtCompound cpd = Microchips.toNbt(this);
         tag.put("microchips", cpd);
