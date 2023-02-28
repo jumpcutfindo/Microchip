@@ -2,6 +2,7 @@ package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
+import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
@@ -52,6 +53,11 @@ public class MicrochipGroupListItem extends ListItem {
 
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        screen.getTextRenderer().draw(matrices, new LiteralText(this.microchipGroup.getDisplayName()), (float) (x + 19), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
+        String displayName = this.microchipGroup.getDisplayName();
+        screen.getTextRenderer().draw(matrices, new LiteralText(StringUtils.truncatedName(displayName, 14)), (float) (x + 19), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
+
+        int microchipCount = microchipGroup.getMicrochips().size();
+        int offset = (Integer.toString(microchipCount).length() - 1) * 6;
+        screen.getTextRenderer().draw(matrices, new LiteralText(Integer.toString(microchipCount)), (float) (x + 114 - offset), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
     }
 }
