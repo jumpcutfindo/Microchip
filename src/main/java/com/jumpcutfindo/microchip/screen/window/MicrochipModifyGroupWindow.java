@@ -36,7 +36,7 @@ public class MicrochipModifyGroupWindow extends Window {
 
         // Create text field
         this.groupNameField = new TextFieldWidget(screen.getTextRenderer(), 0, 0, 124, 18, new TranslatableText("microchip.menu.createGroup.textWidget"));
-        this.groupNameField.setMaxLength(20);
+        this.groupNameField.setMaxLength(16);
         this.groupNameField.setEditableColor(16777215);
         if (isEdit()) this.groupNameField.setText(group.getDisplayName());
 
