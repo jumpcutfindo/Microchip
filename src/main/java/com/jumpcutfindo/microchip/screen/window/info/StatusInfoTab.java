@@ -37,6 +37,10 @@ public class StatusInfoTab extends InfoTab {
     private int timeSinceStatusRetrieved = 0;
     private int breedingAge;
 
+    private int speedStatX, jumpStatX, breedStatX;
+    private int statY;
+    private int speedStatWidth, jumpStatWidth, breedStatWidth;
+
     public StatusInfoTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int statusDisplayCount) {
         super(screen, window, microchip, color, entity);
         this.entityStatuses = new HashMap<>();
@@ -70,29 +74,39 @@ public class StatusInfoTab extends InfoTab {
 
         // Draw stats
         // Speed
-        int statOffset = 0;
+        int statOffset = 0, statGap = 12;
+        statY = window.getY() + 142;
         if (hasSpeed()) {
             RenderSystem.setShaderTexture(0, TEXTURE);
-            screen.drawTexture(matrices, window.getX() + statOffset + 7 , window.getY() + 142, 186, 128, 9, 9);
+            screen.drawTexture(matrices, window.getX() + statOffset + 7 , statY, 186, 128, 9, 9);
             String speedString = String.format("%.2fm/s", StatUtils.calculateMaxSpeed((float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED), entityStatuses.containsKey(StatusEffects.SPEED) ? entityStatuses.get(StatusEffects.SPEED).getAmplifier() : 0));
-            screen.getTextRenderer().drawWithShadow(matrices, speedString, window.getX() + statOffset + 19, window.getY() + 143, 0xFFFFFF);
-            statOffset += speedString.length() * 6 + 12;
+
+            speedStatX = window.getX() + statOffset + 19;
+            screen.getTextRenderer().drawWithShadow(matrices, speedString, speedStatX, statY + 1, 0xFFFFFF);
+            speedStatWidth = speedString.length() * 6;
+            statOffset += speedStatWidth + statGap;
         }
 
         if (hasJump()) {
             RenderSystem.setShaderTexture(0, TEXTURE);
-            screen.drawTexture(matrices, window.getX() + statOffset + 7 , window.getY() + 142, 195, 128, 9, 9);
+            screen.drawTexture(matrices, window.getX() + statOffset + 7 , statY, 195, 128, 9, 9);
             String jumpString = String.format("%.2fm", StatUtils.calculateMaxJumpHeightWithJumpStrength((float) ((HorseEntity) entity).getJumpStrength()));
-            screen.getTextRenderer().drawWithShadow(matrices, jumpString, window.getX() + statOffset + 19, window.getY() + 143, 0xFFFFFF);
-            statOffset += jumpString.length() * 6 + 12;
+
+            jumpStatX = window.getX() + statOffset + 19;
+            screen.getTextRenderer().drawWithShadow(matrices, jumpString, window.getX() + statOffset + 19, statY + 1, 0xFFFFFF);
+            jumpStatWidth = jumpString.length() * 6;
+            statOffset += jumpStatWidth + statGap;
         }
 
         if (hasBreeding()) {
             RenderSystem.setShaderTexture(0, TEXTURE);
-            screen.drawTexture(matrices, window.getX() + statOffset + 7 , window.getY() + 142, 204, 128, 9, 9);
+            screen.drawTexture(matrices, window.getX() + statOffset + 7 , statY, 204, 128, 9, 9);
             String breedString = StringHelper.formatTicks(breedingAge);
-            screen.getTextRenderer().drawWithShadow(matrices, breedString, window.getX() + statOffset + 19, window.getY() + 143, 0xFFFFFF);
-            statOffset += breedString.length() * 6 + 12;
+
+            breedStatX = window.getX() + statOffset + 19;
+            screen.getTextRenderer().drawWithShadow(matrices, breedString, window.getX() + statOffset + 19, statY + 1, 0xFFFFFF);
+            breedStatWidth = breedString.length() * 6;
+            statOffset += breedStatWidth + statGap;
         }
 
         // Draw status effects
@@ -166,8 +180,21 @@ public class StatusInfoTab extends InfoTab {
                 }
             }
         }
+
         if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 129, window.getY() + 172, 18, 18)) {
             screen.renderTooltip(matrices, undisplayedStatuses, mouseX, mouseY);
+        }
+
+        if (hasSpeed() && ScreenUtils.isWithin(mouseX, mouseY, speedStatX, statY, speedStatWidth, 9)) {
+            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.stats.speed"), mouseX, mouseY);
+        }
+
+        if (hasJump() && ScreenUtils.isWithin(mouseX, mouseY, jumpStatX, statY, jumpStatWidth, 9)) {
+            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.stats.jump"), mouseX, mouseY);
+        }
+
+        if (hasBreeding() && ScreenUtils.isWithin(mouseX, mouseY, breedStatX, statY, breedStatWidth, 9)) {
+            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.stats.breed"), mouseX, mouseY);
         }
     }
 
