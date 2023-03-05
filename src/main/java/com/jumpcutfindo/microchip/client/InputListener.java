@@ -48,7 +48,7 @@ public class InputListener implements ClientModInitializer {
             new KeyBinding(
                     "key.microchip.mobInfo",
                     InputUtil.Type.KEYSYM,
-                    GLFW.GLFW_KEY_X,
+                    GLFW.GLFW_KEY_Z,
                     "category.microchip.microchip"
             )
     );
