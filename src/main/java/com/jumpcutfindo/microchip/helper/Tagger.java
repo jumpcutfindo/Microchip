@@ -16,7 +16,7 @@ public class Tagger {
     }
 
     public static Microchips getMicrochips(PlayerEntity player) {
-        return new PlayerMicrochips(player);
+        return new PlayerMicrochips(player.getUuid());
     }
 
 }

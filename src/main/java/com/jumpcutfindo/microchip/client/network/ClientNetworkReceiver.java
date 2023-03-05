@@ -1,10 +1,9 @@
 package com.jumpcutfindo.microchip.client.network;
 
-import com.google.common.collect.ImmutableList;
 import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
-import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
+import com.jumpcutfindo.microchip.data.MicrochipPlayerState;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -19,7 +18,15 @@ import java.util.List;
 public class ClientNetworkReceiver implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        onMicrochipStateUpdate();
         onEntityDataResponse();
+    }
+
+    public static void onMicrochipStateUpdate() {
+        ClientPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_MICROCHIP_STATE_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            MicrochipPlayerState playerState = MicrochipPlayerState.fromNbt(client.player.getUuid(), buf.readNbt());
+            System.out.println(playerState.toNbt());
+        });
     }
 
     public static void onEntityDataResponse() {

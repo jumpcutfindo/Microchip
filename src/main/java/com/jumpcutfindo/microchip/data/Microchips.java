@@ -191,19 +191,7 @@ public abstract class Microchips {
 
     public abstract void sync();
 
-    public void readFromNbt(NbtCompound tag) {
-        Gson gson = new Gson();
-
-        NbtCompound cpd = tag.getCompound("microchips");
-        Microchips.fromNbt(cpd, this);
-    }
-
-    public void writeToNbt(NbtCompound tag) {
-        NbtCompound cpd = Microchips.toNbt(this);
-        tag.put("microchips", cpd);
-    }
-
-    public static void fromNbt(NbtCompound cpd, Microchips microchips) {
+    public static Microchips fromNbt(NbtCompound cpd, Microchips microchips) {
         Gson gson = new Gson();
 
         MicrochipGroup defaultGroup = gson.fromJson(cpd.getString("defaultGroup"), MicrochipGroup.class);
@@ -215,6 +203,8 @@ public abstract class Microchips {
 
         microchips.updateChipCount();
         microchips.createHelperObjects();
+
+        return microchips;
     }
 
     public static NbtCompound toNbt(Microchips microchips) {

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class PlayerMicrochips extends Microchips {
-    protected PlayerEntity owner;
+    protected UUID owner;
 
-    public PlayerMicrochips(PlayerEntity owner) {
+    public PlayerMicrochips(UUID owner) {
         this.owner = owner;
     }
 

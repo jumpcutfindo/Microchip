@@ -5,6 +5,8 @@ import static com.jumpcutfindo.microchip.MicrochipMod.MOD_ID;
 import net.minecraft.util.Identifier;
 
 public class NetworkConstants {
+    public static final Identifier PACKET_MICROCHIP_STATE_UPDATE_ID = new Identifier(MOD_ID, "microchip_state_update");
+
     public static final Identifier PACKET_GLOW_ENTITY_ID = new Identifier(MOD_ID, "glow_entity");
     public static final Identifier PACKET_LOCATE_ENTITY_ID = new Identifier(MOD_ID, "locate_entity");
     public static final Identifier PACKET_TELEPORT_TO_ENTITY_ID = new Identifier(MOD_ID, "teleport_to_entity");
