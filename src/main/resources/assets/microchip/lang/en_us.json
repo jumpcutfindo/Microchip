@@ -1,4 +1,9 @@
 {
+    "category.microchip.microchip": "Microchip",
+    "key.microchip.gui": "Open Microchips Window",
+    "key.microchip.mobInfo": "View Selected Mob's Microchip",
+    "key.microchip.tag": "Microchip Selected Mob",
+
     "microchip.action.tag.added": "Tagged the entity with a microchip!",
     "microchip.action.tag.duplicate": "The entity has already been tagged!",
     "microchip.action.tag.nothing": "Can't tag what you can't see!",
