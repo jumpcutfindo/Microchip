@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "microchip",
-  "version": "${version}",
+  "version": "1.0.0",
 
   "name": "Microchip",
   "description": "Allows players to keep track of their mobs across the world!",
@@ -14,7 +14,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/microchip/icon.png",
 
   "environment": "*",
   "entrypoints": {
