@@ -9,7 +9,7 @@ import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.InfoTab;
-import com.jumpcutfindo.microchip.screen.window.info.InventoryTab;
+import com.jumpcutfindo.microchip.screen.window.info.InventoryInfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
@@ -65,8 +65,8 @@ public class MicrochipInfoWindow extends Window {
         }
 
         this.statusTab = new StatusInfoTab(screen, this, microchip, color, entity, 5);
+        this.inventoryTab = new InventoryInfoTab(screen, this, microchip, color, entity);
         this.actionsTab = new ActionsInfoTab(screen, this, microchip, color, entity, x, y);
-        this.inventoryTab = new InventoryTab(screen, this, microchip, color, entity);
 
         this.activeTab = statusTab;
     }
@@ -121,7 +121,7 @@ public class MicrochipInfoWindow extends Window {
 
         int tabVerticalOffset = 0;
         for (int i = 0; i < tabCount; i++) {
-            if (!screen.getPlayer().isCreative() && getTabs().get(i) instanceof InventoryTab) continue;
+            if (!screen.getPlayer().isCreative() && getTabs().get(i) instanceof ActionsInfoTab) continue;
 
             ScreenUtils.setShaderColor(color, false);
             if (activeTab.equals(getTabs().get(i))) {
@@ -195,7 +195,7 @@ public class MicrochipInfoWindow extends Window {
 
         int tabVerticalOffset = 0;
         for (InfoTab tab : getTabs()) {
-            if (!screen.getPlayer().isCreative() && tab instanceof InventoryTab) continue;
+            if (!screen.getPlayer().isCreative() && tab instanceof ActionsInfoTab) continue;
             if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
                 activeTab = tab;
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -283,7 +283,7 @@ public class MicrochipInfoWindow extends Window {
     }
 
     public void setInventoryList(List<ItemStack> inventoryList, int inventorySize) {
-        if (this.inventoryTab != null) ((InventoryTab) this.inventoryTab).setInventoryList(inventoryList, inventorySize);
+        if (this.inventoryTab != null) ((InventoryInfoTab) this.inventoryTab).setInventoryList(inventoryList, inventorySize);
     }
 
     public static void openStandaloneWindow(MinecraftClient client, ClientPlayerEntity player) {

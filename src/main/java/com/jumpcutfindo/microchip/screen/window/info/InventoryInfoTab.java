@@ -19,12 +19,12 @@ import java.util.stream.Stream;
 
 import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTURE;
 
-public class InventoryTab extends InfoTab {
+public class InventoryInfoTab extends InfoTab {
     private List<ItemStack> inventoryList;
     private List<ItemSlot> handSlots, armorSlots, inventorySlots;
     private int inventorySize;
 
-    public InventoryTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity) {
+    public InventoryInfoTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity) {
         super(screen, window, microchip, color, entity);
         this.inventoryList = ImmutableList.of();
 
