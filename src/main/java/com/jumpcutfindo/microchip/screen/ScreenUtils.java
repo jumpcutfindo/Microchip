@@ -2,6 +2,9 @@ package com.jumpcutfindo.microchip.screen;
 
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.LivingEntity;
 
 import java.awt.*;
 
@@ -29,5 +32,16 @@ public class ScreenUtils {
         float b = (float) color.getBlue() / 204.0f;
 
         RenderSystem.setShaderColor(r, g, b, 0.0f);
+    }
+
+    public static float calculateModelSize(LivingEntity entity, float baseMultiplier) {
+        EntityDimensions dimensions = entity.getDimensions(EntityPose.STANDING);
+
+        float entityMultiplier = EntityModelScale.ENTITY_SCALES.getOrDefault(entity.getClass(), 1.0f);
+
+        float height = dimensions.height;
+        float width = dimensions.width;
+
+        return 1 / Math.max(height, width) * baseMultiplier * entityMultiplier;
     }
 }
