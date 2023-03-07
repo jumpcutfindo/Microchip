@@ -4,6 +4,7 @@ import com.jumpcutfindo.microchip.client.ClientTagger;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.StringUtils;
+import com.jumpcutfindo.microchip.screen.EntityModelScale;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
@@ -92,7 +93,11 @@ public class MicrochipListItem extends ListItem {
     @Override
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         // Draw entity
-        if (this.entity != null) this.drawEntity(x, y);
+        if (this.entity != null) {
+            int xOffset = EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getListX();
+            int yOffset = EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getListY();
+            this.drawEntity(x + xOffset, y + yOffset);
+        }
         else {
             RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
             ScreenUtils.setShaderColor(this.group.getColor(), true);

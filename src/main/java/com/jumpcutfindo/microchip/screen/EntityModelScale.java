@@ -18,15 +18,15 @@ public class EntityModelScale {
      * a more favorable display of the mobs being rendered.
      */
     public static final Map<Class<? extends LivingEntity>, Float> ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
-            .put(AxolotlEntity.class, 0.8f)
-            .put(ChickenEntity.class, 0.8f)
+            .put(AxolotlEntity.class, 0.75f)
+            .put(ChickenEntity.class, 0.7f)
             .put(CaveSpiderEntity.class, 0.55f)
             .put(CatEntity.class, 0.85f)
             .put(CodEntity.class, 0.9f)
             .put(CowEntity.class, 0.95f)
             .put(DolphinEntity.class, 0.6f)
             .put(DonkeyEntity.class, 0.75f)
-            .put(ElderGuardianEntity.class, 0.4f)
+            .put(ElderGuardianEntity.class, 0.45f)
             .put(EndermiteEntity.class, 0.8f)
             .put(FoxEntity.class, 0.65f)
             .put(GhastEntity.class, 0.5f)
@@ -53,7 +53,48 @@ public class EntityModelScale {
             .put(ZoglinEntity.class, 0.75f)
             .build();
 
-    public static final Map<Class<? extends LivingEntity>, Integer> ENTITY_OFFSETS = ImmutableMap.<Class<? extends LivingEntity>, Integer>builder()
-            .put(ElderGuardianEntity.class, 10)
+    /**
+     * This map contains the offsets to be applied to the rendering of the mobs in different windows.
+     *
+     * This is meant to ensure that after the scaling has been carried out, we properly position the mobs
+     * in their relevant frames.
+     */
+    public static final Map<Class<? extends LivingEntity>, InterfaceOffset> ENTITY_OFFSETS = ImmutableMap.<Class<? extends LivingEntity>, InterfaceOffset>builder()
+            .put(AxolotlEntity.class, new InterfaceOffset(2, -3, 3, -4))
+            .put(BlazeEntity.class, new InterfaceOffset(-2, 2, -2, 3))
+            .put(DolphinEntity.class, new InterfaceOffset(-2, -2, 0, -3))
+            .put(ElderGuardianEntity.class, new InterfaceOffset(0, -5, 0, -15))
+            .put(GhastEntity.class, new InterfaceOffset(0, -10, 0, -20))
+            .put(MagmaCubeEntity.class, new InterfaceOffset(0, -3, 0, 0))
+            .put(ParrotEntity.class, new InterfaceOffset(0, -3, 0, 0))
             .build();
+
+    public static class InterfaceOffset {
+        public static InterfaceOffset EMPTY = new InterfaceOffset(0, 0, 0, 0);
+        private final int listX, listY;
+        private final int windowX, windowY;
+
+        public InterfaceOffset(int listX, int listY, int windowX, int windowY) {
+            this.listX = listX;
+            this.listY = listY;
+            this.windowX = windowX;
+            this.windowY = windowY;
+        }
+
+        public int getListX() {
+            return listX;
+        }
+
+        public int getListY() {
+            return listY;
+        }
+
+        public int getWindowX() {
+            return windowX;
+        }
+
+        public int getWindowY() {
+            return windowY;
+        }
+    }
 }

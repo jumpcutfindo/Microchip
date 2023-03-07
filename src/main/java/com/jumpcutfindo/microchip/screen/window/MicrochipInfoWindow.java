@@ -5,6 +5,7 @@ import com.jumpcutfindo.microchip.data.*;
 import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.helper.Tagger;
+import com.jumpcutfindo.microchip.screen.EntityModelScale;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
@@ -98,7 +99,12 @@ public class MicrochipInfoWindow extends Window {
         screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
 
         // Draw entity background, then entity, then the main UI
-        if (this.entity != null) drawLookingEntity(entity, x + 32, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
+        if (this.entity != null) {
+            int xOffset = 32 + EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getWindowX();
+            int yOffset = 80 + EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getWindowY();
+
+            drawLookingEntity(entity, x + xOffset, y + yOffset, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
+        }
         else {
             screen.drawTexture(matrices, x + 18, y + 40, 214, 0, 28, 28);
         }
