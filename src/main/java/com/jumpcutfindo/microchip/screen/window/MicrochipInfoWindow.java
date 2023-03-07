@@ -22,6 +22,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
@@ -59,11 +60,10 @@ public class MicrochipInfoWindow extends Window {
         this.color = color;
 
         if (this.entity != null) {
-            this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 48.0f * (float) Math.max(Math.cos(this.entity.getWidth() / this.entity.getHeight()), Math.cos(this.entity.getHeight() / this.entity.getWidth()));
+           this.entityModelSize = ScreenUtils.calculateModelSize(entity, 48.0f);
         } else {
             this.entityModelSize = 0;
         }
-
         this.statusTab = new StatusInfoTab(screen, this, microchip, color, entity, 5);
         this.inventoryTab = new InventoryInfoTab(screen, this, microchip, color, entity);
         this.actionsTab = new ActionsInfoTab(screen, this, microchip, color, entity, x, y);
@@ -98,7 +98,7 @@ public class MicrochipInfoWindow extends Window {
         screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
 
         // Draw entity background, then entity, then the main UI
-        if (this.entity != null) drawLookingEntity(entity, x + 31, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
+        if (this.entity != null) drawLookingEntity(entity, x + 32, y + 80, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
         else {
             screen.drawTexture(matrices, x + 18, y + 40, 214, 0, 28, 28);
         }
@@ -228,7 +228,10 @@ public class MicrochipInfoWindow extends Window {
         return List.of(statusTab, inventoryTab, actionsTab);
     }
 
-    private static void drawLookingEntity(LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
+    public static void drawLookingEntity(LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
+        EntityPose pose = entity.getPose();
+        entity.setPose(EntityPose.STANDING);
+
         float f = (float)Math.atan((double)(mouseX / 40.0F));
         float g = (float)Math.atan((double)(mouseY / 40.0F));
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
@@ -272,6 +275,8 @@ public class MicrochipInfoWindow extends Window {
         matrixStack.pop();
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
+
+        entity.setPose(pose);
     }
 
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {

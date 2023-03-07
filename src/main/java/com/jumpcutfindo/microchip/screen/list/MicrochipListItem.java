@@ -15,6 +15,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
@@ -141,6 +142,10 @@ public class MicrochipListItem extends ListItem {
         // Don't render if there is a window active and in front of it
         if (screen.isBlockedByWindow(x, y) || screen.isBlockedByWindow(x + 15, y + 15)) return;
 
+        EntityPose pose = this.entity.getPose();
+
+        this.entity.setPose(EntityPose.STANDING);
+
         float f = (float)Math.atan(1.0f);
         float g = (float)Math.atan(0.0f);
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
@@ -182,23 +187,17 @@ public class MicrochipListItem extends ListItem {
         matrixStack.pop();
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
+
+        this.entity.setPose(pose);
     }
     private void setEntity(LivingEntity entity) {
         this.entity = entity;
-
-        determineModelSize();
-    }
-
-    private void determineModelSize() {
-        if (this.entity != null) {
-            this.entityModelSize = 1 / Math.max(this.entity.getHeight(), this.entity.getWidth()) * 24.0f;
-        } else {
-            this.entityModelSize = 0;
-        }
+        this.entityModelSize = ScreenUtils.calculateModelSize(entity, 24.0f);
     }
 
     private void retrieveEntity() {
         PlayerEntity player = this.screen.getPlayer();
-        setEntity(ClientTagger.getEntity(player.getWorld(), player.getPos(), microchip.getEntityId()));
+        LivingEntity entity = ClientTagger.getEntity(player.getWorld(), player.getPos(), microchip.getEntityId());
+        if (entity != null) setEntity(entity);
     }
 }
