@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Microchip {
-    private UUID entityId;
+    private final UUID entityId;
     private MicrochipEntityData entityData;
 
     private Microchip(UUID entityId, MicrochipEntityData entityData) {

@@ -10,7 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +66,7 @@ public class InventoryInfoTab extends InfoTab {
     private void populateSlots() {
         if (entity != null) {
             int handIndex = 0;
-            for (ItemStack itemStack : entity.getItemsHand()) {
+            for (ItemStack itemStack : entity.getHandItems()) {
                 handSlots.get(handIndex).setItemStack(itemStack);
                 handIndex++;
             }
@@ -92,7 +92,7 @@ public class InventoryInfoTab extends InfoTab {
     }
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, Text.translatable("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
         // Draw inventory spaces
         List<ItemSlot> slots = getAllSlots();

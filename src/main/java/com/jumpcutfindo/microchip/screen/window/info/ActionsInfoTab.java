@@ -4,13 +4,12 @@ import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
-import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
+import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class ActionsInfoTab extends InfoTab {
             "microchip.menu.microchipInfo.actionTab.kill"
     );
 
-    private final List<ButtonWidget.PressAction> buttonActions = List.of(
+    private final List<MicrochipButton.PressAction> buttonActions = List.of(
             (locateButton) -> {
                 ClientNetworkSender.EntityActions.locateEntity(microchip);
             },
@@ -40,7 +39,7 @@ public class ActionsInfoTab extends InfoTab {
     );
 
     private final int buttonCount = 4;
-    private final ArrayList<ButtonWidget> entityActionButtons;
+    private final ArrayList<MicrochipButton> entityActionButtons;
 
     public ActionsInfoTab(MicrochipScreen screen, MicrochipInfoWindow window, Microchip microchip, GroupColor color, LivingEntity entity, int x, int y) {
         super(screen, window, microchip, color, entity);
@@ -49,21 +48,21 @@ public class ActionsInfoTab extends InfoTab {
         for (int i = 0; i < buttonCount; i++) {
             int xOffset = 77;
             int yOffset = 24;
-            ButtonWidget buttonWidget = new ButtonWidget(x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset , 75, 20, new TranslatableText(buttonTranslatableKeys.get(i)), buttonActions.get(i));
-            entityActionButtons.add(buttonWidget);
+            MicrochipButton MicrochipButton = new MicrochipButton(x + 7 + (i % 2) * xOffset, y + 118 + (i / 2) * yOffset , 75, 20, Text.translatable(buttonTranslatableKeys.get(i)), buttonActions.get(i));
+            entityActionButtons.add(MicrochipButton);
         }
     }
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, Text.translatable("microchip.menu.microchipInfo.actionTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
         for (int i = 0; i < buttonCount; i++) {
-            ButtonWidget entityActionButton = entityActionButtons.get(i);
+            MicrochipButton entityActionButton = entityActionButtons.get(i);
             int xOffset = 77;
             int yOffset = 24;
-            entityActionButton.x = window.getX() + 7 + (i % 2) * xOffset;
-            entityActionButton.y = window.getY() + 118 + (i / 2) * yOffset;
+            entityActionButton.setX(window.getX() + 7 + (i % 2) * xOffset);
+            entityActionButton.setY(window.getY() + 118 + (i / 2) * yOffset);
             entityActionButton.render(matrices, mouseX, mouseY, 0);
         }
     }
@@ -75,7 +74,7 @@ public class ActionsInfoTab extends InfoTab {
 
         for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
             if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 7 + (i % 2) * xOffset, window.getY() + 118 + (i / 2) * yOffset, 75, 20)) {
-                screen.renderTooltip(matrices, new TranslatableText(buttonTranslatableKeys.get(i) + ".tooltip"), mouseX, mouseY);
+                screen.renderTooltip(matrices, Text.translatable(buttonTranslatableKeys.get(i) + ".tooltip"), mouseX, mouseY);
             }
         }
     }
@@ -97,7 +96,7 @@ public class ActionsInfoTab extends InfoTab {
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        for (ButtonWidget entityActionButton : entityActionButtons) {
+        for (MicrochipButton entityActionButton : entityActionButtons) {
             if (entityActionButton.mouseClicked(mouseX, mouseY, button)) return true;
         }
         return false;

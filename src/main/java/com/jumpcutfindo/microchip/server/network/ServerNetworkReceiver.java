@@ -15,7 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -72,7 +72,7 @@ public class ServerNetworkReceiver implements ModInitializer {
             // Apply a glowing effect to the entity for 60 seconds
             StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.GLOWING, 1200, 0);
             entity.addStatusEffect(statusEffectInstance, player);
-            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.locate.applied", entity.getDisplayName()), false);
+            player.sendMessage(Text.translatable("microchip.menu.microchipInfo.actionTab.locate.applied", entity.getDisplayName()), false);
         }));
     }
 
@@ -85,7 +85,7 @@ public class ServerNetworkReceiver implements ModInitializer {
 
             // Teleport the player to the entity
             player.requestTeleport(entity.getX(), entity.getY(), entity.getZ());
-            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.teleportTo.applied", player.getDisplayName(), entity.getDisplayName(), StringUtils.coordinatesAsFancyText(entity.getX(), entity.getY(), entity.getZ())), false);
+            player.sendMessage(Text.translatable("microchip.menu.microchipInfo.actionTab.teleportTo.applied", player.getDisplayName(), entity.getDisplayName(), StringUtils.coordinatesAsFancyText(entity.getX(), entity.getY(), entity.getZ())), false);
         }));
     }
 
@@ -97,7 +97,7 @@ public class ServerNetworkReceiver implements ModInitializer {
             if (entity == null) return;
 
             entity.setHealth(entity.getMaxHealth());
-            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.heal.applied", entity.getDisplayName()), false);
+            player.sendMessage(Text.translatable("microchip.menu.microchipInfo.actionTab.heal.applied", entity.getDisplayName()), false);
         }));
     }
 
@@ -109,7 +109,7 @@ public class ServerNetworkReceiver implements ModInitializer {
             if (entity == null) return;
 
             entity.kill();
-            player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.kill.applied", entity.getDisplayName()), false);
+            player.sendMessage(Text.translatable("microchip.menu.microchipInfo.actionTab.kill.applied", entity.getDisplayName()), false);
         }));
     }
 
@@ -217,7 +217,7 @@ public class ServerNetworkReceiver implements ModInitializer {
             if (entity != null) return entity;
         }
 
-        player.sendMessage(new TranslatableText("microchip.menu.microchipInfo.actionTab.cannotFindMob"), false);
+        player.sendMessage(Text.translatable("microchip.menu.microchipInfo.actionTab.cannotFindMob"), false);
         return null;
     }
 }

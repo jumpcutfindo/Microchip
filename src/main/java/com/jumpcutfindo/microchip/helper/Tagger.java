@@ -1,13 +1,11 @@
 package com.jumpcutfindo.microchip.helper;
 
-import org.slf4j.Logger;
-
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.MicrochipComponents;
 import com.jumpcutfindo.microchip.data.Microchips;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import org.slf4j.Logger;
 
 public class Tagger {
     public static final Logger LOGGER = MicrochipMod.LOGGER;

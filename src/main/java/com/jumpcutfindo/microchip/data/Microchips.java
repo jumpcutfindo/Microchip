@@ -1,13 +1,12 @@
 package com.jumpcutfindo.microchip.data;
 
-import java.lang.reflect.Type;
-import java.util.*;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.nbt.NbtCompound;
+
+import java.lang.reflect.Type;
+import java.util.*;
 
 public abstract class Microchips implements Component {
     private static final String DEFAULT_GROUP_NAME = "Uncategorised";

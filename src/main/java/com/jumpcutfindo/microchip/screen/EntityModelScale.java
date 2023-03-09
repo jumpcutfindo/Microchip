@@ -29,6 +29,7 @@ public class EntityModelScale {
             .put(ElderGuardianEntity.class, 0.45f)
             .put(EndermiteEntity.class, 0.8f)
             .put(FoxEntity.class, 0.65f)
+            .put(FrogEntity.class, 0.5f)
             .put(GhastEntity.class, 0.5f)
             .put(GlowSquidEntity.class, 0.5f)
             .put(GoatEntity.class, 0.9f)

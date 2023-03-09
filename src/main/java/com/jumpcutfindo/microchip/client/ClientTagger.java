@@ -10,7 +10,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -42,8 +41,8 @@ public class ClientTagger {
     public static Text getEntityTypeText(LivingEntity entity) {
         Text mobType;
         if (entity instanceof VillagerEntity villager) {
-            String profession = villager.getVillagerData().getProfession().getId();
-            mobType = new TranslatableText("entity.minecraft.villager." + profession);
+            String profession = villager.getVillagerData().getProfession().id();
+            mobType = Text.translatable("entity.minecraft.villager." + profession);
         } else {
             mobType = entity.getType().getName();
         }

@@ -1,33 +1,33 @@
 package com.jumpcutfindo.microchip.screen.window;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.ColorButton;
+import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MicrochipModifyGroupWindow extends Window {
     public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
     public static final int WIDTH = 138, HEIGHT = 121;
 
     private final MicrochipGroup group;
-    private TextFieldWidget groupNameField;
-    private ButtonWidget submitButton;
+    private final TextFieldWidget groupNameField;
+    private final MicrochipButton submitButton;
 
-    private List<ColorButton> colorButtons;
+    private final List<ColorButton> colorButtons;
     private ColorButton selectedColor;
 
     public MicrochipModifyGroupWindow(MicrochipsMenuScreen screen, int x, int y, MicrochipGroup group) {
@@ -35,19 +35,19 @@ public class MicrochipModifyGroupWindow extends Window {
         this.group = group;
 
         // Create text field
-        this.groupNameField = new TextFieldWidget(screen.getTextRenderer(), 0, 0, 124, 18, new TranslatableText("microchip.menu.createGroup.textWidget"));
+        this.groupNameField = new TextFieldWidget(screen.getTextRenderer(), 0, 0, 124, 18, Text.translatable("microchip.menu.createGroup.textWidget"));
         this.groupNameField.setMaxLength(20);
         this.groupNameField.setEditableColor(16777215);
         if (isEdit()) this.groupNameField.setText(group.getDisplayName());
 
         // Create buttons
         if (isEdit()) {
-            this.submitButton = new ButtonWidget(0, 0, 64, 20, new TranslatableText("microchip.menu.editGroup.submitButton"), (widget) -> {
+            this.submitButton = new MicrochipButton(0, 0, 64, 20, Text.translatable("microchip.menu.editGroup.submitButton"), (widget) -> {
                 this.updateGroup(group);
                 this.screen.setActiveWindow(null);
             });
         } else {
-            this.submitButton = new ButtonWidget(0, 0, 64, 20, new TranslatableText("microchip.menu.createGroup.submitButton"), (widget) -> {
+            this.submitButton = new MicrochipButton(0, 0, 64, 20, Text.translatable("microchip.menu.createGroup.submitButton"), (widget) -> {
                 this.createGroup();
                 this.screen.setActiveWindow(null);
             });
@@ -83,14 +83,14 @@ public class MicrochipModifyGroupWindow extends Window {
         return new MicrochipModifyGroupWindow(screen, screen.getWindowX(MicrochipModifyGroupWindow.WIDTH), screen.getWindowY(MicrochipModifyGroupWindow.HEIGHT), null);
     }
 
-    private static TranslatableText getTitle(MicrochipGroup group) {
-        if (group == null) return new TranslatableText("microchip.menu.createGroup.windowTitle");
-        return new TranslatableText("microchip.menu.editGroup.windowTitle");
+    private static MutableText getTitle(MicrochipGroup group) {
+        if (group == null) return Text.translatable("microchip.menu.createGroup.windowTitle");
+        return Text.translatable("microchip.menu.editGroup.windowTitle");
     }
 
     @Override
     public void renderBackground(MatrixStack matrices) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
@@ -102,19 +102,19 @@ public class MicrochipModifyGroupWindow extends Window {
         this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
 
         // Group title entry
-        this.screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.createGroup.title"), (float) (x + this.titleX), (float) (y + 25), 0x404040);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        this.screen.getTextRenderer().draw(matrices, Text.translatable("microchip.menu.createGroup.title"), (float) (x + this.titleX), (float) (y + 25), 0x404040);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
-        this.groupNameField.x = x + 7;
-        this.groupNameField.y = y + 36;
+        this.groupNameField.setX(x + 7);
+        this.groupNameField.setY(y + 36);
         this.groupNameField.render(matrices, mouseX, mouseY, 0);
 
 
         // Colour entry
-        this.screen.getTextRenderer().draw(matrices, new TranslatableText("microchip.menu.createGroup.colorTitle"), (float) (x + this.titleX), (float) (y + 60), 0x404040);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        this.screen.getTextRenderer().draw(matrices, Text.translatable("microchip.menu.createGroup.colorTitle"), (float) (x + this.titleX), (float) (y + 60), 0x404040);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
@@ -126,8 +126,8 @@ public class MicrochipModifyGroupWindow extends Window {
         }
 
         // Button rendering
-        this.submitButton.x = x + 67;
-        this.submitButton.y = y + 95;
+        this.submitButton.setX(x + 67);
+        this.submitButton.setY(y + 95);
         this.submitButton.renderButton(matrices, mouseX, mouseY, 0);
         this.submitButton.active = this.isValidInput();
 

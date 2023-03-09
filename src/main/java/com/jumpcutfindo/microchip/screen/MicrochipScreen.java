@@ -101,7 +101,7 @@ public class MicrochipScreen extends Screen {
     }
 
     public void drawBackgroundGradient(MatrixStack matrices) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
     }

@@ -28,12 +28,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Quaternionf;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,9 +41,9 @@ public class MicrochipInfoWindow extends Window {
     public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_info_window.png");
     public static final int WIDTH = 168, HEIGHT = 200;
 
-    private Microchip microchip;
+    private final Microchip microchip;
     private final GroupColor color;
-    private LivingEntity entity;
+    private final LivingEntity entity;
 
     private InfoTab activeTab;
     private final InfoTab statusTab, inventoryTab, actionsTab;
@@ -54,7 +51,7 @@ public class MicrochipInfoWindow extends Window {
 
     private final float entityModelSize;
     public MicrochipInfoWindow(MicrochipScreen screen, int x, int y, Microchip microchip, LivingEntity entity, GroupColor color) {
-        super(screen, new TranslatableText("microchip.menu.microchipInfo.windowTitle"), 168, 200, x, y);
+        super(screen, Text.translatable("microchip.menu.microchipInfo.windowTitle"), 168, 200, x, y);
 
         this.microchip = microchip;
         this.entity = entity;
@@ -91,7 +88,7 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private void drawIdentityCard(MatrixStack matrices, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
@@ -111,7 +108,7 @@ public class MicrochipInfoWindow extends Window {
 
         RenderSystem.setShaderTexture(0, TEXTURE);
         ScreenUtils.setShaderColor(this.color, false);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
 
         // Draw the title and the entity information
@@ -148,21 +145,21 @@ public class MicrochipInfoWindow extends Window {
 
         // Display name
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 29, 102, 12)) {
-            screen.renderTooltip(matrices, new LiteralText(microchip.getEntityData().getDisplayName()), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.literal(microchip.getEntityData().getDisplayName()), mouseX, mouseY);
         }
 
         // Coordinates
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
-            screen.renderTooltip(matrices, new LiteralText(getCoordinates()), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.literal(getCoordinates()), mouseX, mouseY);
         }
 
         // Tabs
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96, 32, 29)) {
-            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
         } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 127, 32, 29)) {
-            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.inventoryTab"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.inventoryTab"), mouseX, mouseY);
         } else if (screen.getPlayer().isCreative() && ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 158, 32, 29)) {
-            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
         }
 
         // Active tab
@@ -194,7 +191,7 @@ public class MicrochipInfoWindow extends Window {
         // Coordinates to chat
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
             MicrochipEntityData data = microchip.getEntityData();
-            screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
+            screen.getPlayer().sendMessage(Text.translatable("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         }
@@ -238,20 +235,20 @@ public class MicrochipInfoWindow extends Window {
         EntityPose pose = entity.getPose();
         entity.setPose(EntityPose.STANDING);
 
-        float f = (float)Math.atan((double)(mouseX / 40.0F));
-        float g = (float)Math.atan((double)(mouseY / 40.0F));
+        float f = (float)Math.atan(mouseX / 40.0F);
+        float g = (float)Math.atan(mouseY / 40.0F);
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         matrixStack.push();
-        matrixStack.translate((double)x, (double)y, 1050.0);
+        matrixStack.translate(x, y, 1050.0);
         matrixStack.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
         MatrixStack matrixStack2 = new MatrixStack();
         matrixStack2.translate(0.0, 0.0, 1000.0);
-        matrixStack2.scale((float)size, (float)size, (float)size);
-        Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
-        Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
-        quaternion.hamiltonProduct(quaternion2);
-        matrixStack2.multiply(quaternion);
+        matrixStack2.scale(size, size, size);
+        Quaternionf quaternionf = new Quaternionf().rotateZ((float)Math.PI);
+        Quaternionf quaternionf2 = new Quaternionf().rotateX(g * 20.0f * ((float)Math.PI / 180));
+        quaternionf.mul(quaternionf2);
+        matrixStack2.multiply(quaternionf);
         float h = entity.bodyYaw;
         float i = entity.getYaw();
         float j = entity.getPitch();
@@ -264,8 +261,8 @@ public class MicrochipInfoWindow extends Window {
         entity.prevHeadYaw = entity.getYaw();
         DiffuseLighting.method_34742();
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-        quaternion2.conjugate();
-        entityRenderDispatcher.setRotation(quaternion2);
+        quaternionf2.conjugate();
+        entityRenderDispatcher.setRotation(quaternionf2);
         entityRenderDispatcher.setRenderShadows(false);
         VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
         RenderSystem.runAsFancy(() -> {

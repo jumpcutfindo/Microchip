@@ -1,23 +1,23 @@
 package com.jumpcutfindo.microchip.screen.list;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MicrochipGroupListView extends ListView {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
-    private TranslatableText title;
+    private MutableText title;
     private final int titleX, titleY;
 
     private final IconButton createGroupButton;
@@ -34,11 +34,11 @@ public class MicrochipGroupListView extends ListView {
                 .setSingleSelect(true);
 
         // Set various variables
-        this.title = new TranslatableText("microchip.menu.groupTitle");
+        this.title = Text.translatable("microchip.menu.groupTitle");
         this.titleX = 7;
         this.titleY = 10;
 
-        this.createGroupButton = new IconButton(screen, x + 126, y + 6, 0, 0, this::onCreateGroup, new TranslatableText("microchip.menu.createGroup.tooltip"));
+        this.createGroupButton = new IconButton(screen, x + 126, y + 6, 0, 0, this::onCreateGroup, Text.translatable("microchip.menu.createGroup.tooltip"));
         this.canCreate = true;
 
         this.setSelected(0);
@@ -80,7 +80,7 @@ public class MicrochipGroupListView extends ListView {
         this.texture = texture;
     }
 
-    public void setTitle(TranslatableText title) {
+    public void setTitle(MutableText title) {
         this.title = title;
     }
 
@@ -106,7 +106,7 @@ public class MicrochipGroupListView extends ListView {
     }
 
     private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 

@@ -1,33 +1,32 @@
 package com.jumpcutfindo.microchip.screen.window;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
+import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
 import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
-
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class MicrochipMoveChipsWindow extends Window {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_move_chips.png");
     public static final int WIDTH = 160, HEIGHT = 200;
-    private MicrochipGroupListView listView;
+    private final MicrochipGroupListView listView;
     private final MicrochipGroup fromGroup;
-    private List<UUID> selectedMicrochips;
+    private final List<UUID> selectedMicrochips;
 
-    private ButtonWidget submitButton;
+    private final MicrochipButton submitButton;
 
     public MicrochipMoveChipsWindow(MicrochipsMenuScreen screen, int x, int y, Microchips microchips, MicrochipGroup fromGroup, List<UUID> selectedMicrochips) {
-        super(screen, new TranslatableText("microchip.menu.moveChips.windowTitle"), WIDTH, HEIGHT, x, y);
+        super(screen, Text.translatable("microchip.menu.moveChips.windowTitle"), WIDTH, HEIGHT, x, y);
         this.fromGroup = fromGroup;
         this.selectedMicrochips = selectedMicrochips;
 
@@ -35,17 +34,17 @@ public class MicrochipMoveChipsWindow extends Window {
         this.listView = new MicrochipGroupListView(screen, microchips, this.x, this.y);
         this.listView.setTexture(TEXTURE);
         this.listView.setTextureDims(160, 200);
-        this.listView.setTitle(new TranslatableText("microchip.menu.moveChips.windowTitle", this.selectedMicrochips.size()));
+        this.listView.setTitle(Text.translatable("microchip.menu.moveChips.windowTitle", this.selectedMicrochips.size()));
         this.listView.setCanCreate(false);
 
         // Create button
-        this.submitButton = new ButtonWidget(x, y, 64, 20, new TranslatableText("microchip.menu.moveChips.submitButton"), (widget) -> this.moveMicrochips());
+        this.submitButton = new MicrochipButton(x, y, 64, 20, Text.translatable("microchip.menu.moveChips.submitButton"), (widget) -> this.moveMicrochips());
 
         this.listView.x = x;
         this.listView.y = y;
 
-        this.submitButton.x = x + 88;
-        this.submitButton.y = y + 174;
+        this.submitButton.setX(x + 88);
+        this.submitButton.setY(y + 174);
     }
 
     @Override

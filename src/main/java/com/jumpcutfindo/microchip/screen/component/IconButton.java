@@ -4,13 +4,12 @@ import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.MutableText;
 
 public class IconButton implements Interactable {
     private final MicrochipsMenuScreen screen;
@@ -21,9 +20,9 @@ public class IconButton implements Interactable {
     private boolean disabled;
     private final Runnable action;
 
-    private final TranslatableText tooltip;
+    private final MutableText tooltip;
 
-    public IconButton(MicrochipsMenuScreen screen, int x, int y, int u, int v, Runnable action, TranslatableText tooltip) {
+    public IconButton(MicrochipsMenuScreen screen, int x, int y, int u, int v, Runnable action, MutableText tooltip) {
         this.screen = screen;
 
         this.x = x;
@@ -42,7 +41,7 @@ public class IconButton implements Interactable {
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, int delta) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 

@@ -1,17 +1,15 @@
 package com.jumpcutfindo.microchip.screen.window;
 
-import java.util.List;
-
 import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
-import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+
+import java.util.List;
 
 public abstract class Window implements Interactable {
     protected MicrochipScreen screen;
@@ -85,7 +83,7 @@ public abstract class Window implements Interactable {
     public abstract List<ClickableWidget> getWidgets();
 
     private void renderBackgroundGradient(MatrixStack matrices) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         screen.drawBackgroundGradient(matrices);
     }

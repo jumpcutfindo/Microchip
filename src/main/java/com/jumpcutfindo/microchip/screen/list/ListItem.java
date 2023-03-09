@@ -1,15 +1,11 @@
 package com.jumpcutfindo.microchip.screen.list;
 
-import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-
-import java.util.List;
 
 /**
  * An item that can be used by ListView. Note that this takes in the x, y position values so that dynamic updating
@@ -52,7 +48,7 @@ public abstract class ListItem {
     }
 
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, this.texture);
 
         if (isSelected) {

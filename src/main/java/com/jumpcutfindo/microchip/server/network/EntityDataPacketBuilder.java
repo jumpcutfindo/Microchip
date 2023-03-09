@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -14,8 +14,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.Collection;
 
 public class EntityDataPacketBuilder {
-    private ServerPlayerEntity player;
-    private LivingEntity entity;
+    private final ServerPlayerEntity player;
+    private final LivingEntity entity;
     private final PacketByteBuf buffer;
     public EntityDataPacketBuilder(ServerPlayerEntity player, LivingEntity entity) {
         this.player = player;
@@ -63,7 +63,7 @@ public class EntityDataPacketBuilder {
     public EntityDataPacketBuilder withInventorySize() {
         int inventorySize = 16;
         if (entity instanceof InventoryOwner) inventorySize = ((InventoryOwner) entity).getInventory().size();
-        else if (entity instanceof HorseBaseEntity) inventorySize = 15;
+        else if (entity instanceof AbstractHorseEntity) inventorySize = 15;
         buffer.writeInt(inventorySize);
 
         return this;

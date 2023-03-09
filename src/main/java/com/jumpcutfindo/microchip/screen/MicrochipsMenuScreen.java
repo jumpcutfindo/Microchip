@@ -8,7 +8,7 @@ import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
 import com.jumpcutfindo.microchip.screen.list.MicrochipsListView;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
     private MicrochipsListView microchipsList;
 
     public MicrochipsMenuScreen(PlayerEntity player) {
-        super(new TranslatableText("microchip.menu.title"));
+        super(Text.translatable("microchip.menu.title"));
         this.microchips = Tagger.getMicrochips(player);
 
         this.selectedGroup = 0;
@@ -175,6 +175,6 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
     }
 
     public enum RefreshType {
-        GROUP, MICROCHIPS, BOTH;
+        GROUP, MICROCHIPS, BOTH
     }
 }

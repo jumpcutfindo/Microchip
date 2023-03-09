@@ -5,7 +5,6 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.StatUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
-import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -21,9 +20,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.HorseEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.StringHelper;
 
 import java.util.*;
@@ -32,7 +30,7 @@ import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTU
 
 public class StatusInfoTab extends InfoTab {
 
-    private Map<StatusEffect, StatusEffectWrapper> entityStatuses;
+    private final Map<StatusEffect, StatusEffectWrapper> entityStatuses;
     private final int statusDisplayCount;
     private int timeSinceStatusRetrieved = 0;
     private int breedingAge;
@@ -52,7 +50,7 @@ public class StatusInfoTab extends InfoTab {
 
     @Override
     public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, Text.translatable("microchip.menu.microchipInfo.statusTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
 
         // Draw health and armor
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -120,7 +118,7 @@ public class StatusInfoTab extends InfoTab {
 
         // Draw status effects
         RenderSystem.setShaderTexture(0, TEXTURE);
-        screen.getTextRenderer().drawWithShadow(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.effects"), (float) (window.getX() + 7), (float) (window.getY() + 158), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, Text.translatable("microchip.menu.microchipInfo.statusTab.effects"), (float) (window.getX() + 7), (float) (window.getY() + 158), 0xFFFFFF);
         StatusEffectSpriteManager statusEffectSpriteManager = MinecraftClient.getInstance().getStatusEffectSpriteManager();
 
         int effectsOffset = 0;
@@ -144,7 +142,7 @@ public class StatusInfoTab extends InfoTab {
                     // Draw the status
                     StatusEffect statusEffect = instance.getEffectType();
                     Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
-                    RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
+                    RenderSystem.setShaderTexture(0, sprite.getAtlasId());
                     DrawableHelper.drawSprite(matrices, window.getX() + 9 + effectsOffset, window.getY() + 172, 0, 18, 18, sprite);
 
                     effectsOffset += 24;
@@ -153,7 +151,7 @@ public class StatusInfoTab extends InfoTab {
             }
         }
 
-        screen.getTextRenderer().drawWithShadow(matrices, new LiteralText(String.format("+%d", Math.max(activeStatusCount - displayedStatuses, 0))), (float) (window.getX() + 132), (float) (window.getY() + 177), 0xFFFFFF);
+        screen.getTextRenderer().drawWithShadow(matrices, Text.literal(String.format("+%d", Math.max(activeStatusCount - displayedStatuses, 0))), (float) (window.getX() + 132), (float) (window.getY() + 177), 0xFFFFFF);
 
     }
 
@@ -175,16 +173,16 @@ public class StatusInfoTab extends InfoTab {
                 if (displayedStatuses < statusDisplayCount) {
                     // Draw the status tooltip
                     if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 9 + effectsOffset, window.getY() + 172, 18, 18)) {
-                        Text timeLeftText = new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved))));
-                        Text text = new TranslatableText(statusEffect.getTranslationKey()).append(timeLeftText);
+                        Text timeLeftText = Text.literal(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved))));
+                        Text text = Text.translatable(statusEffect.getTranslationKey()).append(timeLeftText);
                         screen.renderTooltip(matrices, text, mouseX, mouseY);
 
                     }
                     effectsOffset += 24;
                     displayedStatuses++;
                 } else {
-                    TranslatableText statusName = new TranslatableText(instance.getTranslationKey());
-                    statusName.append(new LiteralText(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved)))));
+                    MutableText statusName = Text.translatable(instance.getTranslationKey());
+                    statusName.append(Text.literal(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved)))));
                     undisplayedStatuses.add(statusName);
                 }
             }
@@ -195,15 +193,15 @@ public class StatusInfoTab extends InfoTab {
         }
 
         if (hasSpeed() && ScreenUtils.isWithin(mouseX, mouseY, speedStatX, statY, speedStatWidth, 9)) {
-            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.stats.speed"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.statusTab.stats.speed"), mouseX, mouseY);
         }
 
         if (hasJump() && ScreenUtils.isWithin(mouseX, mouseY, jumpStatX, statY, jumpStatWidth, 9)) {
-            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.stats.jump"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.statusTab.stats.jump"), mouseX, mouseY);
         }
 
         if (hasBreeding() && ScreenUtils.isWithin(mouseX, mouseY, breedStatX, statY, breedStatWidth, 9)) {
-            screen.renderTooltip(matrices, new TranslatableText("microchip.menu.microchipInfo.statusTab.stats.breed"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.statusTab.stats.breed"), mouseX, mouseY);
         }
     }
 

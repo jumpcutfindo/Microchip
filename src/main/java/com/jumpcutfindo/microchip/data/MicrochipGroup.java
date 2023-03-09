@@ -1,17 +1,19 @@
 package com.jumpcutfindo.microchip.data;
 
-import java.util.*;
-
+import com.jumpcutfindo.microchip.MicrochipMod;
 import org.slf4j.Logger;
 
-import com.jumpcutfindo.microchip.MicrochipMod;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class MicrochipGroup {
     public static Logger LOGGER = MicrochipMod.LOGGER;
-    private UUID id;
+    private final UUID id;
     private String displayName;
     private GroupColor color;
-    private Set<Microchip> microchips;
+    private final Set<Microchip> microchips;
     private boolean isDefault;
 
     public MicrochipGroup(String displayName, GroupColor color) {
