@@ -1,8 +1,8 @@
 package com.jumpcutfindo.microchip.constants;
 
-import static com.jumpcutfindo.microchip.MicrochipMod.MOD_ID;
-
 import net.minecraft.util.Identifier;
+
+import static com.jumpcutfindo.microchip.MicrochipMod.MOD_ID;
 
 public class NetworkConstants {
     public static final Identifier PACKET_GLOW_ENTITY_ID = new Identifier(MOD_ID, "glow_entity");
@@ -18,6 +18,8 @@ public class NetworkConstants {
 
     public static final Identifier PACKET_UPDATE_GROUP_ID = new Identifier(MOD_ID, "update_group");
     public static final Identifier PACKET_DELETE_GROUP_ID = new Identifier(MOD_ID, "delete_group");
+
+    public static final Identifier PACKET_REORDER_GROUP_ID = new Identifier(MOD_ID, "reorder_group");
 
     public static final Identifier PACKET_REQUEST_ENTITY_DATA_ID = new Identifier(MOD_ID, "request_entity_data");
 

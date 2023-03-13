@@ -14,10 +14,13 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
+import java.util.function.BiConsumer;
+
 public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
     private static final Identifier GROUP_LIST_ITEMS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
 
     private boolean isReordering;
+    private BiConsumer<Integer, Integer> moveAction;
 
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int index) {
         super(screen, microchipGroup, index);
@@ -107,5 +110,9 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
 
     public void setReordering(boolean reordering) {
         isReordering = reordering;
+    }
+
+    public void setMoveAction(BiConsumer<Integer, Integer> moveAction) {
+        this.moveAction = moveAction;
     }
 }

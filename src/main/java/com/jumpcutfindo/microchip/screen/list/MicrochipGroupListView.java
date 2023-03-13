@@ -22,8 +22,8 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
 
     private final IconButton createGroupButton, reorderGroupButton;
     private boolean canCreate;
-
     private boolean isReordering;
+
 
     public MicrochipGroupListView(MicrochipsMenuScreen screen, Microchips microchips, int x, int y) {
         super(screen);
@@ -142,10 +142,16 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
 
         for (int i = 0; i < microchipGroups.size(); i++) {
             MicrochipGroup group = microchipGroups.get(i);
+            MicrochipGroupListItem item = new MicrochipGroupListItem(screen, group, i);
+            item.setMoveAction(MicrochipGroupListView::onReorder);
 
-            listItems.add(new MicrochipGroupListItem(screen, group, i));
+            listItems.add(item);
         }
 
         return listItems;
+    }
+
+    private static void onReorder(int from, int to) {
+        // TODO: Make request to server to order
     }
 }

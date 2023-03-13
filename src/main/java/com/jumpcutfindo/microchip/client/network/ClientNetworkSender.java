@@ -71,6 +71,14 @@ public class ClientNetworkSender {
             ClientPlayNetworking.send(NetworkConstants.PACKET_DELETE_GROUP_ID, buffer);
         }
 
+        public static void reorderGroup(int to, int from) {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeInt(to);
+            buffer.writeInt(from);
+
+            ClientPlayNetworking.send(NetworkConstants.PACKET_REORDER_GROUP_ID, buffer);
+        }
+
         public static void updateMicrochips() {
             ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
         }
