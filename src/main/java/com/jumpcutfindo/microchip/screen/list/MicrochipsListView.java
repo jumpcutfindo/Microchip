@@ -12,6 +12,7 @@ import com.jumpcutfindo.microchip.screen.window.MicrochipMoveChipsWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -117,6 +118,16 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
             return this.editGroupButton.mouseClicked(mouseX, mouseY, button)
                     || this.deleteGroupButton.mouseClicked( mouseX, mouseY, button);
         }
+    }
+
+    @Override
+    public NbtCompound getSettings() {
+        return new NbtCompound();
+    }
+
+    @Override
+    public void applySettings(NbtCompound settings) {
+
     }
 
     @Override

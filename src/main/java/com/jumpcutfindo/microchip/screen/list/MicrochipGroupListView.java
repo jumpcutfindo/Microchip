@@ -10,11 +10,13 @@ import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
@@ -24,7 +26,6 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     private final IconButton createGroupButton, reorderGroupButton;
     private boolean canCreate;
     private boolean isReordering;
-
 
     public MicrochipGroupListView(MicrochipsMenuScreen screen, Microchips microchips, int x, int y) {
         super(screen);
@@ -42,7 +43,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         this.titleY = 10;
 
         this.createGroupButton = new IconButton(screen, x + 117, y + 6, 0, 0, this::onCreateGroup, new TranslatableText("microchip.menu.createGroup.tooltip"));
-        this.reorderGroupButton = new IconButton(screen, x + 136, y + 6, 0, 48, this::onReorderGroups, new TranslatableText("microchip.menu.reorderGroup.tooltip"));
+        this.reorderGroupButton = new IconButton(screen, x + 136, y + 6, 0, 48, this::toggleReordering, new TranslatableText("microchip.menu.reorderGroup.tooltip"));
         this.canCreate = true;
 
         this.setSelected(0);
@@ -72,6 +73,21 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     }
 
     @Override
+    public NbtCompound getSettings() {
+        NbtCompound cpd = new NbtCompound();
+        cpd.putUuid("SelectedItem", getSelectedItem().getItem().getId());
+        cpd.putBoolean("IsReordering", isReordering);
+
+        return cpd;
+    }
+
+    @Override
+    public void applySettings(NbtCompound settings) {
+        this.setSelected(settings.getUuid("SelectedItem"));
+        this.setReorderGroups(settings.getBoolean("IsReordering"));
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         return false;
     }
@@ -79,6 +95,17 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     @Override
     public boolean charTyped(char chr, int modifiers) {
         return false;
+    }
+
+    public void setSelected(UUID groupId) {
+        for (int i = 0; i < this.listItems.size(); i++) {
+            MicrochipGroupListItem item = this.listItems.get(i);
+            if (item.getItem().getId().equals(groupId)) {
+                this.setSelected(i);
+                screen.setSelectedGroup(i);
+                return;
+            }
+        }
     }
 
     public void setTexture(Identifier texture) {
@@ -110,8 +137,12 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         this.screen.setActiveWindow(MicrochipModifyGroupWindow.createCreateWindow(this.screen));
     }
 
-    private void onReorderGroups() {
-        this.isReordering = !this.isReordering;
+    private void toggleReordering() {
+        this.setReorderGroups(!this.isReordering);
+    }
+
+    private void setReorderGroups(boolean isReordering) {
+        this.isReordering = isReordering;
 
         this.reorderGroupButton.setActive(this.isReordering);
 

@@ -8,6 +8,7 @@ import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
 import com.jumpcutfindo.microchip.screen.list.MicrochipsListView;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -134,12 +135,13 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
     }
 
     private void refreshGroups() {
-        int selectedIndex = 0;
+        NbtCompound settings = null;
         if (this.microchipGroupList != null) {
-            selectedIndex = this.microchipGroupList.getSelectedIndex();
+            settings = this.microchipGroupList.getSettings();
         }
+
         this.microchipGroupList = new MicrochipGroupListView(this, this.microchips, x, y);
-        this.microchipGroupList.setSelected(selectedIndex);
+        if (settings != null) this.microchipGroupList.applySettings(settings);
     }
 
     private void refreshMicrochips() {

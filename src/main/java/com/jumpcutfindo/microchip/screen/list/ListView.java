@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -235,4 +236,14 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         this.selectedItems = new ArrayList<>();
         this.selectedIndices = new ArrayList<>();
     }
+
+    /**
+     * Retrieves an NbtCompound that represents the various settings (e.g. state) of the ListView.
+     */
+    public abstract NbtCompound getSettings();
+
+    /**
+     * Applies a given set of settings to the ListView.
+     */
+    public abstract void applySettings(NbtCompound settings);
 }
