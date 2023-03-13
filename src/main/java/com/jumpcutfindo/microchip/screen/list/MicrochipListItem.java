@@ -24,26 +24,24 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
-public class MicrochipListItem extends ListItem {
+public class MicrochipListItem extends ListItem<Microchip> {
     private final MicrochipGroup group;
-    private final Microchip microchip;
     private LivingEntity entity;
 
     private float entityModelSize;
 
     public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip) {
-        super(screen);
+        super(screen, microchip);
 
         this.setBackground(MicrochipsListView.TEXTURE, 0, 178, 180, 36);
 
         this.group = group;
-        this.microchip = microchip;
 
         retrieveEntity();
     }
 
     public Microchip getMicrochip() {
-        return microchip;
+        return item;
     }
 
     @Override
@@ -52,22 +50,22 @@ public class MicrochipListItem extends ListItem {
         int displayNameX = x + 38;
         int displayNameY = y + 8;
 
-        if (this.microchip.getEntityData() == null) return;
+        if (this.item.getEntityData() == null) return;
 
         if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) {
-            screen.getTextRenderer().drawWithShadow(matrices, StringUtils.truncatedName(microchip.getEntityData().getDisplayName(), 20), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
+            screen.getTextRenderer().drawWithShadow(matrices, StringUtils.truncatedName(this.item.getEntityData().getDisplayName(), 20), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
         }
 
         int entityNameX = x + 38;
         int entityNameY = y + 21;
         if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
-            screen.getTextRenderer().draw(matrices, microchip.getEntityData().getTypeName(), (float) entityNameX, (float) entityNameY, 0x404040);
+            screen.getTextRenderer().draw(matrices, this.item.getEntityData().getTypeName(), (float) entityNameX, (float) entityNameY, 0x404040);
         }
 
         String entityHealthString = this.entity == null ? "?" : Integer.toString((int) this.entity.getHealth());
 
         // Draw entity health
-        String healthString = String.format("%s/%d", entityHealthString, (int) microchip.getEntityData().getMaxHealth());
+        String healthString = String.format("%s/%d", entityHealthString, (int) this.item.getEntityData().getMaxHealth());
         int offset = healthString.length() * 6 + 1;
         screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 178 - offset, y + 21, 0xFFFFFF);
         int healthIconOffset = offset + 1;
@@ -112,7 +110,7 @@ public class MicrochipListItem extends ListItem {
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY) {
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            screen.setActiveWindow(new MicrochipInfoWindow(screen, screen.getWindowX(MicrochipInfoWindow.WIDTH), screen.getWindowY(MicrochipInfoWindow.HEIGHT), this.microchip, this.entity, this.group.getColor()));
+            screen.setActiveWindow(new MicrochipInfoWindow(screen, screen.getWindowX(MicrochipInfoWindow.WIDTH), screen.getWindowY(MicrochipInfoWindow.HEIGHT), this.item, this.entity, this.group.getColor()));
             return true;
         }
 
@@ -202,7 +200,7 @@ public class MicrochipListItem extends ListItem {
 
     private void retrieveEntity() {
         PlayerEntity player = this.screen.getPlayer();
-        LivingEntity entity = ClientTagger.getEntity(player.getWorld(), player.getPos(), microchip.getEntityId());
+        LivingEntity entity = ClientTagger.getEntity(player.getWorld(), player.getPos(), this.item.getEntityId());
         if (entity != null) setEntity(entity);
     }
 }

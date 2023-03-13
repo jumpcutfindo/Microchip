@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MicrochipGroupListView extends ListView {
+public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
     private TranslatableText title;
     private final int titleX, titleY;
@@ -101,7 +101,7 @@ public class MicrochipGroupListView extends ListView {
     }
 
     public int getSelectedIndex() {
-        return this.getSelectedIndices().size() > 0 ? this.getSelectedIndices().get(0) : 0;
+        return this.getSelectedIndices().size() > 0 ? (int) this.getSelectedIndices().get(0) : 0;
     }
 
     private void onCreateGroup() {
@@ -113,8 +113,8 @@ public class MicrochipGroupListView extends ListView {
 
         this.reorderGroupButton.setActive(this.isReordering);
 
-        for (ListItem item : this.listItems) {
-            ((MicrochipGroupListItem) item).setReordering(this.isReordering);
+        for (MicrochipGroupListItem item : this.listItems) {
+            item.setReordering(this.isReordering);
         }
     }
 
@@ -134,7 +134,7 @@ public class MicrochipGroupListView extends ListView {
         this.reorderGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
     }
 
-    private static List<ListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {
+    private static List<MicrochipGroupListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {
         return microchips.getAllGroups().stream().map(group -> new MicrochipGroupListItem(screen, group, microchips.getAllGroups().indexOf(group))).collect(Collectors.toList());
     }
 }

@@ -12,19 +12,18 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
-public class MicrochipGroupListItem extends ListItem {
+public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
     private static final Identifier GROUP_LIST_ITEMS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
-    private final MicrochipGroup microchipGroup;
     private final int index;
 
     private boolean isReordering;
 
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int index) {
-        super(screen);
+        super(screen, microchipGroup);
 
         this.setBackground(GROUP_LIST_ITEMS_TEXTURE, 0, 178, 124, 18);
 
-        this.microchipGroup = microchipGroup;
+        this.item = microchipGroup;
         this.index = index;
     }
 
@@ -39,7 +38,7 @@ public class MicrochipGroupListItem extends ListItem {
     }
 
     public MicrochipGroup getGroup() {
-        return this.microchipGroup;
+        return this.item;
     }
 
     @Override
@@ -47,7 +46,7 @@ public class MicrochipGroupListItem extends ListItem {
         ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
         super.renderBackground(matrices, x, y, mouseX, mouseY);
 
-        screen.drawTexture(matrices, x + 1, y + 1, this.microchipGroup.getColor().ordinal() * 16, 214, 16, 16);
+        screen.drawTexture(matrices, x + 1, y + 1, this.item.getColor().ordinal() * 16, 214, 16, 16);
     }
 
     @Override
@@ -57,14 +56,14 @@ public class MicrochipGroupListItem extends ListItem {
 
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        String displayName = this.microchipGroup.getDisplayName();
-        screen.getTextRenderer().draw(matrices, new LiteralText(StringUtils.truncatedName(displayName, 14)), (float) (x + 19), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
+        String displayName = this.item.getDisplayName();
+        screen.getTextRenderer().draw(matrices, new LiteralText(StringUtils.truncatedName(displayName, 14)), (float) (x + 19), (float) (y + 5), this.item.getColor().getShadowColor());
 
         if (!isReordering) {
             // Draw microchip count
-            int microchipCount = microchipGroup.getMicrochips().size();
+            int microchipCount = this.item.getMicrochips().size();
             int offset = (Integer.toString(microchipCount).length() - 1) * 6;
-            screen.getTextRenderer().draw(matrices, new LiteralText(Integer.toString(microchipCount)), (float) (x + 114 - offset), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
+            screen.getTextRenderer().draw(matrices, new LiteralText(Integer.toString(microchipCount)), (float) (x + 114 - offset), (float) (y + 5), this.item.getColor().getShadowColor());
         } else {
             // Draw reordering arrows
             RenderSystem.setShader(GameRenderer::getPositionTexShader);

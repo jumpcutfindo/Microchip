@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class MicrochipsListView extends ListView {
+public class MicrochipsListView extends ListView<MicrochipListItem> {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_list.png");
     private final MicrochipGroup group;
 
@@ -152,7 +152,7 @@ public class MicrochipsListView extends ListView {
         ClientNetworkSender.MicrochipsActions.removeEntitiesFromGroup(this.group.getId(), microchipIds);
     }
 
-    private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
+    private static List<MicrochipListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
         if (microchipGroup == null) return new ArrayList<>();
 
         return microchipGroup.getMicrochips().stream().map(microchip -> new MicrochipListItem(screen, microchipGroup, microchip)).collect(Collectors.toList());
