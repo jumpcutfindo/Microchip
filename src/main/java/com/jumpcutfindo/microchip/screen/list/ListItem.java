@@ -14,13 +14,15 @@ import net.minecraft.util.Identifier;
 public abstract class ListItem<T> {
     protected MicrochipsMenuScreen screen;
     protected T item;
+    protected int index;
     private Identifier texture;
     protected int u, v, width, height;
     protected boolean isSelected;
 
-    public ListItem(MicrochipsMenuScreen screen, T item) {
+    public ListItem(MicrochipsMenuScreen screen, T item, int index) {
         this.screen = screen;
         this.item = item;
+        this.index = index;
     }
 
     protected void setBackground(Identifier texture, int u, int v, int width, int height) {
@@ -33,6 +35,10 @@ public abstract class ListItem<T> {
 
     public T getItem() {
         return item;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public int getHeight() {

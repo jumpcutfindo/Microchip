@@ -16,12 +16,11 @@ import net.minecraft.util.Identifier;
 
 public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
     private static final Identifier GROUP_LIST_ITEMS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
-    private final int index;
 
     private boolean isReordering;
 
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int index) {
-        super(screen, microchipGroup);
+        super(screen, microchipGroup, index);
 
         this.setBackground(GROUP_LIST_ITEMS_TEXTURE, 0, 178, 124, 18);
 

@@ -29,8 +29,8 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     private float entityModelSize;
 
-    public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip) {
-        super(screen, microchip);
+    public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip, int index) {
+        super(screen, microchip, index);
 
         this.setBackground(MicrochipsListView.TEXTURE, 0, 178, 180, 36);
 

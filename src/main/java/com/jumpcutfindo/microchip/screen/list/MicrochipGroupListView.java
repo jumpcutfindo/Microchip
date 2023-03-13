@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.IconButton;
@@ -11,8 +12,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
@@ -135,6 +136,16 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     }
 
     private static List<MicrochipGroupListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {
-        return microchips.getAllGroups().stream().map(group -> new MicrochipGroupListItem(screen, group, microchips.getAllGroups().indexOf(group))).collect(Collectors.toList());
+        List<MicrochipGroupListItem> listItems = new ArrayList<>();
+
+        List<MicrochipGroup> microchipGroups = microchips.getAllGroups();
+
+        for (int i = 0; i < microchipGroups.size(); i++) {
+            MicrochipGroup group = microchipGroups.get(i);
+
+            listItems.add(new MicrochipGroupListItem(screen, group, i));
+        }
+
+        return listItems;
     }
 }
