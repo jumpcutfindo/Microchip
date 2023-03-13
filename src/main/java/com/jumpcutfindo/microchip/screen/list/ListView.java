@@ -140,13 +140,14 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
             if (i >= this.listItems.size()) break;
 
             T item = this.listItems.get(i);
-            if (item.mouseSelected(x + listX, y + listY + offsetY, mouseX, mouseY)) {
-                this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-                this.setSelected(i);
+
+            if (item.mouseClicked(x + listX, y + listY + offsetY, mouseX, mouseY)) {
                 return true;
             }
 
-            if (item.mouseClicked(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+            if (item.mouseSelected(x + listX, y + listY + offsetY, mouseX, mouseY)) {
+                this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+                this.setSelected(i);
                 return true;
             }
 
