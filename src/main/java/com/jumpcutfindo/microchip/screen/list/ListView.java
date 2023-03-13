@@ -1,15 +1,13 @@
 package com.jumpcutfindo.microchip.screen.list;
 
+import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -146,7 +144,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
             }
 
             if (item.mouseSelected(x + listX, y + listY + offsetY, mouseX, mouseY)) {
-                this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+                SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
                 this.setSelected(i);
                 return true;
             }
@@ -236,9 +234,5 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         for (T item : listItems) item.setSelected(false);
         this.selectedItems = new ArrayList<>();
         this.selectedIndices = new ArrayList<>();
-    }
-
-    public void playDownSound(SoundManager soundManager) {
-        soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 }
