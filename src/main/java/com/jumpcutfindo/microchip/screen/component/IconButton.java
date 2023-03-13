@@ -18,7 +18,7 @@ public class IconButton implements Interactable {
     private final int u, v;
     private final int width, height;
 
-    private boolean disabled;
+    private boolean active, disabled;
     private final Runnable action;
 
     private final TranslatableText tooltip;
@@ -52,6 +52,11 @@ public class IconButton implements Interactable {
             return;
         }
 
+        if (isActive()) {
+            screen.drawTexture(matrices, x, y, u + 32, v, width, height);
+            return;
+        }
+
         if (isMouseWithin(mouseX, mouseY) && !screen.isWindowOpen()) {
             // Hovered
             screen.drawTexture(matrices, x, y, u + 16, v, width, height);
@@ -67,6 +72,14 @@ public class IconButton implements Interactable {
             return true;
         }
         return false;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public void setDisabled(boolean disabled) {

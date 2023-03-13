@@ -111,6 +111,8 @@ public class MicrochipGroupListView extends ListView {
     private void onReorderGroups() {
         this.isReordering = !this.isReordering;
 
+        this.reorderGroupButton.setActive(this.isReordering);
+
         for (ListItem item : this.listItems) {
             ((MicrochipGroupListItem) item).setReordering(this.isReordering);
         }

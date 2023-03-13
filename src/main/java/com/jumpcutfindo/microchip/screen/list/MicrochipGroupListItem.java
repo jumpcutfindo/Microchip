@@ -74,6 +74,7 @@ public class MicrochipGroupListItem extends ListItem {
             int arrowWidth = 9, arrowHeight = 9;
             int upX = x + 99, upY = y + 4;
             int downX = x + 110, downY = y + 4;
+
             if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
                 screen.drawTexture(matrices, upX, upY, 169, 15, arrowWidth, arrowHeight);
             } else {
