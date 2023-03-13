@@ -32,7 +32,7 @@ public class IconButton implements Interactable {
         this.u = u;
         this.v = v;
 
-        this.width = 26;
+        this.width = 16;
         this.height = 16;
 
         this.disabled = false;
@@ -48,13 +48,13 @@ public class IconButton implements Interactable {
 
         if (isDisabled()) {
             // Disabled
-            screen.drawTexture(matrices, x, y, u + 78, v, width, height);
+            screen.drawTexture(matrices, x, y, u + 48, v, width, height);
             return;
         }
 
         if (isMouseWithin(mouseX, mouseY) && !screen.isWindowOpen()) {
             // Hovered
-            screen.drawTexture(matrices, x, y, u + 26, v, width, height);
+            screen.drawTexture(matrices, x, y, u + 16, v, width, height);
         } else {
             // Default
             screen.drawTexture(matrices, x, y, u, v, width, height);
