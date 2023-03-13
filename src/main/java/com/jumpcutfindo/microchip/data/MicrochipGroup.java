@@ -1,10 +1,12 @@
 package com.jumpcutfindo.microchip.data;
 
-import java.util.*;
-
+import com.jumpcutfindo.microchip.MicrochipMod;
 import org.slf4j.Logger;
 
-import com.jumpcutfindo.microchip.MicrochipMod;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class MicrochipGroup {
     public static Logger LOGGER = MicrochipMod.LOGGER;
@@ -93,5 +95,14 @@ public class MicrochipGroup {
                 && other.getColor().equals(this.color)
                 && other.getDisplayName().equals(this.displayName)
                 && other.getMicrochips().size() == this.microchips.size();
+    }
+
+    @Override
+    public String toString() {
+        return "MicrochipGroup{" +
+                "id=" + id +
+                ", displayName='" + displayName + '\'' +
+                ", size=" + microchips.size() +
+                '}';
     }
 }
