@@ -2,11 +2,13 @@ package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
+import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -36,9 +38,11 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
 
             if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
                 System.out.println("Pressed up!");
+                SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
                 return true;
             } else if (ScreenUtils.isWithin(mouseX, mouseY, downX, downY, arrowWidth, arrowHeight)) {
                 System.out.println("Pressed down!");
+                SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
                 return true;
             }
         }
