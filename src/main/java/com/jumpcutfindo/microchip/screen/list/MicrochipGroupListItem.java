@@ -6,6 +6,8 @@ import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
@@ -14,6 +16,8 @@ public class MicrochipGroupListItem extends ListItem {
     private static final Identifier GROUP_LIST_ITEMS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
     private final MicrochipGroup microchipGroup;
     private final int index;
+
+    private boolean isReordering;
 
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int index) {
         super(screen);
@@ -56,8 +60,36 @@ public class MicrochipGroupListItem extends ListItem {
         String displayName = this.microchipGroup.getDisplayName();
         screen.getTextRenderer().draw(matrices, new LiteralText(StringUtils.truncatedName(displayName, 14)), (float) (x + 19), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
 
-        int microchipCount = microchipGroup.getMicrochips().size();
-        int offset = (Integer.toString(microchipCount).length() - 1) * 6;
-        screen.getTextRenderer().draw(matrices, new LiteralText(Integer.toString(microchipCount)), (float) (x + 114 - offset), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
+        if (!isReordering) {
+            // Draw microchip count
+            int microchipCount = microchipGroup.getMicrochips().size();
+            int offset = (Integer.toString(microchipCount).length() - 1) * 6;
+            screen.getTextRenderer().draw(matrices, new LiteralText(Integer.toString(microchipCount)), (float) (x + 114 - offset), (float) (y + 5), this.microchipGroup.getColor().getShadowColor());
+        } else {
+            // Draw reordering arrows
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, GROUP_LIST_ITEMS_TEXTURE);
+            ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
+
+            int arrowWidth = 9, arrowHeight = 9;
+            int upX = x + 99, upY = y + 4;
+            int downX = x + 110, downY = y + 4;
+            if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
+                screen.drawTexture(matrices, upX, upY, 169, 15, arrowWidth, arrowHeight);
+            } else {
+                screen.drawTexture(matrices, upX, upY, 160, 15, arrowWidth, arrowHeight);
+            }
+
+            if (ScreenUtils.isWithin(mouseX, mouseY, downX, downY, arrowWidth, arrowHeight)) {
+                screen.drawTexture(matrices, downX, downY, 169, 24, arrowWidth, arrowHeight);
+            } else {
+                screen.drawTexture(matrices, downX, downY, 160, 24, arrowWidth, arrowHeight);
+            }
+
+        }
+    }
+
+    public void setReordering(boolean reordering) {
+        isReordering = reordering;
     }
 }
