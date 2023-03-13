@@ -71,10 +71,10 @@ public class ClientNetworkSender {
             ClientPlayNetworking.send(NetworkConstants.PACKET_DELETE_GROUP_ID, buffer);
         }
 
-        public static void reorderGroup(int to, int from) {
+        public static void reorderGroup(int from, int to) {
             PacketByteBuf buffer = PacketByteBufs.create();
-            buffer.writeInt(to);
             buffer.writeInt(from);
+            buffer.writeInt(to);
 
             ClientPlayNetworking.send(NetworkConstants.PACKET_REORDER_GROUP_ID, buffer);
         }

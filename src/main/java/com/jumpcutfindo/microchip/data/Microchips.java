@@ -142,9 +142,10 @@ public abstract class Microchips implements Component {
         return userGroups.remove(group);
     }
 
-    public boolean reorderGroup(int to, int from) {
-        // TODO: Implement reordering of groups
-        return false;
+    public void reorderGroup(int from, int to) {
+        if (from < 0 || to < 0 || from >= this.userGroups.size() || to >= this.userGroups.size()) return;
+
+        Collections.swap(this.userGroups, from, to);
     }
 
     public int getChipCount() {

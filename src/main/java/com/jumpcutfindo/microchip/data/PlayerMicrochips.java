@@ -1,14 +1,14 @@
 package com.jumpcutfindo.microchip.data;
 
-import java.util.List;
-import java.util.UUID;
-
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.entity.PlayerComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+
+import java.util.List;
+import java.util.UUID;
 
 public class PlayerMicrochips extends Microchips implements PlayerComponent<Microchips>, AutoSyncedComponent {
     protected PlayerEntity owner;
@@ -36,6 +36,12 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
         boolean flag = super.deleteGroup(id);
         MicrochipComponents.MICROCHIPS.sync(this.owner);
         return flag;
+    }
+
+    @Override
+    public void reorderGroup(int from, int to) {
+        super.reorderGroup(from, to);
+        MicrochipComponents.MICROCHIPS.sync(this.owner);
     }
 
     @Override

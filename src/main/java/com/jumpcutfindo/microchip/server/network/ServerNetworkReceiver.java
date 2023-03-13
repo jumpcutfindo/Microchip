@@ -193,6 +193,7 @@ public class ServerNetworkReceiver implements ModInitializer {
             int to = buf.readInt();
 
             Microchips microchips = Tagger.getMicrochips(player);
+            microchips.reorderGroup(from, to);
         }));
     }
 

@@ -19,7 +19,7 @@ import java.util.function.BiConsumer;
 public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
     private static final Identifier GROUP_LIST_ITEMS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
 
-    private boolean isReordering;
+    private boolean isReorderable = true, isReordering;
     private BiConsumer<Integer, Integer> moveAction;
 
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int index) {
@@ -33,18 +33,21 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
 
     @Override
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY) {
-        if (this.isReordering) {
+        if (isReorderable && isReordering) {
             int arrowWidth = 9, arrowHeight = 9;
             int upX = x + 99, upY = y + 4;
             int downX = x + 110, downY = y + 4;
 
+            // Offset by 1 as we don't consider default group
             if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
-                System.out.println("Pressed up!");
+                // Up
                 SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
+                this.moveAction.accept(this.index - 1, this.index - 2);
                 return true;
             } else if (ScreenUtils.isWithin(mouseX, mouseY, downX, downY, arrowWidth, arrowHeight)) {
-                System.out.println("Pressed down!");
+                // Down
                 SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
+                this.moveAction.accept(this.index - 1, this.index);
                 return true;
             }
         }
@@ -78,7 +81,7 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
         String displayName = this.item.getDisplayName();
         screen.getTextRenderer().draw(matrices, new LiteralText(StringUtils.truncatedName(displayName, 14)), (float) (x + 19), (float) (y + 5), this.item.getColor().getShadowColor());
 
-        if (!isReordering) {
+        if (!isReorderable || !isReordering) {
             // Draw microchip count
             int microchipCount = this.item.getMicrochips().size();
             int offset = (Integer.toString(microchipCount).length() - 1) * 6;
@@ -106,6 +109,10 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
             }
 
         }
+    }
+
+    public void setReorderable(boolean reorderable) {
+        isReorderable = reorderable;
     }
 
     public void setReordering(boolean reordering) {

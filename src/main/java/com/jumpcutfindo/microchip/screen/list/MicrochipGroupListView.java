@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
+import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
@@ -145,6 +146,8 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
             MicrochipGroupListItem item = new MicrochipGroupListItem(screen, group, i);
             item.setMoveAction(MicrochipGroupListView::onReorder);
 
+            if (group.isDefault()) item.setReorderable(false);
+
             listItems.add(item);
         }
 
@@ -152,6 +155,6 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     }
 
     private static void onReorder(int from, int to) {
-        // TODO: Make request to server to order
+        ClientNetworkSender.MicrochipsActions.reorderGroup(from, to);
     }
 }
