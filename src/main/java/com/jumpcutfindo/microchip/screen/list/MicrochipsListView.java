@@ -128,12 +128,17 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
 
     @Override
     public NbtCompound getSettings() {
-        return new NbtCompound();
+        NbtCompound cpd = new NbtCompound();
+        cpd.putBoolean("IsReordering", isReordering);
+        cpd.putFloat("ScrollPosition", this.getScrollPosition());
+
+        return cpd;
     }
 
     @Override
     public void applySettings(NbtCompound settings) {
-
+        this.setReordering(settings.getBoolean("IsReordering"));
+        this.setScrollPosition(settings.getFloat("ScrollPosition"));
     }
 
     @Override
