@@ -77,6 +77,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         NbtCompound cpd = new NbtCompound();
         cpd.putUuid("SelectedItem", getSelectedItem().getItem().getId());
         cpd.putBoolean("IsReordering", isReordering);
+        cpd.putFloat("ScrollPosition", this.getScrollPosition());
 
         return cpd;
     }
@@ -85,6 +86,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     public void applySettings(NbtCompound settings) {
         this.setSelected(settings.getUuid("SelectedItem"));
         this.setReorderGroups(settings.getBoolean("IsReordering"));
+        this.setScrollPosition(settings.getFloat("ScrollPosition"));
     }
 
     @Override
@@ -126,7 +128,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     }
 
     public MicrochipGroupListItem getSelectedItem() {
-        return this.getSelectedItems().size() > 0 ? (MicrochipGroupListItem) this.getSelectedItems().get(0) : null;
+        return this.getSelectedItems().size() > 0 ? this.getSelectedItems().get(0) : null;
     }
 
     public int getSelectedIndex() {

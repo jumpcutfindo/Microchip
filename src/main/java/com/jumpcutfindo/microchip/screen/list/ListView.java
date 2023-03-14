@@ -237,6 +237,14 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         this.selectedIndices = new ArrayList<>();
     }
 
+    public float getScrollPosition() {
+        return scrollPosition;
+    }
+
+    public void setScrollPosition(float scrollPosition) {
+        this.scrollPosition = scrollPosition;
+    }
+
     /**
      * Retrieves an NbtCompound that represents the various settings (e.g. state) of the ListView.
      */
