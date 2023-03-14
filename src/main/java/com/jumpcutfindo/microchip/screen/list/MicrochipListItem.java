@@ -109,6 +109,10 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     @Override
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY) {
+        int arrowWidth = 5, arrowHeight = 5;
+        int upX = x + 164, upY = y + 3;
+        int downX = x + 172, downY = y + 3;
+
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
             screen.setActiveWindow(new MicrochipInfoWindow(screen, screen.getWindowX(MicrochipInfoWindow.WIDTH), screen.getWindowY(MicrochipInfoWindow.HEIGHT), this.item, this.entity, this.group.getColor()));
@@ -120,7 +124,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     @Override
     public boolean mouseSelected(int x, int y, double mouseX, double mouseY) {
-        return ScreenUtils.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5);
+        return !this.isReordering && ScreenUtils.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5);
     }
 
     private void drawTooltips(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {

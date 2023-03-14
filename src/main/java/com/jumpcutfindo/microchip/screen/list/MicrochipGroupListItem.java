@@ -56,7 +56,7 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
 
     @Override
     public boolean mouseSelected(int x, int y, double mouseX, double mouseY) {
-        return ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height);
+        return !this.isReordering && ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height);
     }
 
     public MicrochipGroup getGroup() {
