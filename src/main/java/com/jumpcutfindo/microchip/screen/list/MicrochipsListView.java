@@ -26,8 +26,10 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     private final MicrochipGroup group;
 
     private final int titleX, titleY;
-    private final IconButton editGroupButton, deleteGroupButton, moveMicrochipsButton, deleteMicrochipsButton;
+    private final IconButton editGroupButton, deleteGroupButton, reorderMicrochipsButton, moveMicrochipsButton, deleteMicrochipsButton;
     private final LiteralText title;
+
+    private boolean isReordering;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int x, int y) {
         super(screen);
 
@@ -54,6 +56,7 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         this.deleteGroupButton = new IconButton(screen, x + 191, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
         if (group.isDefault()) this.deleteGroupButton.setDisabled(true);
 
+        this.reorderMicrochipsButton = new IconButton(screen, x + 155, y + 6, 64, 32, this::toggleReordering, new TranslatableText("microchip.menu.reorderMicrochips.tooltip"));
         this.moveMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
         this.deleteMicrochipsButton = new IconButton(screen, x + 191, y + 6, 64, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
     }
@@ -95,10 +98,12 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
                 this.deleteMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
             }
         } else {
+            this.reorderMicrochipsButton.render(matrices, mouseX, mouseY, 0);
             this.editGroupButton.render(matrices, mouseX, mouseY, 0);
             this.deleteGroupButton.render(matrices, mouseX, mouseY, 0);
 
             if (!screen.isWindowOpen()) {
+                this.reorderMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
                 this.editGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
                 this.deleteGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
             }
@@ -116,7 +121,8 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
                     || this.deleteMicrochipsButton.mouseClicked(mouseX, mouseY, button);
         } else {
             return this.editGroupButton.mouseClicked(mouseX, mouseY, button)
-                    || this.deleteGroupButton.mouseClicked( mouseX, mouseY, button);
+                    || this.deleteGroupButton.mouseClicked(mouseX, mouseY, button)
+                    || this.reorderMicrochipsButton.mouseClicked(mouseX, mouseY, button);
         }
     }
 
@@ -161,6 +167,20 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         if (!this.isAnySelected()) return;
         List<UUID> microchipIds = getSelectedIds();
         ClientNetworkSender.MicrochipsActions.removeEntitiesFromGroup(this.group.getId(), microchipIds);
+    }
+
+    private void toggleReordering() {
+        this.setReordering(!this.isReordering);
+    }
+
+    public void setReordering(boolean reordering) {
+        this.isReordering = reordering;
+
+        this.reorderMicrochipsButton.setActive(this.isReordering);
+
+        for (MicrochipListItem item : this.listItems) {
+            item.setReordering(this.isReordering);
+        }
     }
 
     private static List<MicrochipListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {

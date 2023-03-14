@@ -42,7 +42,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         this.titleX = 7;
         this.titleY = 10;
 
-        this.createGroupButton = new IconButton(screen, x + 117, y + 6, 0, 0, this::onCreateGroup, new TranslatableText("microchip.menu.createGroup.tooltip"));
+        this.createGroupButton = new IconButton(screen, x + 118, y + 6, 0, 0, this::onCreateGroup, new TranslatableText("microchip.menu.createGroup.tooltip"));
         this.reorderGroupButton = new IconButton(screen, x + 136, y + 6, 0, 48, this::toggleReordering, new TranslatableText("microchip.menu.reorderGroup.tooltip"));
         this.canCreate = true;
 

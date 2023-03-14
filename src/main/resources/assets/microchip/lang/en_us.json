@@ -23,6 +23,7 @@
     "microchip.menu.reorderGroup.tooltip": "Reorder Groups",
     "microchip.menu.deleteGroup.tooltip": "Delete Group",
     "microchip.menu.editGroup.tooltip": "Edit Group...",
+    "microchip.menu.reorderMicrochips.tooltip": "Reorder Microchips",
     "microchip.menu.deleteMicrochips.tooltip": "Delete Microchips",
     "microchip.menu.moveMicrochips.tooltip": "Move Microchips...",
     "microchip.menu.listItem.outOfRange.tooltip": "Mob is out of range",

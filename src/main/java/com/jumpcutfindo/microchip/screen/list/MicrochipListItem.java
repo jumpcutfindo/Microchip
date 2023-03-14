@@ -29,6 +29,8 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     private float entityModelSize;
 
+    private boolean isReordering;
+
     public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip, int index) {
         super(screen, microchip, index);
 
@@ -72,18 +74,18 @@ public class MicrochipListItem extends ListItem<Microchip> {
         RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
         if (this.entity != null) {
             if (this.entity.getHealth() > this.entity.getMaxHealth() / 2) {
-                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 183, 9, 9);
+                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
             } else if (this.entity.getHealth() > this.entity.getMaxHealth() / 4) {
-                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 189, 183, 9, 9);
+                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 189, 193, 9, 9);
             } else {
-                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 198, 183, 9, 9);
+                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 198, 193, 9, 9);
             }
         } else {
-            screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 183, 9, 9);
+            screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
         }
 
 
-        drawButton(matrices, x + 172, y + 3, mouseX, mouseY);
+        drawButtons(matrices, x, y, mouseX, mouseY);
         drawTooltips(matrices, x, y, mouseX, mouseY);
     }
 
@@ -97,7 +99,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
         }
         else {
             RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
-            ScreenUtils.setShaderColor(this.group.getColor(), true);
+            ScreenUtils.setShaderColor(this.group.getColor(), false);
             screen.drawTexture(matrices, x + 4, y + 4, 0, 214, 28, 28);
         }
 
@@ -131,13 +133,33 @@ public class MicrochipListItem extends ListItem<Microchip> {
         }
     }
 
-    private void drawButton(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
 
-        if (this.isSelected()) screen.drawTexture(matrices, x, y, 185, 178, 5, 5);
-        else screen.drawTexture(matrices, x, y, 180, 178, 5, 5);
+        if (this.isReordering) {
+            int arrowWidth = 5, arrowHeight = 5;
+            int upX = x + 164, upY = y + 3;
+            int downX = x + 172, downY = y + 3;
+            ScreenUtils.setShaderColor(this.group.getColor(), true);
+
+            if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
+                screen.drawTexture(matrices, upX, upY, 185, 183, arrowWidth, arrowHeight);
+            } else {
+                screen.drawTexture(matrices, upX, upY, 180, 183, arrowWidth, arrowHeight);
+            }
+
+            if (ScreenUtils.isWithin(mouseX, mouseY, downX, downY, arrowWidth, arrowHeight)) {
+                screen.drawTexture(matrices, downX, downY, 185, 188, arrowWidth, arrowHeight);
+            } else {
+                screen.drawTexture(matrices, downX, downY, 180, 188, arrowWidth, arrowHeight);
+            }
+
+        } else {
+            if (this.isSelected()) screen.drawTexture(matrices, x + 172, y + 3, 185, 178, 5, 5);
+            else screen.drawTexture(matrices, x + 172, y + 3, 180, 178, 5, 5);
+        }
     }
 
     private void drawEntity(int x, int y) {
@@ -201,5 +223,9 @@ public class MicrochipListItem extends ListItem<Microchip> {
         PlayerEntity player = this.screen.getPlayer();
         LivingEntity entity = ClientTagger.getEntity(player.getWorld(), player.getPos(), this.item.getEntityId());
         if (entity != null) setEntity(entity);
+    }
+
+    public void setReordering(boolean reordering) {
+        isReordering = reordering;
     }
 }
