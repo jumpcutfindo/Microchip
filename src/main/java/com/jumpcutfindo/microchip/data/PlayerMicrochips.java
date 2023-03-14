@@ -66,6 +66,12 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
     }
 
     @Override
+    public void reorderMicrochips(UUID groupId, int from, int to) {
+        super.reorderMicrochips(groupId, from, to);
+        MicrochipComponents.MICROCHIPS.sync(this.owner);
+    }
+
+    @Override
     public void sync() {
         MicrochipComponents.MICROCHIPS.sync(this.owner);
     }

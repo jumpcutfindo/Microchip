@@ -3,23 +3,20 @@ package com.jumpcutfindo.microchip.data;
 import com.jumpcutfindo.microchip.MicrochipMod;
 import org.slf4j.Logger;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class MicrochipGroup {
     public static Logger LOGGER = MicrochipMod.LOGGER;
     private UUID id;
     private String displayName;
     private GroupColor color;
-    private Set<Microchip> microchips;
+    private List<Microchip> microchips;
     private boolean isDefault;
 
     public MicrochipGroup(String displayName, GroupColor color) {
         this.id = UUID.randomUUID();
         this.displayName = displayName;
-        this.microchips = new HashSet<>();
+        this.microchips = new ArrayList<>();
         this.color = color;
     }
     public MicrochipGroup(String displayName) {
@@ -55,7 +52,7 @@ public class MicrochipGroup {
     }
 
     public List<Microchip> getMicrochips() {
-        return this.microchips.stream().toList();
+        return this.microchips;
     }
 
     public List<Microchip> getMicrochipsWithIds(List<UUID> ids) {
@@ -94,7 +91,7 @@ public class MicrochipGroup {
                 && other.getId().equals(this.id)
                 && other.getColor().equals(this.color)
                 && other.getDisplayName().equals(this.displayName)
-                && other.getMicrochips().size() == this.microchips.size();
+                && other.getMicrochips().equals(this.microchips);
     }
 
     @Override
