@@ -64,8 +64,10 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        if (this.canCreate && this.createGroupButton.mouseClicked(mouseX, mouseY, button)) return true;
-        else if (this.reorderGroupButton.mouseClicked(mouseX, mouseY, button)) return true;
+        if (this.canCreate) {
+            if (this.createGroupButton.mouseClicked(mouseX, mouseY, button)) return true;
+            else if (this.reorderGroupButton.mouseClicked(mouseX, mouseY, button)) return true;
+        }
 
         boolean flag = super.mouseClicked(mouseX, mouseY, button);
         if (flag && this.canCreate) screen.setSelectedGroup(this.getSelectedIndex());
@@ -158,15 +160,18 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
-        this.reorderGroupButton.render(matrices, mouseX, mouseY, 0);
 
         if (this.canCreate) {
+            this.reorderGroupButton.render(matrices, mouseX, mouseY, 0);
+
             this.createGroupButton.render(matrices, mouseX, mouseY, 0);
 
-            if (!screen.isWindowOpen()) this.createGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            if (!screen.isWindowOpen()) {
+                this.reorderGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+                this.createGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            }
         }
 
-        this.reorderGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
     }
 
     private static List<MicrochipGroupListItem> createItems(MicrochipsMenuScreen screen, Microchips microchips) {
