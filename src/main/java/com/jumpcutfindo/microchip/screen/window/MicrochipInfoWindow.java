@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen.window;
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.*;
 import com.jumpcutfindo.microchip.helper.Looker;
+import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.EntityModelScale;
@@ -20,14 +21,12 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -195,7 +194,7 @@ public class MicrochipInfoWindow extends Window {
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
             MicrochipEntityData data = microchip.getEntityData();
             screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
-            MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
             return true;
         }
 
@@ -204,7 +203,7 @@ public class MicrochipInfoWindow extends Window {
             if (!screen.getPlayer().isCreative() && tab instanceof ActionsInfoTab) continue;
             if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
                 activeTab = tab;
-                MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
                 return true;
             }
             tabVerticalOffset += 29;

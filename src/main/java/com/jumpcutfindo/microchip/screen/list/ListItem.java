@@ -1,37 +1,44 @@
 package com.jumpcutfindo.microchip.screen.list;
 
-import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-
-import java.util.List;
 
 /**
  * An item that can be used by ListView. Note that this takes in the x, y position values so that dynamic updating
  * of the position is possible.
  */
-public abstract class ListItem {
+public abstract class ListItem<T> {
     protected MicrochipsMenuScreen screen;
+    protected T item;
+    protected int index;
     private Identifier texture;
     protected int u, v, width, height;
     protected boolean isSelected;
 
-    public ListItem(MicrochipsMenuScreen screen) {
+    public ListItem(MicrochipsMenuScreen screen, T item, int index) {
         this.screen = screen;
+        this.item = item;
+        this.index = index;
     }
 
-    protected ListItem setBackground(Identifier texture, int u, int v, int width, int height) {
+    protected void setBackground(Identifier texture, int u, int v, int width, int height) {
         this.texture = texture;
         this.u = u;
         this.v = v;
         this.width = width;
         this.height = height;
-        return this;
+    }
+
+    public T getItem() {
+        return item;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public int getHeight() {

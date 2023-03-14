@@ -1,15 +1,13 @@
 package com.jumpcutfindo.microchip.screen.component;
 
+import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
 
 public class IconButton implements Interactable {
@@ -18,7 +16,7 @@ public class IconButton implements Interactable {
     private final int u, v;
     private final int width, height;
 
-    private boolean disabled;
+    private boolean active, disabled;
     private final Runnable action;
 
     private final TranslatableText tooltip;
@@ -32,7 +30,7 @@ public class IconButton implements Interactable {
         this.u = u;
         this.v = v;
 
-        this.width = 26;
+        this.width = 16;
         this.height = 16;
 
         this.disabled = false;
@@ -48,13 +46,18 @@ public class IconButton implements Interactable {
 
         if (isDisabled()) {
             // Disabled
-            screen.drawTexture(matrices, x, y, u + 78, v, width, height);
+            screen.drawTexture(matrices, x, y, u + 48, v, width, height);
+            return;
+        }
+
+        if (isActive()) {
+            screen.drawTexture(matrices, x, y, u + 32, v, width, height);
             return;
         }
 
         if (isMouseWithin(mouseX, mouseY) && !screen.isWindowOpen()) {
             // Hovered
-            screen.drawTexture(matrices, x, y, u + 26, v, width, height);
+            screen.drawTexture(matrices, x, y, u + 16, v, width, height);
         } else {
             // Default
             screen.drawTexture(matrices, x, y, u, v, width, height);
@@ -67,6 +70,14 @@ public class IconButton implements Interactable {
             return true;
         }
         return false;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public void setDisabled(boolean disabled) {
@@ -89,7 +100,7 @@ public class IconButton implements Interactable {
 
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!isDisabled() && isMouseWithin(mouseX, mouseY)) {
-            MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
             action.run();
             return true;
         }

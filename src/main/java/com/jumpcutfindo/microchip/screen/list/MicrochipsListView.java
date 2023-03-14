@@ -1,12 +1,8 @@
 package com.jumpcutfindo.microchip.screen.list;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
+import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
@@ -14,20 +10,26 @@ import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.jumpcutfindo.microchip.screen.window.MicrochipMoveChipsWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class MicrochipsListView extends ListView {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class MicrochipsListView extends ListView<MicrochipListItem> {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_list.png");
     private final MicrochipGroup group;
 
     private final int titleX, titleY;
-    private final IconButton editGroupButton, deleteGroupButton, moveMicrochipsButton, deleteMicrochipsButton;
+    private final IconButton editGroupButton, deleteGroupButton, reorderMicrochipsButton, moveMicrochipsButton, deleteMicrochipsButton;
     private final LiteralText title;
+
+    private boolean isReordering;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int x, int y) {
         super(screen);
 
@@ -50,12 +52,13 @@ public class MicrochipsListView extends ListView {
         this.titleX = 22;
         this.titleY = 10;
 
-        this.editGroupButton = new IconButton(screen, x + 154, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
-        this.deleteGroupButton = new IconButton(screen, x + 182, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
+        this.editGroupButton = new IconButton(screen, x + 173, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
+        this.deleteGroupButton = new IconButton(screen, x + 191, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
         if (group.isDefault()) this.deleteGroupButton.setDisabled(true);
 
-        this.moveMicrochipsButton = new IconButton(screen, x + 154, y + 6, 104, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
-        this.deleteMicrochipsButton = new IconButton(screen, x + 182, y + 6, 104, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
+        this.reorderMicrochipsButton = new IconButton(screen, x + 155, y + 6, 64, 32, this::toggleReordering, new TranslatableText("microchip.menu.reorderMicrochips.tooltip"));
+        this.moveMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
+        this.deleteMicrochipsButton = new IconButton(screen, x + 191, y + 6, 64, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
     }
 
     @Override
@@ -95,10 +98,12 @@ public class MicrochipsListView extends ListView {
                 this.deleteMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
             }
         } else {
+            this.reorderMicrochipsButton.render(matrices, mouseX, mouseY, 0);
             this.editGroupButton.render(matrices, mouseX, mouseY, 0);
             this.deleteGroupButton.render(matrices, mouseX, mouseY, 0);
 
             if (!screen.isWindowOpen()) {
+                this.reorderMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
                 this.editGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
                 this.deleteGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
             }
@@ -116,8 +121,24 @@ public class MicrochipsListView extends ListView {
                     || this.deleteMicrochipsButton.mouseClicked(mouseX, mouseY, button);
         } else {
             return this.editGroupButton.mouseClicked(mouseX, mouseY, button)
-                    || this.deleteGroupButton.mouseClicked( mouseX, mouseY, button);
+                    || this.deleteGroupButton.mouseClicked(mouseX, mouseY, button)
+                    || this.reorderMicrochipsButton.mouseClicked(mouseX, mouseY, button);
         }
+    }
+
+    @Override
+    public NbtCompound getSettings() {
+        NbtCompound cpd = new NbtCompound();
+        cpd.putBoolean("IsReordering", isReordering);
+        cpd.putFloat("ScrollPosition", this.getScrollPosition());
+
+        return cpd;
+    }
+
+    @Override
+    public void applySettings(NbtCompound settings) {
+        this.setReordering(settings.getBoolean("IsReordering"));
+        this.setScrollPosition(settings.getFloat("ScrollPosition"));
     }
 
     @Override
@@ -153,9 +174,38 @@ public class MicrochipsListView extends ListView {
         ClientNetworkSender.MicrochipsActions.removeEntitiesFromGroup(this.group.getId(), microchipIds);
     }
 
-    private static List<ListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
+    private void toggleReordering() {
+        this.setReordering(!this.isReordering);
+    }
+
+    public void setReordering(boolean reordering) {
+        this.isReordering = reordering;
+
+        this.reorderMicrochipsButton.setActive(this.isReordering);
+
+        for (MicrochipListItem item : this.listItems) {
+            item.setReordering(this.isReordering);
+        }
+    }
+
+    private static List<MicrochipListItem> createItems(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup) {
         if (microchipGroup == null) return new ArrayList<>();
 
-        return microchipGroup.getMicrochips().stream().map(microchip -> new MicrochipListItem(screen, microchipGroup, microchip)).collect(Collectors.toList());
+        List<MicrochipListItem> items = new ArrayList<>();
+        List<Microchip> microchips = microchipGroup.getMicrochips();
+
+        for (int i = 0; i < microchips.size(); i++) {
+            Microchip microchip = microchips.get(i);
+            MicrochipListItem item = new MicrochipListItem(screen, microchipGroup, microchip, i);
+
+            items.add(item);
+            item.setMoveAction(MicrochipsListView::onReorder);
+        }
+
+        return items;
+    }
+
+    private static void onReorder(MicrochipGroup group, int from, int to) {
+        ClientNetworkSender.MicrochipsActions.reorderMicrochips(group.getId(), from, to);
     }
 }

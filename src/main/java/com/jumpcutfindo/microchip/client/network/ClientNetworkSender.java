@@ -71,6 +71,23 @@ public class ClientNetworkSender {
             ClientPlayNetworking.send(NetworkConstants.PACKET_DELETE_GROUP_ID, buffer);
         }
 
+        public static void reorderGroup(int from, int to) {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeInt(from);
+            buffer.writeInt(to);
+
+            ClientPlayNetworking.send(NetworkConstants.PACKET_REORDER_GROUP_ID, buffer);
+        }
+
+        public static void reorderMicrochips(UUID groupId, int from, int to) {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeUuid(groupId);
+            buffer.writeInt(from);
+            buffer.writeInt(to);
+
+            ClientPlayNetworking.send(NetworkConstants.PACKET_REORDER_MICROCHIPS_ID, buffer);
+        }
+
         public static void updateMicrochips() {
             ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
         }

@@ -46,8 +46,10 @@ public class ServerNetworkReceiver implements ModInitializer {
         onCreateGroup();
         onUpdateGroup();
         onDeleteGroup();
+        onReorderGroup();
 
         onRequestEntityData();
+        onReorderMicrochips();
         onUpdateMicrochips();
     }
 
@@ -183,6 +185,27 @@ public class ServerNetworkReceiver implements ModInitializer {
 
             Microchips microchips = Tagger.getMicrochips(player);
             microchips.deleteGroup(groupId);
+        }));
+    }
+
+    private static void onReorderGroup() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REORDER_GROUP_ID, ((server, player, handler, buf, responseSender) -> {
+            int from = buf.readInt();
+            int to = buf.readInt();
+
+            Microchips microchips = Tagger.getMicrochips(player);
+            microchips.reorderGroup(from, to);
+        }));
+    }
+
+    public static void onReorderMicrochips() {
+        ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REORDER_MICROCHIPS_ID, ((server, player, handler, buf, responseSender) -> {
+            UUID groupId = buf.readUuid();
+            int from = buf.readInt();
+            int to = buf.readInt();
+
+            Microchips microchips = Tagger.getMicrochips(player);
+            microchips.reorderMicrochips(groupId, from, to);
         }));
     }
 
