@@ -191,10 +191,16 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
 
         for (int i = 0; i < microchips.size(); i++) {
             Microchip microchip = microchips.get(i);
+            MicrochipListItem item = new MicrochipListItem(screen, microchipGroup, microchip, i);
 
-            items.add(new MicrochipListItem(screen, microchipGroup, microchip, i));
+            items.add(item);
+            item.setMoveAction(MicrochipsListView::onReorder);
         }
 
         return items;
+    }
+
+    private static void onReorder(MicrochipGroup group, int from, int to) {
+        ClientNetworkSender.MicrochipsActions.reorderMicrochips(group.getId(), from, to);
     }
 }

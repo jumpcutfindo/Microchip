@@ -22,6 +22,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
+import org.apache.logging.log4j.util.TriConsumer;
 
 public class MicrochipListItem extends ListItem<Microchip> {
     private final MicrochipGroup group;
@@ -30,6 +31,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
     private float entityModelSize;
 
     private boolean isReordering;
+    private TriConsumer<MicrochipGroup, Integer, Integer> moveAction;
 
     public MicrochipListItem(MicrochipsMenuScreen screen, MicrochipGroup group, Microchip microchip, int index) {
         super(screen, microchip, index);
@@ -109,9 +111,24 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     @Override
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY) {
-        int arrowWidth = 5, arrowHeight = 5;
-        int upX = x + 164, upY = y + 3;
-        int downX = x + 172, downY = y + 3;
+
+        if (isReordering) {
+            int arrowWidth = 5, arrowHeight = 5;
+            int upX = x + 164, upY = y + 3;
+            int downX = x + 172, downY = y + 3;
+
+            if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
+                // Up
+                SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
+                this.moveAction.accept(this.group, this.index, this.index - 1);
+                return true;
+            } else if (ScreenUtils.isWithin(mouseX, mouseY, downX, downY, arrowWidth, arrowHeight)) {
+                // Down
+                SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
+                this.moveAction.accept(this.group, this.index, this.index + 1);
+                return true;
+            }
+        }
 
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
@@ -231,5 +248,9 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     public void setReordering(boolean reordering) {
         isReordering = reordering;
+    }
+
+    public void setMoveAction(TriConsumer<MicrochipGroup, Integer, Integer> moveAction) {
+        this.moveAction = moveAction;
     }
 }
