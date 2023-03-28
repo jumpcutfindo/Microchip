@@ -117,7 +117,7 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
 
         List<Integer> selectedIndices = this.getSelectedIndices();
         if (super.mouseClicked(mouseX, mouseY, button)) {
-            if (Screen.hasShiftDown()) {
+            if (Screen.hasShiftDown() && selectedIndices.size() > 0) {
                 // Logic for selecting multiple with shift held down
                 int latestIndex = selectedIndices.get(selectedIndices.size() - 1);
 
