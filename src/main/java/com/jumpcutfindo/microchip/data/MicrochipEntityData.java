@@ -38,8 +38,8 @@ public class MicrochipEntityData {
     public static MicrochipEntityData from(LivingEntity entity) {
         MicrochipEntityData data = new MicrochipEntityData();
 
-        data.displayName = entity.getDisplayName().getString();
-        data.typeName = entity.getType().getName().getString();
+        data.displayName = EntityNamer.getDisplayName(entity);
+        data.typeName = EntityNamer.getTypeName(entity);
 
         data.maxHealth = entity.getMaxHealth();
 
