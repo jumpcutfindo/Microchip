@@ -2,6 +2,8 @@ package com.jumpcutfindo.microchip.data;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.village.VillagerProfession;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -14,8 +16,13 @@ public class EntityNamer {
      */
     public static final Map<Class<? extends LivingEntity>, Function<LivingEntity, String>> ENTITY_TYPE_NAMES =
             ImmutableMap.<Class<? extends LivingEntity>, Function<LivingEntity, String>>builder()
-            .put(LivingEntity.class, (entity) -> entity.getType().getName().getString())
-            .build();
+                    .put(LivingEntity.class, (entity) -> entity.getType().getName().getString())
+                    .put(VillagerEntity.class, (entity -> {
+                        VillagerProfession profession = ((VillagerEntity) entity).getVillagerData().getProfession();
+                        if (profession == VillagerProfession.NONE) return "Villager";
+                        else return profession.toString().substring(0, 1).toUpperCase() + profession.toString().substring(1);
+                    }))
+                    .build();
 
     public static String getDisplayName(LivingEntity entity) {
         return entity.getDisplayName().getString();
