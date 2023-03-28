@@ -239,6 +239,10 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
        return selectedItems.size() > 0;
     }
 
+    public boolean isAllSelected() {
+        return selectedItems.size() == listItems.size();
+    }
+
     public void setLastToggledIndex(int lastToggledIndex) {
         this.lastToggledIndex = lastToggledIndex;
     }
