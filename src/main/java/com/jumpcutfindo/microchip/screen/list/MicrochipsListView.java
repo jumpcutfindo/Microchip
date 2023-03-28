@@ -10,6 +10,7 @@ import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.jumpcutfindo.microchip.screen.window.MicrochipMoveChipsWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
@@ -114,7 +115,26 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (group == null) return false;
 
-        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+        List<Integer> selectedIndices = this.getSelectedIndices();
+        if (super.mouseClicked(mouseX, mouseY, button)) {
+            if (Screen.hasShiftDown()) {
+                // Logic for selecting multiple with shift held down
+                int latestIndex = selectedIndices.get(selectedIndices.size() - 1);
+
+                List<Integer> newSelectedIndices = this.getSelectedIndices();
+                int selectedIndex = newSelectedIndices.get(newSelectedIndices.size() - 1);
+
+                int larger = Math.max(selectedIndex, latestIndex);
+                int smaller = Math.min(selectedIndex, latestIndex);
+
+                for (int i = smaller; i < larger; i++) {
+                    this.setSelected(i, true);
+                }
+
+                return true;
+            }
+            return true;
+        }
 
         if (this.isAnySelected()) {
             return this.moveMicrochipsButton.mouseClicked(mouseX, mouseY, button)
