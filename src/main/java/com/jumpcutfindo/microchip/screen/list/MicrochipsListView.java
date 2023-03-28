@@ -54,11 +54,11 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         this.titleX = 22;
         this.titleY = 10;
 
-        this.editGroupButton = new IconButton(screen, x + 155, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
-        this.deleteGroupButton = new IconButton(screen, x + 173, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
+        this.editGroupButton = new IconButton(screen, x + 137, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
+        this.deleteGroupButton = new IconButton(screen, x + 155, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
         if (group.isDefault()) this.deleteGroupButton.setDisabled(true);
+        this.reorderMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 32, this::toggleReordering, new TranslatableText("microchip.menu.reorderMicrochips.tooltip"));
 
-        this.reorderMicrochipsButton = new IconButton(screen, x + 137, y + 6, 64, 32, this::toggleReordering, new TranslatableText("microchip.menu.reorderMicrochips.tooltip"));
         this.moveMicrochipsButton = new IconButton(screen, x + 155, y + 6, 64, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
         this.deleteMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
 
@@ -94,8 +94,10 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
         // Swap selection buttons depending on number selected
-        this.selectAllButton.setDisabled(this.listItems.size() == 0);
-        this.unselectAllButton.setDisabled(this.listItems.size() == 0);
+        boolean isListEmpty = this.listItems.isEmpty();
+        this.selectAllButton.setDisabled(isListEmpty);
+        this.unselectAllButton.setDisabled(isListEmpty);
+        this.reorderMicrochipsButton.setDisabled(isListEmpty);
 
         if (this.isAllSelected()) {
             this.unselectAllButton.render(matrices, mouseX, mouseY, 0);
