@@ -18,7 +18,7 @@ public class EntityModelScaler {
      * a more favorable display of the mobs being rendered.
      */
     public static final Map<Class<? extends LivingEntity>, Float> ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
-            .put(AxolotlEntity.class, 0.75f)
+            .put(AxolotlEntity.class, 0.65f)
             .put(ChickenEntity.class, 0.7f)
             .put(CaveSpiderEntity.class, 0.55f)
             .put(CatEntity.class, 0.85f)
@@ -60,7 +60,7 @@ public class EntityModelScaler {
      * in their relevant frames.
      */
     public static final Map<Class<? extends LivingEntity>, InterfaceOffset> ENTITY_OFFSETS = ImmutableMap.<Class<? extends LivingEntity>, InterfaceOffset>builder()
-            .put(AxolotlEntity.class, new InterfaceOffset(2, -3, 3, -4))
+            .put(AxolotlEntity.class, new InterfaceOffset(2, -3, 0, -4))
             .put(BlazeEntity.class, new InterfaceOffset(-2, 2, -2, 3))
             .put(DolphinEntity.class, new InterfaceOffset(-2, -2, 0, -3))
             .put(ElderGuardianEntity.class, new InterfaceOffset(0, -5, 0, -15))

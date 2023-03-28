@@ -2,8 +2,7 @@ package com.jumpcutfindo.microchip.data;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.passive.*;
 import net.minecraft.village.VillagerProfession;
 
 import java.util.Map;
@@ -18,10 +17,9 @@ public class EntityNamer {
     public static final Map<Class<? extends LivingEntity>, Function<LivingEntity, String>> ENTITY_TYPE_NAMES =
             ImmutableMap.<Class<? extends LivingEntity>, Function<LivingEntity, String>>builder()
                     .put(LivingEntity.class, (entity) -> entity.getType().getName().getString())
-                    .put(VillagerEntity.class, (entity -> {
-                        VillagerProfession profession = ((VillagerEntity) entity).getVillagerData().getProfession();
-                        if (profession == VillagerProfession.NONE) return "Villager";
-                        else return profession.toString().substring(0, 1).toUpperCase() + profession.toString().substring(1);
+                    .put(AxolotlEntity.class, (entity -> {
+                        AxolotlEntity.Variant variant = ((AxolotlEntity) entity).getVariant();
+                        return nameWithVariant("Axolotl", variant.getName());
                     }))
                     .put(CatEntity.class, (entity -> {
                         int catType = ((CatEntity) entity).getCatType();
@@ -40,6 +38,15 @@ public class EntityNamer {
                             default: return "Cat";
                         }
                     }))
+                    .put(HorseEntity.class, (entity) -> {
+                        HorseColor color = ((HorseEntity) entity).getColor();
+                        return nameWithVariant("Horse", color.name());
+                    })
+                    .put(VillagerEntity.class, (entity -> {
+                        VillagerProfession profession = ((VillagerEntity) entity).getVillagerData().getProfession();
+                        if (profession == VillagerProfession.NONE) return "Villager";
+                        else return profession.toString().substring(0, 1).toUpperCase() + profession.toString().substring(1);
+                    }))
                     .build();
 
     public static String getDisplayName(LivingEntity entity) {
@@ -49,5 +56,9 @@ public class EntityNamer {
     public static String getTypeName(LivingEntity entity) {
         if (ENTITY_TYPE_NAMES.containsKey(entity.getClass())) return ENTITY_TYPE_NAMES.get(entity.getClass()).apply(entity);
         else return ENTITY_TYPE_NAMES.get(LivingEntity.class).apply(entity);
+    }
+
+    private static String nameWithVariant(String name, String variant) {
+        return String.format("%s (%s%s)", name, variant.substring(0, 1).toUpperCase(), variant.substring(1).toLowerCase());
     }
 }
