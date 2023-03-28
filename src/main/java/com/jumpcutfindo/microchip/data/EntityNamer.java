@@ -2,6 +2,7 @@ package com.jumpcutfindo.microchip.data;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.village.VillagerProfession;
 
@@ -21,6 +22,23 @@ public class EntityNamer {
                         VillagerProfession profession = ((VillagerEntity) entity).getVillagerData().getProfession();
                         if (profession == VillagerProfession.NONE) return "Villager";
                         else return profession.toString().substring(0, 1).toUpperCase() + profession.toString().substring(1);
+                    }))
+                    .put(CatEntity.class, (entity -> {
+                        int catType = ((CatEntity) entity).getCatType();
+                        switch (catType) {
+                            case 0: return "Tabby";
+                            case 1: return "Black";
+                            case 2: return "Red";
+                            case 3: return "Siamese";
+                            case 4: return "British Shorthair";
+                            case 5: return "Calico";
+                            case 6: return "Persian";
+                            case 7: return "Ragdoll";
+                            case 8: return "White";
+                            case 9: return "Jellie";
+                            case 10: return "All Black";
+                            default: return "Cat";
+                        }
                     }))
                     .build();
 
