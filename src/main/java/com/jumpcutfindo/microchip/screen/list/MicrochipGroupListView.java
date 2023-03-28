@@ -46,7 +46,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         this.reorderGroupButton = new IconButton(screen, x + 136, y + 6, 0, 48, this::toggleReordering, new TranslatableText("microchip.menu.reorderGroup.tooltip"));
         this.canCreate = true;
 
-        this.setSelected(0);
+        this.toggleSelected(0);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         for (int i = 0; i < this.listItems.size(); i++) {
             MicrochipGroupListItem item = this.listItems.get(i);
             if (item.getItem().getId().equals(groupId)) {
-                this.setSelected(i);
+                this.toggleSelected(i);
                 screen.setSelectedGroup(i);
                 return;
             }
