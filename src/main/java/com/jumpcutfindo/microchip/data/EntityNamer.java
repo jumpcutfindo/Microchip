@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.data;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.*;
+import net.minecraft.util.DyeColor;
 import net.minecraft.village.VillagerProfession;
 
 import java.util.Map;
@@ -20,6 +21,8 @@ public class EntityNamer {
                     .put(AxolotlEntity.class, EntityNamer::getAxolotlType)
                     .put(CatEntity.class, EntityNamer::getCatType)
                     .put(HorseEntity.class, EntityNamer::getHorseType)
+                    .put(SheepEntity.class, EntityNamer::getSheepType)
+                    .put(TropicalFishEntity.class, EntityNamer::getTropicalFishType)
                     .put(VillagerEntity.class, EntityNamer::getVillagerType)
                     .build();
 
@@ -62,6 +65,16 @@ public class EntityNamer {
     private static String getHorseType(LivingEntity entity) {
         HorseColor color = ((HorseEntity) entity).getColor();
         return nameWithVariant("Horse", color.name());
+    }
+
+    private static String getSheepType(LivingEntity entity) {
+        DyeColor color = ((SheepEntity) entity).getColor();
+        return nameWithVariant("Sheep", color.name());
+    }
+
+    private static String getTropicalFishType(LivingEntity entity) {
+        String name = TropicalFishEntity.getTranslationKey(((TropicalFishEntity) entity).getVariant()).split("type.")[1];
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 
     private static String getVillagerType(LivingEntity entity) {
