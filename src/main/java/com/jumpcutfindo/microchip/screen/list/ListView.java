@@ -13,7 +13,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class ListView<T extends ListItem<?>> implements Interactable {
     protected final MicrochipsMenuScreen screen;
@@ -40,14 +42,16 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     protected List<T> listItems;
     protected List<T> visibleItems;
 
-    private List<T> selectedItems;
-    private List<Integer> selectedIndices;
+    private Set<T> selectedItems;
+    private Set<Integer> selectedIndices;
+
+    private int lastToggledIndex = 0;
 
     public ListView(MicrochipsMenuScreen screen) {
         this.screen = screen;
 
-        this.selectedItems = new ArrayList<>();
-        this.selectedIndices = new ArrayList<>();
+        this.selectedItems = new HashSet<>();
+        this.selectedIndices = new HashSet<>();
     }
 
     protected ListView<T> setPosition(int x, int y) {
@@ -142,7 +146,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
 
             if (item.mouseSelected(x + listX, y + listY + offsetY, mouseX, mouseY)) {
                 SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
-                this.setSelected(i);
+                this.toggleSelected(i);
                 return true;
             }
 
@@ -195,7 +199,16 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         return textureHeight;
     }
 
-    public boolean setSelected(int index) {
+    public void setSelected(int index, boolean selected) {
+        if (index < listItems.size()) {
+            T item = listItems.get(index);
+            item.setSelected(selected);
+            selectedItems.add(item);
+            selectedIndices.add(index);
+        }
+    }
+
+    public boolean toggleSelected(int index) {
         if (index >= this.listItems.size()) return false;
 
         T item = this.listItems.get(index);
@@ -217,6 +230,8 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
             }
         }
 
+        this.lastToggledIndex = index;
+
         return true;
     }
 
@@ -224,18 +239,30 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
        return selectedItems.size() > 0;
     }
 
+    public boolean isAllSelected() {
+        return selectedItems.size() == listItems.size();
+    }
+
+    public void setLastToggledIndex(int lastToggledIndex) {
+        this.lastToggledIndex = lastToggledIndex;
+    }
+
+    public int getLastToggledIndex() {
+        return lastToggledIndex;
+    }
+
     public List<T> getSelectedItems() {
-        return selectedItems;
+        return selectedItems.stream().toList();
     }
 
     public List<Integer> getSelectedIndices() {
-        return selectedIndices;
+        return selectedIndices.stream().toList();
     }
 
-    private void resetSelection() {
+    protected void resetSelection() {
         for (T item : listItems) item.setSelected(false);
-        this.selectedItems = new ArrayList<>();
-        this.selectedIndices = new ArrayList<>();
+        this.selectedItems = new HashSet<>();
+        this.selectedIndices = new HashSet<>();
     }
 
     public float getScrollPosition() {

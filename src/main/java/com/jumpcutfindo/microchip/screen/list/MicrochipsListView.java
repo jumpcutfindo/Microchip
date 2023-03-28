@@ -10,6 +10,7 @@ import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.jumpcutfindo.microchip.screen.window.MicrochipMoveChipsWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
@@ -26,9 +27,10 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     private final MicrochipGroup group;
 
     private final int titleX, titleY;
-    private final IconButton editGroupButton, deleteGroupButton, reorderMicrochipsButton, moveMicrochipsButton, deleteMicrochipsButton;
+    private final IconButton editGroupButton, deleteGroupButton,
+            reorderMicrochipsButton, moveMicrochipsButton, deleteMicrochipsButton,
+            selectAllButton, unselectAllButton;
     private final LiteralText title;
-
     private boolean isReordering;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int x, int y) {
         super(screen);
@@ -52,13 +54,16 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         this.titleX = 22;
         this.titleY = 10;
 
-        this.editGroupButton = new IconButton(screen, x + 173, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
-        this.deleteGroupButton = new IconButton(screen, x + 191, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
+        this.editGroupButton = new IconButton(screen, x + 137, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
+        this.deleteGroupButton = new IconButton(screen, x + 155, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
         if (group.isDefault()) this.deleteGroupButton.setDisabled(true);
+        this.reorderMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 32, this::toggleReordering, new TranslatableText("microchip.menu.reorderMicrochips.tooltip"));
 
-        this.reorderMicrochipsButton = new IconButton(screen, x + 155, y + 6, 64, 32, this::toggleReordering, new TranslatableText("microchip.menu.reorderMicrochips.tooltip"));
-        this.moveMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
-        this.deleteMicrochipsButton = new IconButton(screen, x + 191, y + 6, 64, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
+        this.moveMicrochipsButton = new IconButton(screen, x + 155, y + 6, 64, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
+        this.deleteMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
+
+        this.selectAllButton = new IconButton(screen, x + 191, y + 6, 64, 48, this::onSelectAllMicrochips, new TranslatableText("microchip.menu.selectAllMicrochips.tooltip"));
+        this.unselectAllButton = new IconButton(screen, x + 191, y + 6, 64, 64, this::onUnselectAllMicrochips, new TranslatableText("microchip.menu.unselectAllMicrochips.tooltip"));
     }
 
     @Override
@@ -88,6 +93,20 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
+        // Swap selection buttons depending on number selected
+        boolean isListEmpty = this.listItems.isEmpty();
+        this.selectAllButton.setDisabled(isListEmpty);
+        this.unselectAllButton.setDisabled(isListEmpty);
+        this.reorderMicrochipsButton.setDisabled(isListEmpty);
+
+        if (this.isAllSelected()) {
+            this.unselectAllButton.render(matrices, mouseX, mouseY, 0);
+            if (!screen.isWindowOpen()) this.unselectAllButton.renderTooltip(matrices, mouseX, mouseY, 0);
+        } else {
+            this.selectAllButton.render(matrices, mouseX, mouseY, 0);
+            if (!screen.isWindowOpen()) this.selectAllButton.renderTooltip(matrices, mouseX, mouseY, 0);
+        }
+
         // Swap the buttons depending on whether any items were selected
         if (this.isAnySelected()) {
             this.moveMicrochipsButton.render(matrices, mouseX, mouseY, 0);
@@ -114,8 +133,35 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (group == null) return false;
 
-        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+        int start = getLastToggledIndex();
+        if (super.mouseClicked(mouseX, mouseY, button)) {
+            if (Screen.hasShiftDown()) {
+                this.resetSelection();
 
+                int end = getLastToggledIndex();
+
+                int smaller = Math.min(start, end);
+                int larger = Math.max(start, end);
+
+                for (int i = smaller; i <= larger; i++) {
+                    this.setSelected(i, true);
+                }
+
+                this.setLastToggledIndex(start);
+            }
+            return true;
+        }
+
+        // If all selected, only consider unselect button
+        boolean flag = false;
+        if (this.isAllSelected()) {
+            flag = this.unselectAllButton.mouseClicked(mouseX, mouseY, button);
+        } else {
+            flag = this.selectAllButton.mouseClicked(mouseX, mouseY, button);
+        }
+        if (flag) return true;
+
+        // Consider the rest of the buttons
         if (this.isAnySelected()) {
             return this.moveMicrochipsButton.mouseClicked(mouseX, mouseY, button)
                     || this.deleteMicrochipsButton.mouseClicked(mouseX, mouseY, button);
@@ -172,6 +218,14 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         if (!this.isAnySelected()) return;
         List<UUID> microchipIds = getSelectedIds();
         ClientNetworkSender.MicrochipsActions.removeEntitiesFromGroup(this.group.getId(), microchipIds);
+    }
+
+    private void onSelectAllMicrochips() {
+        for (int i = 0; i < listItems.size(); i++) this.setSelected(i, true);
+    }
+
+    private void onUnselectAllMicrochips() {
+        this.resetSelection();
     }
 
     private void toggleReordering() {
