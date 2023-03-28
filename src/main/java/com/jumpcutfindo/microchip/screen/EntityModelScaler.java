@@ -7,7 +7,7 @@ import net.minecraft.entity.passive.*;
 
 import java.util.Map;
 
-public class EntityModelScale {
+public class EntityModelScaler {
     /**
      * This map contains the scale factor for the rendering of the mobs within Microchip related
      * screens and windows.

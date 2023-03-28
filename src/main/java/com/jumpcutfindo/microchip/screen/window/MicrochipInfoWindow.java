@@ -6,7 +6,7 @@ import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.helper.Tagger;
-import com.jumpcutfindo.microchip.screen.EntityModelScale;
+import com.jumpcutfindo.microchip.screen.EntityModelScaler;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
@@ -99,8 +99,8 @@ public class MicrochipInfoWindow extends Window {
 
         // Draw entity background, then entity, then the main UI
         if (this.entity != null) {
-            int xOffset = 32 + EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getWindowX();
-            int yOffset = 80 + EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getWindowY();
+            int xOffset = 32 + EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getWindowX();
+            int yOffset = 80 + EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getWindowY();
 
             drawLookingEntity(entity, x + xOffset, y + yOffset, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
         }

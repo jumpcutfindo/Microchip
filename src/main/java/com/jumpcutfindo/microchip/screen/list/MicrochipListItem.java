@@ -5,7 +5,7 @@ import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
-import com.jumpcutfindo.microchip.screen.EntityModelScale;
+import com.jumpcutfindo.microchip.screen.EntityModelScaler;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
@@ -95,8 +95,8 @@ public class MicrochipListItem extends ListItem<Microchip> {
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         // Draw entity
         if (this.entity != null) {
-            int xOffset = EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getListX();
-            int yOffset = EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getListY();
+            int xOffset = EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getListX();
+            int yOffset = EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getListY();
             this.drawEntity(x + xOffset, y + yOffset);
         }
         else {

@@ -37,7 +37,7 @@ public class ScreenUtils {
     public static float calculateModelSize(LivingEntity entity, float baseMultiplier) {
         EntityDimensions dimensions = entity.getDimensions(EntityPose.STANDING);
 
-        float entityMultiplier = EntityModelScale.ENTITY_SCALES.getOrDefault(entity.getClass(), 1.0f);
+        float entityMultiplier = EntityModelScaler.ENTITY_SCALES.getOrDefault(entity.getClass(), 1.0f);
 
         float height = dimensions.height;
         float width = dimensions.width;
