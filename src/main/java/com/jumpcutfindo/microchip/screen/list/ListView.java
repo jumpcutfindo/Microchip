@@ -45,6 +45,8 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     private Set<T> selectedItems;
     private Set<Integer> selectedIndices;
 
+    private int lastToggledIndex = 0;
+
     public ListView(MicrochipsMenuScreen screen) {
         this.screen = screen;
 
@@ -228,11 +230,21 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
             }
         }
 
+        this.lastToggledIndex = index;
+
         return true;
     }
 
     public boolean isAnySelected() {
        return selectedItems.size() > 0;
+    }
+
+    public void setLastToggledIndex(int lastToggledIndex) {
+        this.lastToggledIndex = lastToggledIndex;
+    }
+
+    public int getLastToggledIndex() {
+        return lastToggledIndex;
     }
 
     public List<T> getSelectedItems() {
@@ -243,7 +255,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         return selectedIndices.stream().toList();
     }
 
-    private void resetSelection() {
+    protected void resetSelection() {
         for (T item : listItems) item.setSelected(false);
         this.selectedItems = new HashSet<>();
         this.selectedIndices = new HashSet<>();

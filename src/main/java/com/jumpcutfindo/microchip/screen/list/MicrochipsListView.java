@@ -29,7 +29,6 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     private final int titleX, titleY;
     private final IconButton editGroupButton, deleteGroupButton, reorderMicrochipsButton, moveMicrochipsButton, deleteMicrochipsButton;
     private final LiteralText title;
-
     private boolean isReordering;
     public MicrochipsListView(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int x, int y) {
         super(screen);
@@ -115,23 +114,21 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (group == null) return false;
 
-        List<Integer> selectedIndices = this.getSelectedIndices();
+        int start = getLastToggledIndex();
         if (super.mouseClicked(mouseX, mouseY, button)) {
-            if (Screen.hasShiftDown() && selectedIndices.size() > 0) {
-                // Logic for selecting multiple with shift held down
-                int latestIndex = selectedIndices.get(selectedIndices.size() - 1);
+            if (Screen.hasShiftDown()) {
+                this.resetSelection();
 
-                List<Integer> newSelectedIndices = this.getSelectedIndices();
-                int selectedIndex = newSelectedIndices.get(newSelectedIndices.size() - 1);
+                int end = getLastToggledIndex();
 
-                int larger = Math.max(selectedIndex, latestIndex);
-                int smaller = Math.min(selectedIndex, latestIndex);
+                int smaller = Math.min(start, end);
+                int larger = Math.max(start, end);
 
-                for (int i = smaller; i < larger; i++) {
+                for (int i = smaller; i <= larger; i++) {
                     this.setSelected(i, true);
                 }
 
-                return true;
+                this.setLastToggledIndex(start);
             }
             return true;
         }
