@@ -5,7 +5,6 @@ import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.helper.StatUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
-import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -107,7 +106,7 @@ public class StatusInfoTab extends InfoTab {
         if (hasBreeding()) {
             RenderSystem.setShaderTexture(0, TEXTURE);
             screen.drawTexture(matrices, window.getX() + statOffset + 7 , statY, 204, 128, 9, 9);
-            String breedString = StringHelper.formatTicks(breedingAge);
+            String breedString = breedingAge < 0 ? "0:00" : StringHelper.formatTicks(breedingAge);
 
             breedStatX = window.getX() + statOffset + 19;
             screen.getTextRenderer().drawWithShadow(matrices, breedString, window.getX() + statOffset + 19, statY + 1, 0xFFFFFF);

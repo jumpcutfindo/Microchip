@@ -29,6 +29,7 @@
     "microchip.menu.selectAllMicrochips.tooltip": "Select All Microchips",
     "microchip.menu.unselectAllMicrochips.tooltip": "Unselect All Microchips",
     "microchip.menu.listItem.outOfRange.tooltip": "Mob is out of range",
+    "microchip.menu.listItem.baby.tooltip": "Baby",
 
     "microchip.menu.createGroup.windowTitle": "Create a group",
     "microchip.menu.createGroup.title": "Name",

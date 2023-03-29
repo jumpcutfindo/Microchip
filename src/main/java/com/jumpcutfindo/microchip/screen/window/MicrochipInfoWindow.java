@@ -99,8 +99,8 @@ public class MicrochipInfoWindow extends Window {
 
         // Draw entity background, then entity, then the main UI
         if (this.entity != null) {
-            int xOffset = 32 + EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getWindowX();
-            int yOffset = 80 + EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getWindowY();
+            int xOffset = 32 + EntityModelScaler.getInterfaceOffset(entity).getWindowX();
+            int yOffset = 80 + EntityModelScaler.getInterfaceOffset(entity).getWindowY();
 
             drawLookingEntity(entity, x + xOffset, y + yOffset, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
         }

@@ -67,6 +67,12 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
         String entityHealthString = this.entity == null ? "?" : Integer.toString((int) this.entity.getHealth());
 
+        // Draw baby status
+        if (this.entity != null && this.entity.isBaby()) {
+            RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
+            screen.drawTexture(matrices, x + 22, y + 22, 180, 202, 9, 9);
+        }
+
         // Draw entity health
         String healthString = String.format("%s/%d", entityHealthString, (int) this.item.getEntityData().getMaxHealth());
         int offset = healthString.length() * 6 + 1;
@@ -86,7 +92,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
             screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
         }
 
-
         drawButtons(matrices, x, y, mouseX, mouseY);
         drawTooltips(matrices, x, y, mouseX, mouseY);
     }
@@ -95,8 +100,8 @@ public class MicrochipListItem extends ListItem<Microchip> {
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         // Draw entity
         if (this.entity != null) {
-            int xOffset = EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getListX();
-            int yOffset = EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getListY();
+            int xOffset = EntityModelScaler.getInterfaceOffset(entity).getListX();
+            int yOffset = EntityModelScaler.getInterfaceOffset(entity).getListY();
             this.drawEntity(x + xOffset, y + yOffset);
         }
         else {
@@ -146,6 +151,13 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     private void drawTooltips(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (screen.isWindowOpen()) return;
+
+        if (ScreenUtils.isWithin(mouseX, mouseY, x + 22, y + 22, 9, 9)) {
+            if (this.entity != null && this.entity.isBaby()) {
+                screen.renderTooltip(matrices, new TranslatableText("microchip.menu.listItem.baby.tooltip"), mouseX, mouseY);
+            }
+            return;
+        }
 
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 4, y + 4, 28, 28)) {
             if (this.entity == null) {
