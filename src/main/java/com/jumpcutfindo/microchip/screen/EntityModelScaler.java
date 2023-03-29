@@ -17,7 +17,7 @@ public class EntityModelScaler {
      * window they're supposed to fit in. The solution is thus to adjust it slightly so that we have
      * a more favorable display of the mobs being rendered.
      */
-    public static final Map<Class<? extends LivingEntity>, Float> ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
+    private static final Map<Class<? extends LivingEntity>, Float> ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
             .put(AxolotlEntity.class, 0.65f)
             .put(ChickenEntity.class, 0.7f)
             .put(CaveSpiderEntity.class, 0.55f)
@@ -59,7 +59,7 @@ public class EntityModelScaler {
      * This is meant to ensure that after the scaling has been carried out, we properly position the mobs
      * in their relevant frames.
      */
-    public static final Map<Class<? extends LivingEntity>, InterfaceOffset> ENTITY_OFFSETS = ImmutableMap.<Class<? extends LivingEntity>, InterfaceOffset>builder()
+    private static final Map<Class<? extends LivingEntity>, InterfaceOffset> ENTITY_OFFSETS = ImmutableMap.<Class<? extends LivingEntity>, InterfaceOffset>builder()
             .put(AxolotlEntity.class, new InterfaceOffset(2, -3, 0, -4))
             .put(BlazeEntity.class, new InterfaceOffset(-2, 2, -2, 3))
             .put(DolphinEntity.class, new InterfaceOffset(-2, -2, 0, -3))
@@ -68,6 +68,14 @@ public class EntityModelScaler {
             .put(MagmaCubeEntity.class, new InterfaceOffset(0, -3, 0, 0))
             .put(ParrotEntity.class, new InterfaceOffset(0, -3, 0, 0))
             .build();
+
+    public static float getScaleModifier(LivingEntity entity) {
+        return ENTITY_SCALES.getOrDefault(entity.getClass(), 1.0f);
+    }
+
+    public static InterfaceOffset getInterfaceOffset(LivingEntity entity) {
+        return ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY);
+    }
 
     public static class InterfaceOffset {
         public static InterfaceOffset EMPTY = new InterfaceOffset(0, 0, 0, 0);

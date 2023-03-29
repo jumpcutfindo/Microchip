@@ -95,8 +95,8 @@ public class MicrochipListItem extends ListItem<Microchip> {
     public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         // Draw entity
         if (this.entity != null) {
-            int xOffset = EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getListX();
-            int yOffset = EntityModelScaler.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY).getListY();
+            int xOffset = EntityModelScaler.getInterfaceOffset(entity).getListX();
+            int yOffset = EntityModelScaler.getInterfaceOffset(entity).getListY();
             this.drawEntity(x + xOffset, y + yOffset);
         }
         else {
