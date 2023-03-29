@@ -53,6 +53,11 @@ public class EntityModelScaler {
             .put(ZoglinEntity.class, 0.75f)
             .build();
 
+    private static final Map<Class<? extends LivingEntity>, Float> BABY_ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
+            .put(VillagerEntity.class, 0.75f)
+            .put(TurtleEntity.class, 0.75f)
+            .build();
+
     /**
      * This map contains the offsets to be applied to the rendering of the mobs in different windows.
      *
@@ -70,6 +75,7 @@ public class EntityModelScaler {
             .build();
 
     public static float getScaleModifier(LivingEntity entity) {
+        if (entity.isBaby()) return BABY_ENTITY_SCALES.getOrDefault(entity.getClass(), 0.5f);
         return ENTITY_SCALES.getOrDefault(entity.getClass(), 1.0f);
     }
 
