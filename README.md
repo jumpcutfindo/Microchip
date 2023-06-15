@@ -1,4 +1,5 @@
 # Microchip
+![image](https://github.com/jumpcutfindo/Microchip/assets/28668883/01f642e4-2cac-4a10-bfa6-c0dd8aecd1f7)
 
 Microchip is a mod that allows the player to keep track of mobs across their world.
 
