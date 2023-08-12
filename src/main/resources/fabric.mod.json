@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "microchip",
-  "version": "1.0.0",
+  "version": "1.1.0",
 
   "name": "Microchip",
   "description": "Allows players to keep track of their mobs across the world!",
@@ -46,9 +46,9 @@
     "minecraft": "~1.19.3",
     "java": ">=17",
     "fabric-key-binding-api-v1": "*",
-    "cardinal-components": ">=5.1.0"
+    "cardinal-components-base": ">=5.1.0",
+    "cardinal-components-entity": ">=5.1.0"
   },
   "suggests": {
-    "another-mod": "*"
   }
 }
