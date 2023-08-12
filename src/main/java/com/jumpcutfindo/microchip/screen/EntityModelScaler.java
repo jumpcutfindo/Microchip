@@ -19,6 +19,7 @@ public class EntityModelScaler {
      */
     private static final Map<Class<? extends LivingEntity>, Float> ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
             .put(AxolotlEntity.class, 0.65f)
+            .put(AllayEntity.class, 0.6f)
             .put(ChickenEntity.class, 0.7f)
             .put(CaveSpiderEntity.class, 0.55f)
             .put(CatEntity.class, 0.85f)
@@ -50,6 +51,7 @@ public class EntityModelScaler {
             .put(SkeletonHorseEntity.class, 0.75f)
             .put(SlimeEntity.class, 0.75f)
             .put(TurtleEntity.class, 0.75f)
+            .put(TadpoleEntity.class, 0.7f)
             .put(WolfEntity.class, 0.85f)
             .put(ZoglinEntity.class, 0.75f)
             .build();
