@@ -79,16 +79,16 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
     @Override
     public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         String displayName = this.item.getDisplayName();
-        screen.getTextRenderer().draw(matrices, new LiteralText(StringUtils.truncatedName(displayName, 14)), (float) (x + 19), (float) (y + 5), this.item.getColor().getShadowColor());
+        screen.getTextRenderer().draw(matrices, Text.literal(StringUtils.truncatedName(displayName, 14)), (float) (x + 19), (float) (y + 5), this.item.getColor().getShadowColor());
 
         if (!isReorderable || !isReordering) {
             // Draw microchip count
             int microchipCount = this.item.getMicrochips().size();
             int offset = (Integer.toString(microchipCount).length() - 1) * 6;
-            screen.getTextRenderer().draw(matrices, new LiteralText(Integer.toString(microchipCount)), (float) (x + 114 - offset), (float) (y + 5), this.item.getColor().getShadowColor());
+            screen.getTextRenderer().draw(matrices, Text.literal(Integer.toString(microchipCount)), (float) (x + 114 - offset), (float) (y + 5), this.item.getColor().getShadowColor());
         } else {
             // Draw reordering arrows
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderTexture(0, GROUP_LIST_ITEMS_TEXTURE);
             ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
 

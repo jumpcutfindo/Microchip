@@ -10,13 +10,13 @@ public class MicrochipGroup {
     private final UUID id;
     private String displayName;
     private GroupColor color;
-    private final Set<Microchip> microchips;
+    private final List<Microchip> microchips;
     private boolean isDefault;
 
     public MicrochipGroup(String displayName, GroupColor color) {
         this.id = UUID.randomUUID();
         this.displayName = displayName;
-        this.microchips = new HashSet<>();
+        this.microchips = new ArrayList<>();
         this.color = color;
     }
     public MicrochipGroup(String displayName) {
@@ -52,7 +52,7 @@ public class MicrochipGroup {
     }
 
     public List<Microchip> getMicrochips() {
-        return this.microchips.stream().toList();
+        return this.microchips;
     }
 
     public List<Microchip> getMicrochipsWithIds(List<UUID> ids) {

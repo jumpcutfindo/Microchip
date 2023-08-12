@@ -6,7 +6,7 @@ import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.helper.Tagger;
-import com.jumpcutfindo.microchip.screen.EntityModelScale;
+import com.jumpcutfindo.microchip.screen.EntityModelScaler;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.info.ActionsInfoTab;
@@ -21,15 +21,12 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.joml.Quaternionf;
@@ -193,7 +190,7 @@ public class MicrochipInfoWindow extends Window {
         // Coordinates to chat
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
             MicrochipEntityData data = microchip.getEntityData();
-            screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
+            screen.getPlayer().sendMessage(Text.translatable("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
             SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
             return true;
         }

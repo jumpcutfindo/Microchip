@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.data;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.*;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.DyeColor;
 import net.minecraft.village.VillagerProfession;
 
@@ -45,25 +46,24 @@ public class EntityNamer {
     }
 
     private static String getCatType(LivingEntity entity) {{
-        int catType = ((CatEntity) entity).getCatType();
-        switch (catType) {
-            case 0: return "Tabby";
-            case 1: return "Black";
-            case 2: return "Red";
-            case 3: return "Siamese";
-            case 4: return "British Shorthair";
-            case 5: return "Calico";
-            case 6: return "Persian";
-            case 7: return "Ragdoll";
-            case 8: return "White";
-            case 9: return "Jellie";
-            case 10: return "All Black";
-            default: return "Cat";
-        }
+        CatVariant catType = ((CatEntity) entity).getVariant();
+
+        if (catType == Registries.CAT_VARIANT.get(CatVariant.TABBY)) return "Tabby";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.BLACK)) return "Black";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.RED)) return "Red";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.SIAMESE)) return "Siamese";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.BRITISH_SHORTHAIR)) return "British Shorthair";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.CALICO)) return "Calico";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.PERSIAN)) return "Persian";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.RAGDOLL)) return "Ragdoll";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.WHITE)) return "White";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.JELLIE)) return "Jellie";
+        else if (catType == Registries.CAT_VARIANT.get(CatVariant.ALL_BLACK)) return "All Black";
+        else return "Cat";
     }}
 
     private static String getHorseType(LivingEntity entity) {
-        HorseColor color = ((HorseEntity) entity).getColor();
+        HorseColor color = ((HorseEntity) entity).getVariant();
         return nameWithVariant("Horse", color.name());
     }
 
@@ -73,7 +73,8 @@ public class EntityNamer {
     }
 
     private static String getTropicalFishType(LivingEntity entity) {
-        String name = TropicalFishEntity.getTranslationKey(((TropicalFishEntity) entity).getVariant()).split("type.")[1];
+        TropicalFishEntity.Variety variety = ((TropicalFishEntity) entity).getVariant();
+        String name = variety.asString();
         return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 

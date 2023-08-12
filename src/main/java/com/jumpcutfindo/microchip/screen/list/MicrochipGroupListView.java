@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
-
-
-public class MicrochipGroupListView extends ListView {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
     private MutableText title;
     private final int titleX, titleY;
@@ -49,8 +46,8 @@ public class MicrochipGroupListView extends ListView {
         this.titleX = 7;
         this.titleY = 10;
 
-        this.createGroupButton = new IconButton(screen, x + 118, y + 6, 0, 0, this::onCreateGroup, new TranslatableText("microchip.menu.createGroup.tooltip"));
-        this.reorderGroupButton = new IconButton(screen, x + 136, y + 6, 0, 48, this::toggleReordering, new TranslatableText("microchip.menu.reorderGroup.tooltip"));
+        this.createGroupButton = new IconButton(screen, x + 118, y + 6, 0, 0, this::onCreateGroup, Text.translatable("microchip.menu.createGroup.tooltip"));
+        this.reorderGroupButton = new IconButton(screen, x + 136, y + 6, 0, 48, this::toggleReordering, Text.translatable("microchip.menu.reorderGroup.tooltip"));
         this.canCreate = true;
 
         this.toggleSelected(0);

@@ -27,7 +27,6 @@ import org.apache.logging.log4j.util.TriConsumer;
 
 public class MicrochipListItem extends ListItem<Microchip> {
     private final MicrochipGroup group;
-    private final Microchip microchip;
     private LivingEntity entity;
 
     private float entityModelSize;

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class MicrochipsListView extends ListView {
+public class MicrochipsListView extends ListView<MicrochipListItem> {
     protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_list.png");
     private final MicrochipGroup group;
 
@@ -54,16 +54,16 @@ public class MicrochipsListView extends ListView {
         this.titleX = 22;
         this.titleY = 10;
 
-        this.editGroupButton = new IconButton(screen, x + 137, y + 6, 0, 32, this::onEditGroup, new TranslatableText("microchip.menu.editGroup.tooltip"));
-        this.deleteGroupButton = new IconButton(screen, x + 155, y + 6, 0, 16, this::onDeleteGroup, new TranslatableText("microchip.menu.deleteGroup.tooltip"));
+        this.editGroupButton = new IconButton(screen, x + 137, y + 6, 0, 32, this::onEditGroup, Text.translatable("microchip.menu.editGroup.tooltip"));
+        this.deleteGroupButton = new IconButton(screen, x + 155, y + 6, 0, 16, this::onDeleteGroup, Text.translatable("microchip.menu.deleteGroup.tooltip"));
         if (group.isDefault()) this.deleteGroupButton.setDisabled(true);
-        this.reorderMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 32, this::toggleReordering, new TranslatableText("microchip.menu.reorderMicrochips.tooltip"));
+        this.reorderMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 32, this::toggleReordering, Text.translatable("microchip.menu.reorderMicrochips.tooltip"));
 
-        this.moveMicrochipsButton = new IconButton(screen, x + 155, y + 6, 64, 16, this::onMoveMicrochips, new TranslatableText("microchip.menu.moveMicrochips.tooltip"));
-        this.deleteMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 0, this::onDeleteMicrochips, new TranslatableText("microchip.menu.deleteMicrochips.tooltip"));
+        this.moveMicrochipsButton = new IconButton(screen, x + 155, y + 6, 64, 16, this::onMoveMicrochips, Text.translatable("microchip.menu.moveMicrochips.tooltip"));
+        this.deleteMicrochipsButton = new IconButton(screen, x + 173, y + 6, 64, 0, this::onDeleteMicrochips, Text.translatable("microchip.menu.deleteMicrochips.tooltip"));
 
-        this.selectAllButton = new IconButton(screen, x + 191, y + 6, 64, 48, this::onSelectAllMicrochips, new TranslatableText("microchip.menu.selectAllMicrochips.tooltip"));
-        this.unselectAllButton = new IconButton(screen, x + 191, y + 6, 64, 64, this::onUnselectAllMicrochips, new TranslatableText("microchip.menu.unselectAllMicrochips.tooltip"));
+        this.selectAllButton = new IconButton(screen, x + 191, y + 6, 64, 48, this::onSelectAllMicrochips, Text.translatable("microchip.menu.selectAllMicrochips.tooltip"));
+        this.unselectAllButton = new IconButton(screen, x + 191, y + 6, 64, 64, this::onUnselectAllMicrochips, Text.translatable("microchip.menu.unselectAllMicrochips.tooltip"));
     }
 
     @Override
