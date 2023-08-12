@@ -142,6 +142,20 @@ public abstract class Microchips implements Component {
         return userGroups.remove(group);
     }
 
+    public void reorderGroup(int from, int to) {
+        if (from < 0 || to < 0 || from >= this.userGroups.size() || to >= this.userGroups.size()) return;
+
+        Collections.swap(this.userGroups, from, to);
+    }
+
+    public void reorderMicrochips(UUID groupId, int from, int to) {
+        MicrochipGroup group = getGroup(groupId);
+        if (group == null) return;
+        if (from < 0 || to < 0 || from >= group.getMicrochips().size() || to >= group.getMicrochips().size()) return;
+
+        Collections.swap(group.getMicrochips(), from, to);
+    }
+
     public int getChipCount() {
         return chipCount;
     }

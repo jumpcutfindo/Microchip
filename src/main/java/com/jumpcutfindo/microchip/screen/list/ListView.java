@@ -1,22 +1,26 @@
 package com.jumpcutfindo.microchip.screen.list;
 
+import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public abstract class ListView implements Interactable {
+public abstract class ListView<T extends ListItem<?>> implements Interactable {
     protected final MicrochipsMenuScreen screen;
 
     // Texture position
@@ -38,26 +42,28 @@ public abstract class ListView implements Interactable {
     private float scrollPosition; // Range from 0.0 to 1.0
     private boolean scrolling;
 
-    protected List<ListItem> listItems;
-    protected List<ListItem> visibleItems;
+    protected List<T> listItems;
+    protected List<T> visibleItems;
 
-    private List<ListItem> selectedItems;
-    private List<Integer> selectedIndices;
+    private Set<T> selectedItems;
+    private Set<Integer> selectedIndices;
+
+    private int lastToggledIndex = 0;
 
     public ListView(MicrochipsMenuScreen screen) {
         this.screen = screen;
 
-        this.selectedItems = new ArrayList<>();
-        this.selectedIndices = new ArrayList<>();
+        this.selectedItems = new HashSet<>();
+        this.selectedIndices = new HashSet<>();
     }
 
-    protected ListView setPosition(int x, int y) {
+    protected ListView<T> setPosition(int x, int y) {
         this.x = x;
         this.y = y;
         return this;
     }
 
-    protected ListView setTexture(Identifier texture, int u, int v, int width, int height) {
+    protected ListView<T> setTexture(Identifier texture, int u, int v, int width, int height) {
         this.texture = texture;
         this.textureU = u;
         this.textureV = v;
@@ -66,13 +72,13 @@ public abstract class ListView implements Interactable {
         return this;
     }
 
-    protected ListView setListPosition(int x, int y) {
+    protected ListView<T> setListPosition(int x, int y) {
         this.listX = x;
         this.listY = y;
         return this;
     }
 
-    protected ListView setScrollbar(int x, int y, int u, int v, int width, int height) {
+    protected ListView<T> setScrollbar(int x, int y, int u, int v, int width, int height) {
         this.scrollbarX = x;
         this.scrollbarY = y;
         this.scrollbarU = u;
@@ -82,16 +88,16 @@ public abstract class ListView implements Interactable {
         return this;
     }
 
-    protected ListView setList(List<ListItem> listItems, int maxItems) {
+    protected ListView<T> setList(List<T> listItems, int maxItems) {
         this.listItems = listItems;
         this.maxItems = maxItems;
         this.visibleItems = new ArrayList<>();
-        this.maxSteps = listItems.size() - maxItems;
+        this.maxSteps = Math.max(0, listItems.size() - maxItems);
         this.stepAmount = (float) (this.scrollbarHeight - 15) / (float) (this.maxSteps);
         return this;
     }
 
-    protected ListView setSingleSelect(boolean isSingleSelect) {
+    protected ListView<T> setSingleSelect(boolean isSingleSelect) {
         this.isSingleSelect = isSingleSelect;
         return this;
     }
@@ -116,7 +122,7 @@ public abstract class ListView implements Interactable {
         for (int i = step; i < step + maxItems; i++) {
             if (i >= this.listItems.size()) break;
 
-            ListItem item = this.listItems.get(i);
+            T item = this.listItems.get(i);
             item.render(matrices, x + listX, y + listY + offsetY, mouseX, mouseY);
             offsetY += item.getHeight();
         }
@@ -139,16 +145,18 @@ public abstract class ListView implements Interactable {
         for (int i = step; i < step + maxItems; i++) {
             if (i >= this.listItems.size()) break;
 
-            ListItem item = this.listItems.get(i);
+            T item = this.listItems.get(i);
+
             if (item.mouseSelected(x + listX, y + listY + offsetY, mouseX, mouseY)) {
-                this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-                this.setSelected(i);
+                SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
+                this.toggleSelected(i);
                 return true;
             }
 
             if (item.mouseClicked(x + listX, y + listY + offsetY, mouseX, mouseY)) {
                 return true;
             }
+
 
             offsetY += item.getHeight();
         }
@@ -194,10 +202,19 @@ public abstract class ListView implements Interactable {
         return textureHeight;
     }
 
-    public boolean setSelected(int index) {
+    public void setSelected(int index, boolean selected) {
+        if (index < listItems.size()) {
+            T item = listItems.get(index);
+            item.setSelected(selected);
+            selectedItems.add(item);
+            selectedIndices.add(index);
+        }
+    }
+
+    public boolean toggleSelected(int index) {
         if (index >= this.listItems.size()) return false;
 
-        ListItem item = this.listItems.get(index);
+        T item = this.listItems.get(index);
 
         if (isSingleSelect) {
             this.resetSelection();
@@ -216,6 +233,8 @@ public abstract class ListView implements Interactable {
             }
         }
 
+        this.lastToggledIndex = index;
+
         return true;
     }
 
@@ -223,21 +242,47 @@ public abstract class ListView implements Interactable {
        return selectedItems.size() > 0;
     }
 
-    public List<ListItem> getSelectedItems() {
-        return selectedItems;
+    public boolean isAllSelected() {
+        return selectedItems.size() == listItems.size();
+    }
+
+    public void setLastToggledIndex(int lastToggledIndex) {
+        this.lastToggledIndex = lastToggledIndex;
+    }
+
+    public int getLastToggledIndex() {
+        return lastToggledIndex;
+    }
+
+    public List<T> getSelectedItems() {
+        return selectedItems.stream().toList();
     }
 
     public List<Integer> getSelectedIndices() {
-        return selectedIndices;
+        return selectedIndices.stream().toList();
     }
 
-    private void resetSelection() {
-        for (ListItem item : listItems) item.setSelected(false);
-        this.selectedItems = new ArrayList<>();
-        this.selectedIndices = new ArrayList<>();
+    protected void resetSelection() {
+        for (T item : listItems) item.setSelected(false);
+        this.selectedItems = new HashSet<>();
+        this.selectedIndices = new HashSet<>();
     }
 
-    public void playDownSound(SoundManager soundManager) {
-        soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    public float getScrollPosition() {
+        return scrollPosition;
     }
+
+    public void setScrollPosition(float scrollPosition) {
+        this.scrollPosition = scrollPosition;
+    }
+
+    /**
+     * Retrieves an NbtCompound that represents the various settings (e.g. state) of the ListView.
+     */
+    public abstract NbtCompound getSettings();
+
+    /**
+     * Applies a given set of settings to the ListView.
+     */
+    public abstract void applySettings(NbtCompound settings);
 }

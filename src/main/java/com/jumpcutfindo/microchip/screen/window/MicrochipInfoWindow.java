@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen.window;
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.*;
 import com.jumpcutfindo.microchip.helper.Looker;
+import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.EntityModelScale;
@@ -28,6 +29,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.joml.Quaternionf;
@@ -97,8 +99,8 @@ public class MicrochipInfoWindow extends Window {
 
         // Draw entity background, then entity, then the main UI
         if (this.entity != null) {
-            int xOffset = 32 + EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getWindowX();
-            int yOffset = 80 + EntityModelScale.ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScale.InterfaceOffset.EMPTY).getWindowY();
+            int xOffset = 32 + EntityModelScaler.getInterfaceOffset(entity).getWindowX();
+            int yOffset = 80 + EntityModelScaler.getInterfaceOffset(entity).getWindowY();
 
             drawLookingEntity(entity, x + xOffset, y + yOffset, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
         }
@@ -191,8 +193,8 @@ public class MicrochipInfoWindow extends Window {
         // Coordinates to chat
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
             MicrochipEntityData data = microchip.getEntityData();
-            screen.getPlayer().sendMessage(Text.translatable("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
-            MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            screen.getPlayer().sendMessage(new TranslatableText("microchip.menu.microchipInfo.statusTab.clickLocation.message", data.getDisplayName(), StringUtils.coordinatesAsFancyText(data.getX(), data.getY(), data.getZ())), false);
+            SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
             return true;
         }
 
@@ -201,7 +203,7 @@ public class MicrochipInfoWindow extends Window {
             if (!screen.getPlayer().isCreative() && tab instanceof ActionsInfoTab) continue;
             if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96 + tabVerticalOffset, 32, 29)) {
                 activeTab = tab;
-                MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
                 return true;
             }
             tabVerticalOffset += 29;

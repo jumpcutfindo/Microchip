@@ -105,7 +105,7 @@ public class StatusInfoTab extends InfoTab {
         if (hasBreeding()) {
             RenderSystem.setShaderTexture(0, TEXTURE);
             screen.drawTexture(matrices, window.getX() + statOffset + 7 , statY, 204, 128, 9, 9);
-            String breedString = StringHelper.formatTicks(breedingAge);
+            String breedString = breedingAge < 0 ? "0:00" : StringHelper.formatTicks(breedingAge);
 
             breedStatX = window.getX() + statOffset + 19;
             screen.getTextRenderer().drawWithShadow(matrices, breedString, window.getX() + statOffset + 19, statY + 1, 0xFFFFFF);

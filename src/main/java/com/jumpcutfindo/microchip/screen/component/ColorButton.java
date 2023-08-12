@@ -2,10 +2,12 @@ package com.jumpcutfindo.microchip.screen.component;
 
 import com.jumpcutfindo.microchip.MicrochipMod;
 import com.jumpcutfindo.microchip.data.GroupColor;
+import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
@@ -71,15 +73,11 @@ public class ColorButton implements Interactable {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, width, height)) {
             this.isSelected = !this.isSelected;
-            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            SoundUtils.playClickSound(MinecraftClient.getInstance().getSoundManager());
             return true;
         }
 
         return false;
-    }
-
-    private void playDownSound(SoundManager soundManager) {
-        soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     private boolean isMouseWithin(int mouseX, int mouseY) {

@@ -26,11 +26,6 @@ public class Microchip {
     }
 
     @Override
-    public String toString() {
-        return this.entityId.toString();
-    }
-
-    @Override
     public boolean equals(Object obj) {
         return obj instanceof Microchip other && other.getEntityId().equals(this.entityId);
     }
@@ -42,5 +37,12 @@ public class Microchip {
 
     public static Microchip of(LivingEntity entity) {
         return new Microchip(entity.getUuid(), MicrochipEntityData.from(entity));
+    }
+
+    @Override
+    public String toString() {
+        return "Microchip{" +
+                "entityId=" + entityId +
+                '}';
     }
 }

@@ -39,6 +39,12 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
     }
 
     @Override
+    public void reorderGroup(int from, int to) {
+        super.reorderGroup(from, to);
+        MicrochipComponents.MICROCHIPS.sync(this.owner);
+    }
+
+    @Override
     public boolean addToGroup(UUID groupId, Microchip microchip) {
         boolean flag = super.addToGroup(groupId, microchip);
         MicrochipComponents.MICROCHIPS.sync(this.owner);
@@ -57,6 +63,12 @@ public class PlayerMicrochips extends Microchips implements PlayerComponent<Micr
         boolean flag = super.moveBetweenGroups(fromId, toId, microchipIds);
         MicrochipComponents.MICROCHIPS.sync(this.owner);
         return flag;
+    }
+
+    @Override
+    public void reorderMicrochips(UUID groupId, int from, int to) {
+        super.reorderMicrochips(groupId, from, to);
+        MicrochipComponents.MICROCHIPS.sync(this.owner);
     }
 
     @Override

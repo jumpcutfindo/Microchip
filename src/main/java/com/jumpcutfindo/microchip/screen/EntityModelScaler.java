@@ -7,7 +7,7 @@ import net.minecraft.entity.passive.*;
 
 import java.util.Map;
 
-public class EntityModelScale {
+public class EntityModelScaler {
     /**
      * This map contains the scale factor for the rendering of the mobs within Microchip related
      * screens and windows.
@@ -17,8 +17,8 @@ public class EntityModelScale {
      * window they're supposed to fit in. The solution is thus to adjust it slightly so that we have
      * a more favorable display of the mobs being rendered.
      */
-    public static final Map<Class<? extends LivingEntity>, Float> ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
-            .put(AxolotlEntity.class, 0.75f)
+    private static final Map<Class<? extends LivingEntity>, Float> ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
+            .put(AxolotlEntity.class, 0.65f)
             .put(ChickenEntity.class, 0.7f)
             .put(CaveSpiderEntity.class, 0.55f)
             .put(CatEntity.class, 0.85f)
@@ -54,14 +54,19 @@ public class EntityModelScale {
             .put(ZoglinEntity.class, 0.75f)
             .build();
 
+    private static final Map<Class<? extends LivingEntity>, Float> BABY_ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
+            .put(VillagerEntity.class, 0.75f)
+            .put(TurtleEntity.class, 0.75f)
+            .build();
+
     /**
      * This map contains the offsets to be applied to the rendering of the mobs in different windows.
      *
      * This is meant to ensure that after the scaling has been carried out, we properly position the mobs
      * in their relevant frames.
      */
-    public static final Map<Class<? extends LivingEntity>, InterfaceOffset> ENTITY_OFFSETS = ImmutableMap.<Class<? extends LivingEntity>, InterfaceOffset>builder()
-            .put(AxolotlEntity.class, new InterfaceOffset(2, -3, 3, -4))
+    private static final Map<Class<? extends LivingEntity>, InterfaceOffset> ENTITY_OFFSETS = ImmutableMap.<Class<? extends LivingEntity>, InterfaceOffset>builder()
+            .put(AxolotlEntity.class, new InterfaceOffset(2, -3, 0, -4))
             .put(BlazeEntity.class, new InterfaceOffset(-2, 2, -2, 3))
             .put(DolphinEntity.class, new InterfaceOffset(-2, -2, 0, -3))
             .put(ElderGuardianEntity.class, new InterfaceOffset(0, -5, 0, -15))
@@ -69,6 +74,15 @@ public class EntityModelScale {
             .put(MagmaCubeEntity.class, new InterfaceOffset(0, -3, 0, 0))
             .put(ParrotEntity.class, new InterfaceOffset(0, -3, 0, 0))
             .build();
+
+    public static float getScaleModifier(LivingEntity entity) {
+        if (entity.isBaby()) return BABY_ENTITY_SCALES.getOrDefault(entity.getClass(), 0.5f);
+        return ENTITY_SCALES.getOrDefault(entity.getClass(), 1.0f);
+    }
+
+    public static InterfaceOffset getInterfaceOffset(LivingEntity entity) {
+        return ENTITY_OFFSETS.getOrDefault(entity.getClass(), EntityModelScaler.InterfaceOffset.EMPTY);
+    }
 
     public static class InterfaceOffset {
         public static InterfaceOffset EMPTY = new InterfaceOffset(0, 0, 0, 0);

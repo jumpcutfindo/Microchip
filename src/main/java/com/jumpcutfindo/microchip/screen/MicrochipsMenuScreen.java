@@ -9,6 +9,7 @@ import com.jumpcutfindo.microchip.screen.list.MicrochipsListView;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -134,23 +135,32 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
     }
 
     private void refreshGroups() {
-        int selectedIndex = 0;
+        NbtCompound settings = null;
         if (this.microchipGroupList != null) {
-            selectedIndex = this.microchipGroupList.getSelectedIndex();
+            settings = this.microchipGroupList.getSettings();
         }
+
         this.microchipGroupList = new MicrochipGroupListView(this, this.microchips, x, y);
-        this.microchipGroupList.setSelected(selectedIndex);
+        if (settings != null) this.microchipGroupList.applySettings(settings);
     }
 
     private void refreshMicrochips() {
+        NbtCompound settings = null;
+        List<MicrochipGroup> allGroups = this.microchips.getAllGroups();
+
         int index = Math.min(this.microchips.getGroupCount() - 1, this.selectedGroup);
         index = Math.max(0, index);
         this.selectedGroup = index;
 
-        if (this.microchips.getAllGroups().size() == 0) {
+        if (this.microchipsList != null) {
+            settings = this.microchipsList.getSettings();
+        }
+
+        if (allGroups.size() == 0) {
             this.microchipsList = new MicrochipsListView(this, null, x + this.microchipGroupList.getTextureWidth(), y);
         } else {
-            this.microchipsList = new MicrochipsListView(this, this.microchips.getAllGroups().get(index), x + this.microchipGroupList.getTextureWidth(), y);
+            this.microchipsList = new MicrochipsListView(this, allGroups.get(index), x + this.microchipGroupList.getTextureWidth(), y);
+            if (settings != null) this.microchipsList.applySettings(settings);
         }
     }
 
