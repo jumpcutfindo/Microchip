@@ -99,29 +99,35 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         this.unselectAllButton.setDisabled(isListEmpty);
         this.reorderMicrochipsButton.setDisabled(isListEmpty);
 
-        if (this.isAllSelected()) {
+        boolean isAllSelected = this.isAllSelected();
+        boolean isAnySelected = this.isAnySelected();
+
+        // Render buttons
+        if (isAllSelected) {
             this.unselectAllButton.render(matrices, mouseX, mouseY, 0);
-            if (!screen.isWindowOpen()) this.unselectAllButton.renderTooltip(matrices, mouseX, mouseY, 0);
         } else {
             this.selectAllButton.render(matrices, mouseX, mouseY, 0);
-            if (!screen.isWindowOpen()) this.selectAllButton.renderTooltip(matrices, mouseX, mouseY, 0);
         }
-
+        
         // Swap the buttons depending on whether any items were selected
         if (this.isAnySelected()) {
             this.moveMicrochipsButton.render(matrices, mouseX, mouseY, 0);
             this.deleteMicrochipsButton.render(matrices, mouseX, mouseY, 0);
-
-            if (!screen.isWindowOpen()) {
-                this.moveMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
-                this.deleteMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
-            }
         } else {
             this.reorderMicrochipsButton.render(matrices, mouseX, mouseY, 0);
             this.editGroupButton.render(matrices, mouseX, mouseY, 0);
             this.deleteGroupButton.render(matrices, mouseX, mouseY, 0);
+        }
 
-            if (!screen.isWindowOpen()) {
+        // Render tooltips
+        if (!screen.isWindowOpen()) {
+            if (isAllSelected) this.unselectAllButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            else this.selectAllButton.renderTooltip(matrices, mouseX, mouseY, 0);
+
+            if (isAnySelected) {
+                this.moveMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
+                this.deleteMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            } else {
                 this.reorderMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
                 this.editGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
                 this.deleteGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
