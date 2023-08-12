@@ -9,6 +9,7 @@ import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -64,28 +65,28 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
         ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
-        super.renderBackground(matrices, x, y, mouseX, mouseY);
+        super.renderBackground(context, x, y, mouseX, mouseY);
 
-        screen.drawTexture(matrices, x + 1, y + 1, this.item.getColor().ordinal() * 16, 214, 16, 16);
+        context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, x + 1, y + 1, this.item.getColor().ordinal() * 16, 214, 16, 16);
     }
 
     @Override
-    public void renderSelectedBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        screen.drawTexture(matrices, x, y, u, v + height, this.width, this.height);
+    public void renderSelectedBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, x, y, u, v + height, this.width, this.height);
     }
 
     @Override
-    public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderContent(DrawContext context, int x, int y, int mouseX, int mouseY) {
         String displayName = this.item.getDisplayName();
-        screen.getTextRenderer().draw(matrices, Text.literal(StringUtils.truncatedName(displayName, 14)), (float) (x + 19), (float) (y + 5), this.item.getColor().getShadowColor());
+        context.drawText(this.screen.getTextRenderer(), Text.literal(StringUtils.truncatedName(displayName, 14)), (x + 19), (y + 5), this.item.getColor().getShadowColor(), false);
 
         if (!isReorderable || !isReordering) {
             // Draw microchip count
             int microchipCount = this.item.getMicrochips().size();
             int offset = (Integer.toString(microchipCount).length() - 1) * 6;
-            screen.getTextRenderer().draw(matrices, Text.literal(Integer.toString(microchipCount)), (float) (x + 114 - offset), (float) (y + 5), this.item.getColor().getShadowColor());
+            context.drawText(this.screen.getTextRenderer(), Text.literal(Integer.toString(microchipCount)), (x + 114 - offset), (y + 5), this.item.getColor().getShadowColor(), false);
         } else {
             // Draw reordering arrows
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
@@ -97,15 +98,15 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
             int downX = x + 110, downY = y + 4;
 
             if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
-                screen.drawTexture(matrices, upX, upY, 169, 15, arrowWidth, arrowHeight);
+                context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, upX, upY, 169, 15, arrowWidth, arrowHeight);
             } else {
-                screen.drawTexture(matrices, upX, upY, 160, 15, arrowWidth, arrowHeight);
+                context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, upX, upY, 160, 15, arrowWidth, arrowHeight);
             }
 
             if (ScreenUtils.isWithin(mouseX, mouseY, downX, downY, arrowWidth, arrowHeight)) {
-                screen.drawTexture(matrices, downX, downY, 169, 24, arrowWidth, arrowHeight);
+                context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, downX, downY, 169, 24, arrowWidth, arrowHeight);
             } else {
-                screen.drawTexture(matrices, downX, downY, 160, 24, arrowWidth, arrowHeight);
+                context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, downX, downY, 160, 24, arrowWidth, arrowHeight);
             }
 
         }

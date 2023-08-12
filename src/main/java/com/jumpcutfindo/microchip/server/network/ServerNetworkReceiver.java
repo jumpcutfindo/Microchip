@@ -16,6 +16,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.TypeFilter;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -122,7 +123,7 @@ public class ServerNetworkReceiver implements ModInitializer {
             if (groupId == null || entityId == null) return;
 
             Microchips microchips = Tagger.getMicrochips(player);
-            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
+            LivingEntity entity = getEntityByUUID(player, entityId);
             if (entity != null) microchips.addToGroup(groupId, Microchip.of(entity));
         }));
     }
@@ -214,7 +215,7 @@ public class ServerNetworkReceiver implements ModInitializer {
             Microchips microchips = Tagger.getMicrochips(player);
             List<Microchip> microchipList = microchips.getAllMicrochips();
             microchipList.forEach(microchip -> {
-                LivingEntity entity = (LivingEntity) player.getWorld().getEntity(microchip.getEntityId());
+                LivingEntity entity = getEntityByUUID(player, microchip.getEntityId());
                 if (entity != null) microchip.setEntityData(MicrochipEntityData.from(entity));
             });
 
@@ -226,7 +227,7 @@ public class ServerNetworkReceiver implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(NetworkConstants.PACKET_REQUEST_ENTITY_DATA_ID, ((server, player, handler, buf, responseSender) -> {
             UUID entityId = buf.readUuid();
 
-            LivingEntity target = (LivingEntity) player.getWorld().getEntity(entityId);
+            LivingEntity target = getEntityByUUID(player, entityId);
 
             if (target != null) {
                 ServerNetworkSender.sendEntityDataResponse(player, target);
@@ -236,11 +237,23 @@ public class ServerNetworkReceiver implements ModInitializer {
 
     private static LivingEntity findEntity(ServerPlayerEntity player, UUID entityId) {
         if (entityId != null) {
-            LivingEntity entity = (LivingEntity) player.getWorld().getEntity(entityId);
+            LivingEntity entity = getEntityByUUID(player, entityId);
             if (entity != null) return entity;
         }
 
         player.sendMessage(Text.translatable("microchip.menu.microchipInfo.actionTab.cannotFindMob"), false);
         return null;
+    }
+
+    private static LivingEntity getEntityByUUID(ServerPlayerEntity player, UUID entityId) {
+        List<LivingEntity> entities = player.getWorld()
+                .getEntitiesByType(
+                        TypeFilter.instanceOf(LivingEntity.class),
+                        player.getBoundingBox().expand(128.0d),
+                        (e) -> e.getUuid().equals(entityId)
+                );
+
+        if (entities.size() == 0) return null;
+        else return entities.get(0);
     }
 }

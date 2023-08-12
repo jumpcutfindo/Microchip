@@ -7,6 +7,7 @@ import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
@@ -102,14 +103,14 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         return this;
     }
 
-    public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
+    public void renderBackground(DrawContext context, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, this.texture);
-        screen.drawTexture(matrices, x, y, this.textureU, this.textureV, this.textureWidth, this.textureHeight);
-        this.renderScrollbar(matrices, mouseX, mouseY);
+        context.drawTexture(this.texture, x, y, this.textureU, this.textureV, this.textureWidth, this.textureHeight);
+        this.renderScrollbar(context, mouseX, mouseY);
     }
 
-    public void renderItems(MatrixStack matrices, int mouseX, int mouseY) {
+    public void renderItems(DrawContext context, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.texture);
@@ -123,16 +124,16 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
             if (i >= this.listItems.size()) break;
 
             T item = this.listItems.get(i);
-            item.render(matrices, x + listX, y + listY + offsetY, mouseX, mouseY);
+            item.render(context, x + listX, y + listY + offsetY, mouseX, mouseY);
             offsetY += item.getHeight();
         }
     }
 
-    private void renderScrollbar(MatrixStack matrices, int mouseX, int mouseY) {
+    private void renderScrollbar(DrawContext context, int mouseX, int mouseY) {
         if (!this.hasScrollbar()) return;
 
         RenderSystem.setShaderTexture(0, this.texture);
-        screen.drawTexture(matrices, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15);
+        context.drawTexture(this.texture, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15);
     }
 
     public boolean mouseClicked(int mouseX, int mouseY, int button) {

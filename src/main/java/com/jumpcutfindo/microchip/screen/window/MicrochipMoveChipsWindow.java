@@ -7,6 +7,7 @@ import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
 import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -48,16 +49,16 @@ public class MicrochipMoveChipsWindow extends Window {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices) {
-        this.listView.renderBackground(matrices, 0, 0);
+    public void renderBackground(DrawContext context) {
+        this.listView.renderBackground(context, 0, 0);
     }
 
     @Override
-    public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        this.listView.renderItems(matrices, mouseX, mouseY);
+    public void renderContent(DrawContext context, int mouseX, int mouseY) {
+        this.listView.renderItems(context, mouseX, mouseY);
 
         this.submitButton.active = this.listView.getSelectedItems().size() > 0;
-        this.submitButton.renderButton(matrices, mouseX, mouseY, 0);
+        this.submitButton.render(context, mouseX, mouseY, 0);
     }
 
     @Override

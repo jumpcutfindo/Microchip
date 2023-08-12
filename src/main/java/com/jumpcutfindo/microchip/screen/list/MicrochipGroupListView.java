@@ -9,6 +9,7 @@ import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
@@ -54,16 +55,16 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
-        super.renderBackground(matrices, mouseX, mouseY);
+    public void renderBackground(DrawContext context, int mouseX, int mouseY) {
+        super.renderBackground(context, mouseX, mouseY);
 
-        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
+        context.drawText(this.screen.getTextRenderer(), this.title, (x + this.titleX), (y + this.titleY), 0x404040, false);
     }
 
     @Override
-    public void renderItems(MatrixStack matrices, int mouseX, int mouseY) {
-        super.renderItems(matrices, mouseX, mouseY);
-        this.drawButtons(matrices, x, y, mouseX, mouseY);
+    public void renderItems(DrawContext context, int mouseX, int mouseY) {
+        super.renderItems(context, mouseX, mouseY);
+        this.drawButtons(context, x, y, mouseX, mouseY);
     }
 
     @Override
@@ -159,20 +160,20 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         }
     }
 
-    private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    private void drawButtons(DrawContext context, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
 
         if (this.canCreate) {
-            this.reorderGroupButton.render(matrices, mouseX, mouseY, 0);
+            this.reorderGroupButton.render(context, mouseX, mouseY, 0);
 
-            this.createGroupButton.render(matrices, mouseX, mouseY, 0);
+            this.createGroupButton.render(context, mouseX, mouseY, 0);
 
             if (!screen.isWindowOpen()) {
-                this.reorderGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
-                this.createGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+                this.reorderGroupButton.renderTooltip(context, mouseX, mouseY, 0);
+                this.createGroupButton.renderTooltip(context, mouseX, mouseY, 0);
             }
         }
 

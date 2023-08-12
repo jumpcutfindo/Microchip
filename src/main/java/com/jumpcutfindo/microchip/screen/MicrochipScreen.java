@@ -5,6 +5,7 @@ import com.jumpcutfindo.microchip.screen.window.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -38,10 +39,10 @@ public class MicrochipScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         if (this.activeWindow != null) {
             this.activeWindow.setPos(this.getWindowX(this.activeWindow.getWidth()), this.getWindowY(this.activeWindow.getHeight()));
-            this.activeWindow.render(matrices, mouseX, mouseY);
+            this.activeWindow.render(context, mouseX, mouseY);
         }
     }
 
@@ -107,14 +108,14 @@ public class MicrochipScreen extends Screen {
         if (this.activeWindow != null) this.activeWindow.tick();
     }
 
-    public void drawBackgroundGradient(MatrixStack matrices) {
+    public void drawBackgroundGradient(DrawContext context) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
+        context.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
     }
 
-    public void drawGradient(MatrixStack matrices, int x, int y, int endX, int endY, int colorStart, int colorEnd, int z) {
-        fillGradient(matrices, x, y, endX, endY, colorStart, colorEnd, z);
+    public void drawGradient(DrawContext context, int x, int y, int endX, int endY, int colorStart, int colorEnd, int z) {
+        context.fillGradient(x, y, endX, endY, colorStart, colorEnd, z);
     }
 
     public void setActiveWindow(Window window) {
@@ -155,9 +156,5 @@ public class MicrochipScreen extends Screen {
 
     public TextRenderer getTextRenderer() {
         return this.textRenderer;
-    }
-
-    public ItemRenderer getItemRenderer() {
-        return this.itemRenderer;
     }
 }

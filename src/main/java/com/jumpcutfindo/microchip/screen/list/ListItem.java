@@ -3,6 +3,7 @@ package com.jumpcutfindo.microchip.screen.list;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -53,39 +54,39 @@ public abstract class ListItem<T> {
         return isSelected;
     }
 
-    public void render(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        this.renderBackground(matrices, x, y, mouseX, mouseY);
-        this.renderContent(matrices, x, y, mouseX, mouseY);
+    public void render(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        this.renderBackground(context, x, y, mouseX, mouseY);
+        this.renderContent(context, x, y, mouseX, mouseY);
     }
 
-    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, this.texture);
 
         if (isSelected) {
             // Selected
-            renderSelectedBackground(matrices, x, y, mouseX, mouseY);
+            renderSelectedBackground(context, x, y, mouseX, mouseY);
             return;
         }
 
         if (ScreenUtils.isWithin(mouseX, mouseY, x, y, this.width, this.height)) {
             // Hovered
-            renderHoveredBackground(matrices, x, y, mouseX, mouseY);
+            renderHoveredBackground(context, x, y, mouseX, mouseY);
         } else {
             // Normal
-            screen.drawTexture(matrices, x, y, this.u, this.v, this.width, this.height);
+            context.drawTexture(this.texture, x, y, this.u, this.v, this.width, this.height);
         }
     }
 
-    public void renderSelectedBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        screen.drawTexture(matrices, x, y, this.u, this.v, this.width, this.height);
+    public void renderSelectedBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        context.drawTexture(this.texture, x, y, this.u, this.v, this.width, this.height);
     }
 
-    public void renderHoveredBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        screen.drawTexture(matrices, x, y, this.u, this.v, this.width, this.height);
+    public void renderHoveredBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        context.drawTexture(this.texture, x, y, this.u, this.v, this.width, this.height);
     }
 
-    public abstract void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY);
+    public abstract void renderContent(DrawContext context, int x, int y, int mouseX, int mouseY);
 
     public abstract boolean mouseClicked(int x, int y, double mouseX, double mouseY);
     public abstract boolean mouseSelected(int x, int y, double mouseX, double mouseY);

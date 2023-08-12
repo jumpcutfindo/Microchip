@@ -6,6 +6,7 @@ import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
@@ -41,34 +42,34 @@ public class IconButton implements Interactable {
         this.tooltip = tooltip;
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY, int delta) {
+    public void render(DrawContext context, int mouseX, int mouseY, int delta) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
 
         if (isDisabled()) {
             // Disabled
-            screen.drawTexture(matrices, x, y, u + 48, v, width, height);
+            context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 48, v, width, height);
             return;
         }
 
         if (isActive()) {
-            screen.drawTexture(matrices, x, y, u + 32, v, width, height);
+            context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 32, v, width, height);
             return;
         }
 
         if (isMouseWithin(mouseX, mouseY) && !screen.isWindowOpen()) {
             // Hovered
-            screen.drawTexture(matrices, x, y, u + 16, v, width, height);
+            context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 16, v, width, height);
         } else {
             // Default
-            screen.drawTexture(matrices, x, y, u, v, width, height);
+            context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u, v, width, height);
         }
     }
 
-    public boolean renderTooltip(MatrixStack matrices, int mouseX, int mouseY, int delta) {
+    public boolean renderTooltip(DrawContext context, int mouseX, int mouseY, int delta) {
         if (isMouseWithin(mouseX, mouseY)) {
-            screen.renderTooltip(matrices, tooltip, mouseX, mouseY);
+            context.drawTooltip(this.screen.getTextRenderer(), tooltip, mouseX, mouseY);
             return true;
         }
         return false;

@@ -8,6 +8,7 @@ import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.ColorButton;
 import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.GameRenderer;
@@ -68,7 +69,7 @@ public class MicrochipModifyGroupWindow extends Window {
             }
         }
 
-        this.groupNameField.setTextFieldFocused(true);
+        this.groupNameField.setFocused(true);
     }
 
     private boolean isEdit() {
@@ -89,31 +90,31 @@ public class MicrochipModifyGroupWindow extends Window {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices) {
+    public void renderBackground(DrawContext context) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
-        this.screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
+        context.drawTexture(TEXTURE, x, y, 0, 0, this.width, this.height);
     }
 
     @Override
-    public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), 0x404040);
+    public void renderContent(DrawContext context, int mouseX, int mouseY) {
+        context.drawText(this.screen.getTextRenderer(), this.title, (x + this.titleX), (y + this.titleY), 0x404040, false);
 
         // Group title entry
-        this.screen.getTextRenderer().draw(matrices, Text.translatable("microchip.menu.createGroup.title"), (float) (x + this.titleX), (float) (y + 25), 0x404040);
+        context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.createGroup.title"), (x + this.titleX), (y + 25), 0x404040, false);
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         this.groupNameField.setX(x + 7);
         this.groupNameField.setY(y + 36);
-        this.groupNameField.render(matrices, mouseX, mouseY, 0);
+        this.groupNameField.render(context, mouseX, mouseY, 0);
 
 
         // Colour entry
-        this.screen.getTextRenderer().draw(matrices, Text.translatable("microchip.menu.createGroup.colorTitle"), (float) (x + this.titleX), (float) (y + 60), 0x404040);
+        context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.createGroup.colorTitle"), (x + this.titleX), (y + 60), 0x404040, false);
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -122,18 +123,18 @@ public class MicrochipModifyGroupWindow extends Window {
             ColorButton colorButton = colorButtons.get(i);
             colorButton.x = x + 7 + i * 14;
             colorButton.y = y + 74;
-            colorButton.render(matrices, mouseX, mouseY, 0);
+            colorButton.render(context, mouseX, mouseY, 0);
         }
 
         // Button rendering
         this.submitButton.setX(x + 67);
         this.submitButton.setY(y + 95);
-        this.submitButton.renderButton(matrices, mouseX, mouseY, 0);
+        this.submitButton.render(context, mouseX, mouseY, 0);
         this.submitButton.active = this.isValidInput();
 
         // Render tooltips
         for (ColorButton colorButton : colorButtons) {
-            colorButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            colorButton.renderTooltip(context, mouseX, mouseY, 0);
         }
     }
 

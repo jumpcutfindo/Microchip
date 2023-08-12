@@ -11,6 +11,7 @@ import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -49,7 +50,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
     }
 
     @Override
-    public void renderContent(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderContent(DrawContext context, int x, int y, int mouseX, int mouseY) {
         // Draw entity information
         int displayNameX = x + 38;
         int displayNameY = y + 8;
@@ -57,13 +58,13 @@ public class MicrochipListItem extends ListItem<Microchip> {
         if (this.item.getEntityData() == null) return;
 
         if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) {
-            screen.getTextRenderer().drawWithShadow(matrices, StringUtils.truncatedName(this.item.getEntityData().getDisplayName(), 20), (float) displayNameX, (float) displayNameY, 0xFFFFFF);
+            context.drawText(this.screen.getTextRenderer(), StringUtils.truncatedName(this.item.getEntityData().getDisplayName(), 20), displayNameX, displayNameY, 0xFFFFFF, true);
         }
 
         int entityNameX = x + 38;
         int entityNameY = y + 21;
         if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
-            screen.getTextRenderer().draw(matrices, this.item.getEntityData().getTypeName(), (float) entityNameX, (float) entityNameY, 0x404040);
+            context.drawText(this.screen.getTextRenderer(), this.item.getEntityData().getTypeName(), entityNameX, entityNameY, 0x404040, false);
         }
 
         String entityHealthString = this.entity == null ? "?" : Integer.toString((int) this.entity.getHealth());
@@ -71,34 +72,34 @@ public class MicrochipListItem extends ListItem<Microchip> {
         // Draw baby status
         if (this.entity != null && this.entity.isBaby()) {
             RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
-            screen.drawTexture(matrices, x + 22, y + 22, 180, 202, 9, 9);
+            context.drawTexture(MicrochipsListView.TEXTURE, x + 22, y + 22, 180, 202, 9, 9);
         }
 
         // Draw entity health
         String healthString = String.format("%s/%d", entityHealthString, (int) this.item.getEntityData().getMaxHealth());
         int offset = healthString.length() * 6 + 1;
-        screen.getTextRenderer().drawWithShadow(matrices, healthString, x + 178 - offset, y + 21, 0xFFFFFF);
+        context.drawText(this.screen.getTextRenderer(), healthString, x + 178 - offset, y + 21, 0xFFFFFF, true);
         int healthIconOffset = offset + 1;
 
         RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
         if (this.entity != null) {
             if (this.entity.getHealth() > this.entity.getMaxHealth() / 2) {
-                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
+                context.drawTexture(MicrochipsListView.TEXTURE, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
             } else if (this.entity.getHealth() > this.entity.getMaxHealth() / 4) {
-                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 189, 193, 9, 9);
+                context.drawTexture(MicrochipsListView.TEXTURE, x + 168 - healthIconOffset, y + 20, 189, 193, 9, 9);
             } else {
-                screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 198, 193, 9, 9);
+                context.drawTexture(MicrochipsListView.TEXTURE, x + 168 - healthIconOffset, y + 20, 198, 193, 9, 9);
             }
         } else {
-            screen.drawTexture(matrices, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
+            context.drawTexture(MicrochipsListView.TEXTURE, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
         }
 
-        drawButtons(matrices, x, y, mouseX, mouseY);
-        drawTooltips(matrices, x, y, mouseX, mouseY);
+        drawButtons(context, x, y, mouseX, mouseY);
+        drawTooltips(context, x, y, mouseX, mouseY);
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
         // Draw entity
         if (this.entity != null) {
             int xOffset = EntityModelScaler.getInterfaceOffset(entity).getListX();
@@ -108,11 +109,11 @@ public class MicrochipListItem extends ListItem<Microchip> {
         else {
             RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
             ScreenUtils.setShaderColor(this.group.getColor(), false);
-            screen.drawTexture(matrices, x + 4, y + 4, 0, 214, 28, 28);
+            context.drawTexture(MicrochipsListView.TEXTURE, x + 4, y + 4, 0, 214, 28, 28);
         }
 
         ScreenUtils.setShaderColor(this.group.getColor(), true);
-        super.renderBackground(matrices, x, y, mouseX, mouseY);
+        super.renderBackground(context, x, y, mouseX, mouseY);
     }
 
     @Override
@@ -150,24 +151,24 @@ public class MicrochipListItem extends ListItem<Microchip> {
         return !this.isReordering && ScreenUtils.isWithin(mouseX, mouseY, x + 172, y + 3, 5, 5);
     }
 
-    private void drawTooltips(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    private void drawTooltips(DrawContext context, int x, int y, int mouseX, int mouseY) {
         if (screen.isWindowOpen()) return;
 
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 22, y + 22, 9, 9)) {
             if (this.entity != null && this.entity.isBaby()) {
-                screen.renderTooltip(matrices, Text.translatable("microchip.menu.listItem.baby.tooltip"), mouseX, mouseY);
+                context.drawTooltip(this.screen.getTextRenderer(), Text.translatable("microchip.menu.listItem.baby.tooltip"), mouseX, mouseY);
             }
             return;
         }
 
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 4, y + 4, 28, 28)) {
             if (this.entity == null) {
-                screen.renderTooltip(matrices, Text.translatable("microchip.menu.listItem.outOfRange.tooltip"), mouseX, mouseY);
+                context.drawTooltip(this.screen.getTextRenderer(), Text.translatable("microchip.menu.listItem.outOfRange.tooltip"), mouseX, mouseY);
             }
         }
     }
 
-    private void drawButtons(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    private void drawButtons(DrawContext context, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
@@ -179,20 +180,20 @@ public class MicrochipListItem extends ListItem<Microchip> {
             ScreenUtils.setShaderColor(this.group.getColor(), true);
 
             if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
-                screen.drawTexture(matrices, upX, upY, 185, 183, arrowWidth, arrowHeight);
+                context.drawTexture(MicrochipsListView.TEXTURE, upX, upY, 185, 183, arrowWidth, arrowHeight);
             } else {
-                screen.drawTexture(matrices, upX, upY, 180, 183, arrowWidth, arrowHeight);
+                context.drawTexture(MicrochipsListView.TEXTURE, upX, upY, 180, 183, arrowWidth, arrowHeight);
             }
 
             if (ScreenUtils.isWithin(mouseX, mouseY, downX, downY, arrowWidth, arrowHeight)) {
-                screen.drawTexture(matrices, downX, downY, 185, 188, arrowWidth, arrowHeight);
+                context.drawTexture(MicrochipsListView.TEXTURE, downX, downY, 185, 188, arrowWidth, arrowHeight);
             } else {
-                screen.drawTexture(matrices, downX, downY, 180, 188, arrowWidth, arrowHeight);
+                context.drawTexture(MicrochipsListView.TEXTURE, downX, downY, 180, 188, arrowWidth, arrowHeight);
             }
 
         } else {
-            if (this.isSelected()) screen.drawTexture(matrices, x + 172, y + 3, 185, 178, 5, 5);
-            else screen.drawTexture(matrices, x + 172, y + 3, 180, 178, 5, 5);
+            if (this.isSelected()) context.drawTexture(MicrochipsListView.TEXTURE, x + 172, y + 3, 185, 178, 5, 5);
+            else context.drawTexture(MicrochipsListView.TEXTURE, x + 172, y + 3, 180, 178, 5, 5);
         }
     }
 

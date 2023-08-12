@@ -15,6 +15,7 @@ import com.jumpcutfindo.microchip.screen.window.info.InventoryInfoTab;
 import com.jumpcutfindo.microchip.screen.window.info.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.DiffuseLighting;
@@ -74,25 +75,25 @@ public class MicrochipInfoWindow extends Window {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices) {
+    public void renderBackground(DrawContext context) {
     }
 
     @Override
-    public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        this.drawIdentityCard(matrices, mouseX, mouseY);
+    public void renderContent(DrawContext context, int mouseX, int mouseY) {
+        this.drawIdentityCard(context, mouseX, mouseY);
 
-        this.activeTab.renderContent(matrices, mouseX, mouseY);
-        this.drawTabs(matrices, mouseX, mouseY);
-        this.drawTooltips(matrices, mouseX, mouseY);
+        this.activeTab.renderContent(context, mouseX, mouseY);
+        this.drawTabs(context, mouseX, mouseY);
+        this.drawTooltips(context, mouseX, mouseY);
     }
 
-    private void drawIdentityCard(MatrixStack matrices, int mouseX, int mouseY) {
+    private void drawIdentityCard(DrawContext context, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         ScreenUtils.setShaderColor(this.color, false);
-        screen.drawTexture(matrices, x + 8, y + 23, 168, 0, 46, 62);
+        context.drawTexture(TEXTURE, x + 8, y + 23, 168, 0, 46, 62);
 
         // Draw entity background, then entity, then the main UI
         if (this.entity != null) {
@@ -102,23 +103,23 @@ public class MicrochipInfoWindow extends Window {
             drawLookingEntity(entity, x + xOffset, y + yOffset, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
         }
         else {
-            screen.drawTexture(matrices, x + 18, y + 40, 214, 0, 28, 28);
+            context.drawTexture(TEXTURE, x + 18, y + 40, 214, 0, 28, 28);
         }
 
         RenderSystem.setShaderTexture(0, TEXTURE);
         ScreenUtils.setShaderColor(this.color, false);
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        screen.drawTexture(matrices, x, y, 0, 0, this.width, this.height);
+        context.drawTexture(TEXTURE, x, y, 0, 0, this.width, this.height);
 
         // Draw the title and the entity information
-        screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.color.getShadowColor());
-        screen.getTextRenderer().drawWithShadow(matrices, StringUtils.truncatedName(microchip.getEntityData().getDisplayName(), 15), x + 59, y + 30, 0xFFFFFF);
-        screen.getTextRenderer().drawWithShadow(matrices, microchip.getEntityData().getTypeName(), x + 59, y + 50, 0xFFFFFF);
+        context.drawText(this.screen.getTextRenderer(), this.title, (x + this.titleX), (y + this.titleY), this.color.getShadowColor(), false);
+        context.drawText(this.screen.getTextRenderer(), StringUtils.truncatedName(microchip.getEntityData().getDisplayName(), 15), x + 59, y + 30, 0xFFFFFF, true);
+        context.drawText(this.screen.getTextRenderer(), microchip.getEntityData().getTypeName(), x + 59, y + 50, 0xFFFFFF, true);
 
-        screen.getTextRenderer().drawWithShadow(matrices, StringUtils.truncatedName(getCoordinates(), 18), x + 59, y + 70, 0xFFFFFF);
+        context.drawText(this.screen.getTextRenderer(), StringUtils.truncatedName(getCoordinates(), 18), x + 59, y + 70, 0xFFFFFF, true);
     }
 
-    private void drawTabs(MatrixStack matrices, int mouseX, int mouseY) {
+    private void drawTabs(DrawContext context, int mouseX, int mouseY) {
         RenderSystem.setShaderTexture(0, TEXTURE);
 
         int tabVerticalOffset = 0;
@@ -127,42 +128,42 @@ public class MicrochipInfoWindow extends Window {
 
             ScreenUtils.setShaderColor(color, false);
             if (activeTab.equals(getTabs().get(i))) {
-                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 168, 62 + (i == 0 ? 0 : 28), 32, 28);
+                context.drawTexture(TEXTURE, x + 164, y + 96 + tabVerticalOffset, 168, 62 + (i == 0 ? 0 : 28), 32, 28);
             } else {
-                screen.drawTexture(matrices, x + 164, y + 96 + tabVerticalOffset, 200, 62 + (i == 0 ? 0 : 28), 32, 28);
+                context.drawTexture(TEXTURE, x + 164, y + 96 + tabVerticalOffset, 200, 62 + (i == 0 ? 0 : 28), 32, 28);
             }
 
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            screen.drawTexture(matrices, x + 171, y + 100 + tabVerticalOffset, i * 18, 215, 18, 18);
+            context.drawTexture(TEXTURE, x + 171, y + 100 + tabVerticalOffset, i * 18, 215, 18, 18);
 
             tabVerticalOffset += 30;
         }
     }
 
-    private void drawTooltips(MatrixStack matrices, int mouseX, int mouseY) {
+    private void drawTooltips(DrawContext context, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         // Display name
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 29, 102, 12)) {
-            screen.renderTooltip(matrices, Text.literal(microchip.getEntityData().getDisplayName()), mouseX, mouseY);
+            context.drawTooltip(this.screen.getTextRenderer(), Text.literal(microchip.getEntityData().getDisplayName()), mouseX, mouseY);
         }
 
         // Coordinates
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 59, y + 69, 102, 12)) {
-            screen.renderTooltip(matrices, Text.literal(getCoordinates()), mouseX, mouseY);
+            context.drawTooltip(this.screen.getTextRenderer(), Text.literal(getCoordinates()), mouseX, mouseY);
         }
 
         // Tabs
         if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 96, 32, 29)) {
-            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
+            context.drawTooltip(this.screen.getTextRenderer(), Text.translatable("microchip.menu.microchipInfo.statusTab"), mouseX, mouseY);
         } else if (ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 127, 32, 29)) {
-            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.inventoryTab"), mouseX, mouseY);
+            context.drawTooltip(this.screen.getTextRenderer(),  Text.translatable("microchip.menu.microchipInfo.inventoryTab"), mouseX, mouseY);
         } else if (screen.getPlayer().isCreative() && ScreenUtils.isWithin(mouseX, mouseY, x + 164, y + 158, 32, 29)) {
-            screen.renderTooltip(matrices, Text.translatable("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
+            context.drawTooltip(this.screen.getTextRenderer(),  Text.translatable("microchip.menu.microchipInfo.actionTab"), mouseX, mouseY);
         }
 
         // Active tab
-        activeTab.renderTooltips(matrices, mouseX, mouseY);
+        activeTab.renderTooltips(context, mouseX, mouseY);
     }
 
     private String getCoordinates() {

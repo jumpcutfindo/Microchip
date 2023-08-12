@@ -9,6 +9,7 @@ import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -55,15 +56,15 @@ public class ColorButton implements Interactable {
         isSelected = selected;
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.screen.drawTexture(matrices, x, y, u, v, this.width, this.height);
-        if (this.isSelected) this.screen.drawTexture(matrices, x, y + 12, u, v + 10, this.width, this.height);
+        context.drawTexture(TEXTURE, x, y, u, v, this.width, this.height);
+        if (this.isSelected) context.drawTexture(TEXTURE, x, y + 12, u, v + 10, this.width, this.height);
     }
 
-    public boolean renderTooltip(MatrixStack matrices, int mouseX, int mouseY, int delta) {
+    public boolean renderTooltip(DrawContext context, int mouseX, int mouseY, int delta) {
         if (isMouseWithin(mouseX, mouseY)) {
-            screen.renderTooltip(matrices, Text.translatable("microchip.menu.color." + color.getColorName()), mouseX, mouseY);
+            context.drawTooltip(this.screen.getTextRenderer(), Text.translatable("microchip.menu.color." + color.getColorName()), mouseX, mouseY);
             return true;
         }
         return false;

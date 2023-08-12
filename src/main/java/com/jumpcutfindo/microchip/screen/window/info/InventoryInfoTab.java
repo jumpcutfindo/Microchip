@@ -7,6 +7,9 @@ import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -91,8 +94,8 @@ public class InventoryInfoTab extends InfoTab {
         }
     }
     @Override
-    public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().drawWithShadow(matrices, Text.translatable("microchip.menu.microchipInfo.inventoryTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
+    public void renderContent(DrawContext context, int mouseX, int mouseY) {
+        context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.microchipInfo.inventoryTab"), (window.getX() + 7), (window.getY() + 105), 0xFFFFFF, true);
 
         // Draw inventory spaces
         List<ItemSlot> slots = getAllSlots();
@@ -105,10 +108,10 @@ public class InventoryInfoTab extends InfoTab {
             int slotX = itemSlot.getX(windowX);
             int slotY = itemSlot.getY(windowY);
 
-            if (itemSlot.isDisabled()) screen.drawTexture(matrices, slotX, slotY, 186, 159, 18, 18);
-            else screen.drawTexture(matrices, slotX, slotY, 168, 159, 18, 18);
+            if (itemSlot.isDisabled()) context.drawTexture(TEXTURE, slotX, slotY, 186, 159, 18, 18);
+            else context.drawTexture(TEXTURE, slotX, slotY, 168, 159, 18, 18);
 
-            if (itemSlot.isSpecial() && itemSlot.isEmpty()) screen.drawTexture(matrices, slotX + 1, slotY + 1, itemSlot.getSpecialU(), itemSlot.getSpecialV(), 16, 16);
+            if (itemSlot.isSpecial() && itemSlot.isEmpty()) context.drawTexture(TEXTURE, slotX + 1, slotY + 1, itemSlot.getSpecialU(), itemSlot.getSpecialV(), 16, 16);
         }
 
         RenderSystem.disableDepthTest();
@@ -122,9 +125,9 @@ public class InventoryInfoTab extends InfoTab {
             int slotY = itemSlot.getY(windowY);
             ItemStack itemStack = itemSlot.getItemStack();
 
-            drawItem(itemStack, slotX + 1, slotY + 1, itemStack.getCount() <= 1 ? "" : Integer.toString(itemStack.getCount()));
+            drawItem(context, itemStack, slotX + 1, slotY + 1, itemStack.getCount() <= 1 ? "" : Integer.toString(itemStack.getCount()));
 
-            if (itemSlot.isHovered(windowX, windowY, mouseX, mouseY)) drawSlotHighlight(matrices, slotX, slotY, 0);
+            if (itemSlot.isHovered(windowX, windowY, mouseX, mouseY)) drawSlotHighlight(context, slotX, slotY, 0);
         }
 
         matrixStack.pop();
@@ -133,11 +136,11 @@ public class InventoryInfoTab extends InfoTab {
     }
 
     @Override
-    public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
+    public void renderTooltips(DrawContext context, int mouseX, int mouseY) {
         List<ItemSlot> slots = getAllSlots();
         for (ItemSlot itemSlot : slots) {
             if (itemSlot.isHovered(window.getX(), window.getY(), mouseX, mouseY) && !itemSlot.isEmpty()) {
-                drawItemTooltip(matrices, itemSlot.getItemStack(), mouseX, mouseY);
+                drawItemTooltip(context, itemSlot.getItemStack(), mouseX, mouseY);
             }
         }
     }
@@ -182,24 +185,23 @@ public class InventoryInfoTab extends InfoTab {
         populateSlots();
     }
 
-    private void drawItem(ItemStack stack, int x, int y, String amountText) {
-        this.screen.getItemRenderer().renderInGuiWithOverrides(stack, x, y);
-        this.screen.getItemRenderer().renderGuiItemOverlay(this.screen.getTextRenderer(), stack, x, y, amountText);
+    private void drawItem(DrawContext context, ItemStack stack, int x, int y, String amountText) {
+        context.drawItemInSlot(this.screen.getTextRenderer(), stack, x, y, amountText);
     }
 
-    private void drawSlotHighlight(MatrixStack matrices, int x, int y, int z) {
+    private void drawSlotHighlight(DrawContext context, int x, int y, int z) {
         RenderSystem.disableDepthTest();
         RenderSystem.colorMask(true, true, true, false);
-        screen.drawGradient(matrices, x + 1, y + 1, x + 17, y + 17, -2130706433, -2130706433, z);
+        screen.drawGradient(context, x + 1, y + 1, x + 17, y + 17, -2130706433, -2130706433, z);
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();
     }
 
-    protected void drawItemTooltip(MatrixStack matrices, ItemStack stack, int x, int y) {
+    protected void drawItemTooltip(DrawContext context, ItemStack stack, int x, int y) {
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         matrixStack.translate(0.0, 0.0, 32.0);
         RenderSystem.applyModelViewMatrix();
-        screen.renderTooltip(matrices, screen.getTooltipFromItem(stack), stack.getTooltipData(), x, y);
+        context.drawTooltip(this.screen.getTextRenderer(), Screen.getTooltipFromItem(MinecraftClient.getInstance(), stack), stack.getTooltipData(), x, y);
 
         matrixStack.translate(0.0, 0.0, -32.0);
         RenderSystem.applyModelViewMatrix();

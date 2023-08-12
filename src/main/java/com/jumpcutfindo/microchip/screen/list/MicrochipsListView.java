@@ -10,6 +10,7 @@ import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.jumpcutfindo.microchip.screen.window.MicrochipMoveChipsWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -67,28 +68,28 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices, int mouseX, int mouseY) {
+    public void renderBackground(DrawContext context, int mouseX, int mouseY) {
         ScreenUtils.setShaderColor(this.group.getColor(), true);
 
-        super.renderBackground(matrices, mouseX, mouseY);
+        super.renderBackground(context, mouseX, mouseY);
 
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        this.screen.getTextRenderer().draw(matrices, this.title, (float) (x + this.titleX), (float) (y + this.titleY), this.group.getColor().getShadowColor());
+        context.drawText(this.screen.getTextRenderer(), this.title, (x + this.titleX), (y + this.titleY), this.group.getColor().getShadowColor(), false);
 
 
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         ScreenUtils.setShaderColor(group.getColor(), false);
         RenderSystem.setShaderTexture(0, MicrochipGroupListView.TEXTURE);
-        screen.drawTexture(matrices, x + 5, y + 6, group.getColor().ordinal() * 16, 214, 16, 16);
+        context.drawTexture(MicrochipGroupListView.TEXTURE, x + 5, y + 6, group.getColor().ordinal() * 16, 214, 16, 16);
     }
 
     @Override
-    public void renderItems(MatrixStack matrices, int mouseX, int mouseY) {
-        super.renderItems(matrices, mouseX, mouseY);
-        this.drawButtons(matrices, mouseX, mouseY);
+    public void renderItems(DrawContext context, int mouseX, int mouseY) {
+        super.renderItems(context, mouseX, mouseY);
+        this.drawButtons(context, mouseX, mouseY);
     }
 
-    private void drawButtons(MatrixStack matrices, int mouseX, int mouseY) {
+    private void drawButtons(DrawContext context, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
@@ -104,33 +105,33 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
 
         // Render buttons
         if (isAllSelected) {
-            this.unselectAllButton.render(matrices, mouseX, mouseY, 0);
+            this.unselectAllButton.render(context, mouseX, mouseY, 0);
         } else {
-            this.selectAllButton.render(matrices, mouseX, mouseY, 0);
+            this.selectAllButton.render(context, mouseX, mouseY, 0);
         }
 
         // Swap the buttons depending on whether any items were selected
         if (this.isAnySelected()) {
-            this.moveMicrochipsButton.render(matrices, mouseX, mouseY, 0);
-            this.deleteMicrochipsButton.render(matrices, mouseX, mouseY, 0);
+            this.moveMicrochipsButton.render(context, mouseX, mouseY, 0);
+            this.deleteMicrochipsButton.render(context, mouseX, mouseY, 0);
         } else {
-            this.reorderMicrochipsButton.render(matrices, mouseX, mouseY, 0);
-            this.editGroupButton.render(matrices, mouseX, mouseY, 0);
-            this.deleteGroupButton.render(matrices, mouseX, mouseY, 0);
+            this.reorderMicrochipsButton.render(context, mouseX, mouseY, 0);
+            this.editGroupButton.render(context, mouseX, mouseY, 0);
+            this.deleteGroupButton.render(context, mouseX, mouseY, 0);
         }
 
         // Render tooltips
         if (!screen.isWindowOpen()) {
-            if (isAllSelected) this.unselectAllButton.renderTooltip(matrices, mouseX, mouseY, 0);
-            else this.selectAllButton.renderTooltip(matrices, mouseX, mouseY, 0);
+            if (isAllSelected) this.unselectAllButton.renderTooltip(context, mouseX, mouseY, 0);
+            else this.selectAllButton.renderTooltip(context, mouseX, mouseY, 0);
 
             if (isAnySelected) {
-                this.moveMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
-                this.deleteMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
+                this.moveMicrochipsButton.renderTooltip(context, mouseX, mouseY, 0);
+                this.deleteMicrochipsButton.renderTooltip(context, mouseX, mouseY, 0);
             } else {
-                this.reorderMicrochipsButton.renderTooltip(matrices, mouseX, mouseY, 0);
-                this.editGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
-                this.deleteGroupButton.renderTooltip(matrices, mouseX, mouseY, 0);
+                this.reorderMicrochipsButton.renderTooltip(context, mouseX, mouseY, 0);
+                this.editGroupButton.renderTooltip(context, mouseX, mouseY, 0);
+                this.deleteGroupButton.renderTooltip(context, mouseX, mouseY, 0);
             }
         }
     }

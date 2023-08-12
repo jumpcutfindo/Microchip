@@ -5,6 +5,7 @@ import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 
@@ -26,9 +27,9 @@ public abstract class InfoTab implements Interactable {
         return entity != null;
     }
 
-    public abstract void renderContent(MatrixStack matrices, int mouseX, int mouseY);
+    public abstract void renderContent(DrawContext context, int mouseX, int mouseY);
 
-    public abstract void renderTooltips(MatrixStack matrices, int mouseX, int mouseY);
+    public abstract void renderTooltips(DrawContext context, int mouseX, int mouseY);
 
     public abstract void tick();
 }

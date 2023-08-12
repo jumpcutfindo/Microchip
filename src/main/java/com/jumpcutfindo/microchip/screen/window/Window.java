@@ -4,6 +4,7 @@ import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -31,10 +32,10 @@ public abstract class Window implements Interactable {
         this.y = y;
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY) {
-        this.renderBackgroundGradient(matrices);
-        this.renderBackground(matrices);
-        this.renderContent(matrices, mouseX, mouseY);
+    public void render(DrawContext context, int mouseX, int mouseY) {
+        this.renderBackgroundGradient(context);
+        this.renderBackground(context);
+        this.renderContent(context, mouseX, mouseY);
     }
 
     public void setPos(int x, int y) {
@@ -58,8 +59,8 @@ public abstract class Window implements Interactable {
         return height;
     }
 
-    public abstract void renderBackground(MatrixStack matrices);
-    public abstract void renderContent(MatrixStack matrices, int mouseX, int mouseY);
+    public abstract void renderBackground(DrawContext context);
+    public abstract void renderContent(DrawContext context, int mouseX, int mouseY);
 
     public abstract void tick();
 
@@ -82,9 +83,9 @@ public abstract class Window implements Interactable {
 
     public abstract List<ClickableWidget> getWidgets();
 
-    private void renderBackgroundGradient(MatrixStack matrices) {
+    private void renderBackgroundGradient(DrawContext context) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        screen.drawBackgroundGradient(matrices);
+        screen.drawBackgroundGradient(context);
     }
 }

@@ -41,13 +41,13 @@
   },
 
   "depends": {
-    "fabricloader": ">=0.14.17",
+    "fabricloader": ">=0.14.22",
     "fabric": "*",
-    "minecraft": "~1.19.4",
+    "minecraft": "^1.20",
     "java": ">=17",
     "fabric-key-binding-api-v1": "*",
-    "cardinal-components-base": ">=5.1.0",
-    "cardinal-components-entity": ">=5.1.0"
+    "cardinal-components-base": ">=5.2.2",
+    "cardinal-components-entity": ">=5.2.2"
   },
   "suggests": {
   }

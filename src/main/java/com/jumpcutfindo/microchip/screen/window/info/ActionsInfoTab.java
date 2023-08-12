@@ -7,6 +7,7 @@ import com.jumpcutfindo.microchip.screen.MicrochipScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -54,8 +55,8 @@ public class ActionsInfoTab extends InfoTab {
     }
 
     @Override
-    public void renderContent(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.getTextRenderer().drawWithShadow(matrices, Text.translatable("microchip.menu.microchipInfo.actionTab"), (float) (window.getX() + 7), (float) (window.getY() + 105), 0xFFFFFF);
+    public void renderContent(DrawContext context, int mouseX, int mouseY) {
+        context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.microchipInfo.actionTab"), (window.getX() + 7), (window.getY() + 105), 0xFFFFFF, true);
 
         for (int i = 0; i < buttonCount; i++) {
             MicrochipButton entityActionButton = entityActionButtons.get(i);
@@ -63,18 +64,18 @@ public class ActionsInfoTab extends InfoTab {
             int yOffset = 24;
             entityActionButton.setX(window.getX() + 7 + (i % 2) * xOffset);
             entityActionButton.setY(window.getY() + 118 + (i / 2) * yOffset);
-            entityActionButton.render(matrices, mouseX, mouseY, 0);
+            entityActionButton.render(context, mouseX, mouseY, 0);
         }
     }
 
     @Override
-    public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
+    public void renderTooltips(DrawContext context, int mouseX, int mouseY) {
         int xOffset = 77;
         int yOffset = 24;
 
         for (int i = 0; i < buttonTranslatableKeys.size(); i++) {
             if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 7 + (i % 2) * xOffset, window.getY() + 118 + (i / 2) * yOffset, 75, 20)) {
-                screen.renderTooltip(matrices, Text.translatable(buttonTranslatableKeys.get(i) + ".tooltip"), mouseX, mouseY);
+                context.drawTooltip(this.screen.getTextRenderer(), Text.translatable(buttonTranslatableKeys.get(i) + ".tooltip"), mouseX, mouseY);
             }
         }
     }
