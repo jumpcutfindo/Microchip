@@ -95,8 +95,8 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
 
         // Swap selection buttons depending on number selected
         boolean isListEmpty = this.listItems.isEmpty();
-        this.selectAllButton.setDisabled(isListEmpty);
-        this.unselectAllButton.setDisabled(isListEmpty);
+        this.selectAllButton.setDisabled(isListEmpty || isReordering);
+        this.unselectAllButton.setDisabled(isListEmpty || isReordering);
         this.reorderMicrochipsButton.setDisabled(isListEmpty);
 
         boolean isAllSelected = this.isAllSelected();
