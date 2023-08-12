@@ -89,7 +89,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         this.listItems = listItems;
         this.maxItems = maxItems;
         this.visibleItems = new ArrayList<>();
-        this.maxSteps = listItems.size() - maxItems;
+        this.maxSteps = Math.max(0, listItems.size() - maxItems);
         this.stepAmount = (float) (this.scrollbarHeight - 15) / (float) (this.maxSteps);
         return this;
     }
