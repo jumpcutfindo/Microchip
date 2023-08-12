@@ -10,6 +10,10 @@ Due to the nature of Minecraft and the complexity of the different moving parts 
 - Tagging multiple mobs and checking that list scroll works OK
 - Modifying the name and colour of a group
 - Changes are being persisted to the server on leaving
+- Creation of multiple groups and reordering works OK
+- Tagging of multiple mobs and reordering works OK
+- Select all / deselect all mobs works OK
+- Shift select mobs works OK
 
 ## Intermediate Functionalities
 - Scaling of mob rendering in their relevant boxes is correct (when villagers are sleeping, for big mobs as well)
@@ -17,6 +21,7 @@ Due to the nature of Minecraft and the complexity of the different moving parts 
 - Status effects and various stats of the mob are reflected and updating correctly
 - Items in the mob's inventory and inventory size are reflected correctly
 - Actions in the Microchip are being executed correctly
+- Mobs with variants have all their variant names appearing as the mob's name
 
 ## Advanced Functionalities
 - When updating from one version to the next, Microchips are being loaded correctly on the new version

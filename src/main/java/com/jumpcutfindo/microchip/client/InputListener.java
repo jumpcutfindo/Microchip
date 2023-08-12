@@ -19,7 +19,7 @@ import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public class InputListener implements ClientModInitializer {
-    private static final KeyBinding tagBinding = KeyBindingHelper.registerKeyBinding(
+    private static final KeyBinding TAG_BINDING = KeyBindingHelper.registerKeyBinding(
                 new KeyBinding(
                     "key.microchip.tag",
                     InputUtil.Type.KEYSYM,
@@ -27,7 +27,7 @@ public class InputListener implements ClientModInitializer {
                     "category.microchip.microchip"
                 )
     );
-    private static final KeyBinding guiBinding = KeyBindingHelper.registerKeyBinding(
+    public static final KeyBinding GUI_BINDING = KeyBindingHelper.registerKeyBinding(
             new KeyBinding(
                     "key.microchip.gui",
                     InputUtil.Type.KEYSYM,
@@ -36,7 +36,7 @@ public class InputListener implements ClientModInitializer {
             )
     );
 
-    private static final KeyBinding mobInfoBinding = KeyBindingHelper.registerKeyBinding(
+    private static final KeyBinding MOB_INFO_BINDING = KeyBindingHelper.registerKeyBinding(
             new KeyBinding(
                     "key.microchip.mobInfo",
                     InputUtil.Type.KEYSYM,
@@ -49,9 +49,9 @@ public class InputListener implements ClientModInitializer {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player != null) {
-                while (tagBinding.wasPressed()) tagEntity(client.player);
-                while (guiBinding.wasPressed()) openMicrochipsMenu(client, client.player);
-                while (mobInfoBinding.wasPressed()) openMicrochipInfoWindow(client, client.player);
+                while (TAG_BINDING.wasPressed()) tagEntity(client.player);
+                while (GUI_BINDING.wasPressed()) openMicrochipsMenu(client, client.player);
+                while (MOB_INFO_BINDING.wasPressed()) openMicrochipInfoWindow(client, client.player);
             }
         });
     }
