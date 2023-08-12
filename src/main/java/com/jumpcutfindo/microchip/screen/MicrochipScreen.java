@@ -1,7 +1,9 @@
 package com.jumpcutfindo.microchip.screen;
 
+import com.jumpcutfindo.microchip.client.InputListener;
 import com.jumpcutfindo.microchip.screen.window.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
@@ -75,6 +77,11 @@ public class MicrochipScreen extends Screen {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.activeWindow != null) {
             if (isStandalone) close();
             this.activeWindow = null;
+            return true;
+        }
+
+        if (keyCode == KeyBindingHelper.getBoundKeyOf(InputListener.GUI_BINDING).getCode() && this.activeWindow == null) {
+            close();
             return true;
         }
 

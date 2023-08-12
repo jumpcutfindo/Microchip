@@ -1,13 +1,9 @@
 package com.jumpcutfindo.microchip.client;
 
 import com.jumpcutfindo.microchip.client.network.ClientNetworkSender;
-import com.jumpcutfindo.microchip.helper.Looker;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import com.jumpcutfindo.microchip.helper.TagResult;
@@ -22,12 +18,10 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.TranslatableText;
 
-import java.util.List;
-
 
 @Environment(EnvType.CLIENT)
 public class InputListener implements ClientModInitializer {
-    private static KeyBinding tagBinding = KeyBindingHelper.registerKeyBinding(
+    private static final KeyBinding TAG_BINDING = KeyBindingHelper.registerKeyBinding(
                 new KeyBinding(
                     "key.microchip.tag",
                     InputUtil.Type.KEYSYM,
@@ -35,7 +29,7 @@ public class InputListener implements ClientModInitializer {
                     "category.microchip.microchip"
                 )
     );
-    private static KeyBinding guiBinding = KeyBindingHelper.registerKeyBinding(
+    public static final KeyBinding GUI_BINDING = KeyBindingHelper.registerKeyBinding(
             new KeyBinding(
                     "key.microchip.gui",
                     InputUtil.Type.KEYSYM,
@@ -44,7 +38,7 @@ public class InputListener implements ClientModInitializer {
             )
     );
 
-    private static KeyBinding mobInfoBinding = KeyBindingHelper.registerKeyBinding(
+    private static final KeyBinding MOB_INFO_BINDING = KeyBindingHelper.registerKeyBinding(
             new KeyBinding(
                     "key.microchip.mobInfo",
                     InputUtil.Type.KEYSYM,
@@ -57,9 +51,9 @@ public class InputListener implements ClientModInitializer {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player != null) {
-                while (tagBinding.wasPressed()) tagEntity(client.player);
-                while (guiBinding.wasPressed()) openMicrochipsMenu(client, client.player);
-                while (mobInfoBinding.wasPressed()) openMicrochipInfoWindow(client, client.player);
+                while (TAG_BINDING.wasPressed()) tagEntity(client.player);
+                while (GUI_BINDING.wasPressed()) openMicrochipsMenu(client, client.player);
+                while (MOB_INFO_BINDING.wasPressed()) openMicrochipInfoWindow(client, client.player);
             }
         });
     }
