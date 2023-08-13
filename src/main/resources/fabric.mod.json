@@ -43,7 +43,7 @@
   "depends": {
     "fabricloader": ">=0.14.14",
     "fabric": "*",
-    "minecraft": "~1.18.2",
+    "minecraft": "^1.18",
     "java": ">=17",
     "fabric-key-binding-api-v1": "*",
     "cardinal-components-base": ">=4.1.4",
