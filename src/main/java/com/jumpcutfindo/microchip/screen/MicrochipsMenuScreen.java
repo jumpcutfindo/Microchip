@@ -57,11 +57,11 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
         if (hasUpdates()) refreshScreen(RefreshType.BOTH);
 
         this.drawBackgroundGradient(context);
-        this.microchipGroupList.renderBackground(context, mouseX, mouseY);
         this.microchipsList.renderBackground(context, mouseX, mouseY);
-
-        this.microchipGroupList.renderItems(context, mouseX, mouseY);
         this.microchipsList.renderItems(context, mouseX, mouseY);
+
+        this.microchipGroupList.renderBackground(context, mouseX, mouseY);
+        this.microchipGroupList.renderItems(context, mouseX, mouseY);
 
         super.render(context, mouseX, mouseY, delta);
     }

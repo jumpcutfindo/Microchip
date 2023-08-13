@@ -104,7 +104,6 @@ public class InventoryInfoTab extends InfoTab {
         int windowY = window.getY();
 
         for (ItemSlot itemSlot : slots) {
-            RenderSystem.setShaderTexture(0, TEXTURE);
             int slotX = itemSlot.getX(windowX);
             int slotY = itemSlot.getY(windowY);
 

@@ -56,6 +56,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         super.renderBackground(context, mouseX, mouseY);
 
         context.drawText(this.screen.getTextRenderer(), this.title, (x + this.titleX), (y + this.titleY), 0x404040, false);
@@ -64,7 +65,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     @Override
     public void renderItems(DrawContext context, int mouseX, int mouseY) {
         super.renderItems(context, mouseX, mouseY);
-        this.drawButtons(context, x, y, mouseX, mouseY);
+        this.drawButtons(context, mouseX, mouseY);
     }
 
     @Override
@@ -160,12 +161,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         }
     }
 
-    private void drawButtons(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
-
-
+    private void drawButtons(DrawContext context, int mouseX, int mouseY) {
         if (this.canCreate) {
             this.reorderGroupButton.render(context, mouseX, mouseY, 0);
 

@@ -88,10 +88,6 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private void drawIdentityCard(DrawContext context, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-
         ScreenUtils.setShaderColor(this.color, false);
         context.drawTexture(TEXTURE, x + 8, y + 23, 168, 0, 46, 62);
 
@@ -106,9 +102,7 @@ public class MicrochipInfoWindow extends Window {
             context.drawTexture(TEXTURE, x + 18, y + 40, 214, 0, 28, 28);
         }
 
-        RenderSystem.setShaderTexture(0, TEXTURE);
         ScreenUtils.setShaderColor(this.color, false);
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         context.drawTexture(TEXTURE, x, y, 0, 0, this.width, this.height);
 
         // Draw the title and the entity information
@@ -120,8 +114,6 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private void drawTabs(DrawContext context, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, TEXTURE);
-
         int tabVerticalOffset = 0;
         for (int i = 0; i < tabCount; i++) {
             if (!screen.getPlayer().isCreative() && getTabs().get(i) instanceof ActionsInfoTab) continue;

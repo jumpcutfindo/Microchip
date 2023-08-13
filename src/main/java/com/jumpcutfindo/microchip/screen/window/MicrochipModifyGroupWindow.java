@@ -91,10 +91,6 @@ public class MicrochipModifyGroupWindow extends Window {
 
     @Override
     public void renderBackground(DrawContext context) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-
         context.drawTexture(TEXTURE, x, y, 0, 0, this.width, this.height);
     }
 
@@ -104,9 +100,6 @@ public class MicrochipModifyGroupWindow extends Window {
 
         // Group title entry
         context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.createGroup.title"), (x + this.titleX), (y + 25), 0x404040, false);
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
 
         this.groupNameField.setX(x + 7);
         this.groupNameField.setY(y + 36);
@@ -115,9 +108,6 @@ public class MicrochipModifyGroupWindow extends Window {
 
         // Colour entry
         context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.createGroup.colorTitle"), (x + this.titleX), (y + 60), 0x404040, false);
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
 
         for (int i = 0; i < colorButtons.size(); i++) {
             ColorButton colorButton = colorButtons.get(i);

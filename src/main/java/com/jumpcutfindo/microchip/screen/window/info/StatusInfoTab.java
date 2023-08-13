@@ -53,19 +53,15 @@ public class StatusInfoTab extends InfoTab {
         context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.microchipInfo.statusTab"), (window.getX() + 7), (window.getY() + 105), 0xFFFFFF, true);
 
         // Draw health and armor
-        RenderSystem.setShaderTexture(0, TEXTURE);
-
         float health = this.entity == null ? 0.0f : this.entity.getHealth();
         context.drawTexture(TEXTURE, window.getX() + 7, window.getY() + 130, 0, 200, 154, 5);
         context.drawTexture(TEXTURE, window.getX() + 7, window.getY() + 130, 0, 205, (int) ((health / microchip.getEntityData().getMaxHealth()) * 154), 5);
 
-        RenderSystem.setShaderTexture(0, TEXTURE);
         context.drawTexture(TEXTURE, window.getX() + 7, window.getY() + 117, 168, 128, 9, 9);
         String healthString = this.entity == null ? "?" : Integer.toString((int) health);
         String healthDisplayString = String.format("%s/%d", healthString, (int) microchip.getEntityData().getMaxHealth());
         context.drawText(this.screen.getTextRenderer(), healthDisplayString, window.getX() + 19, window.getY() + 118, 0xFFFFFF, true);
 
-        RenderSystem.setShaderTexture(0, TEXTURE);
         context.drawTexture(TEXTURE, window.getX() + 19 + healthDisplayString.length() * 7, window.getY() + 117, 177, 128, 9, 9);
         String armorString = this.entity == null ? "?" : Integer.toString(this.entity.getArmor());
         context.drawText(this.screen.getTextRenderer(), armorString, window.getX() + 19 + healthDisplayString.length() * 7 + 12, window.getY() + 118, 0xFFFFFF, true);
@@ -75,7 +71,6 @@ public class StatusInfoTab extends InfoTab {
         int statOffset = 0, statGap = 12;
         statY = window.getY() + 142;
         if (hasSpeed()) {
-            RenderSystem.setShaderTexture(0, TEXTURE);
             context.drawTexture(TEXTURE, window.getX() + statOffset + 7 , statY, 186, 128, 9, 9);
             String speedString = String.format("%.2fm/s", StatUtils.calculateMaxSpeed((float) entity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED), entityStatuses.containsKey(StatusEffects.SPEED) ? entityStatuses.get(StatusEffects.SPEED).getAmplifier() : 0));
 
@@ -89,7 +84,6 @@ public class StatusInfoTab extends InfoTab {
         }
 
         if (hasJump()) {
-            RenderSystem.setShaderTexture(0, TEXTURE);
             context.drawTexture(TEXTURE, window.getX() + statOffset + 7 , statY, 195, 128, 9, 9);
             String jumpString = String.format("%.2fm", StatUtils.calculateMaxJumpHeightWithJumpStrength((float) ((HorseEntity) entity).getJumpStrength()));
 
@@ -103,7 +97,6 @@ public class StatusInfoTab extends InfoTab {
         }
 
         if (hasBreeding()) {
-            RenderSystem.setShaderTexture(0, TEXTURE);
             context.drawTexture(TEXTURE, window.getX() + statOffset + 7 , statY, 204, 128, 9, 9);
             String breedString = breedingAge < 0 ? "0:00" : StringHelper.formatTicks(breedingAge);
 
@@ -117,7 +110,6 @@ public class StatusInfoTab extends InfoTab {
         }
 
         // Draw status effects
-        RenderSystem.setShaderTexture(0, TEXTURE);
         context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.microchipInfo.statusTab.effects"), (window.getX() + 7), (window.getY() + 158), 0xFFFFFF, true);
         StatusEffectSpriteManager statusEffectSpriteManager = MinecraftClient.getInstance().getStatusEffectSpriteManager();
 
@@ -127,7 +119,6 @@ public class StatusInfoTab extends InfoTab {
 
         // Draw status effect backgrounds
         for (int i = 0; i < statusDisplayCount; i++) {
-            RenderSystem.setShaderTexture(0, TEXTURE);
             context.drawTexture(TEXTURE, window.getX() + 7 + statusEffectBgOffset, window.getY() + 170, 168, 137, 22, 22);
             statusEffectBgOffset += 24;
         }
@@ -142,7 +133,6 @@ public class StatusInfoTab extends InfoTab {
                     // Draw the status
                     StatusEffect statusEffect = instance.getEffectType();
                     Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
-                    RenderSystem.setShaderTexture(0, sprite.getAtlasId());
                     context.drawSprite(window.getX() + 9 + effectsOffset, window.getY() + 172, 0, 18, 18, sprite);
 
                     effectsOffset += 24;

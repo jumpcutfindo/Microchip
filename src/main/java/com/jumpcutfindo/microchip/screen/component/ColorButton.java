@@ -57,7 +57,6 @@ public class ColorButton implements Interactable {
     }
 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShaderTexture(0, TEXTURE);
         context.drawTexture(TEXTURE, x, y, u, v, this.width, this.height);
         if (this.isSelected) context.drawTexture(TEXTURE, x, y + 12, u, v + 10, this.width, this.height);
     }

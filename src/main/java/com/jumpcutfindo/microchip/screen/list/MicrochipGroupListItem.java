@@ -89,10 +89,6 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
             context.drawText(this.screen.getTextRenderer(), Text.literal(Integer.toString(microchipCount)), (x + 114 - offset), (y + 5), this.item.getColor().getShadowColor(), false);
         } else {
             // Draw reordering arrows
-            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-            RenderSystem.setShaderTexture(0, GROUP_LIST_ITEMS_TEXTURE);
-            ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
-
             int arrowWidth = 9, arrowHeight = 9;
             int upX = x + 99, upY = y + 4;
             int downX = x + 110, downY = y + 4;

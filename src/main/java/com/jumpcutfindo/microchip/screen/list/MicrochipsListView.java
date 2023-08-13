@@ -73,13 +73,9 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
 
         super.renderBackground(context, mouseX, mouseY);
 
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         context.drawText(this.screen.getTextRenderer(), this.title, (x + this.titleX), (y + this.titleY), this.group.getColor().getShadowColor(), false);
 
-
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         ScreenUtils.setShaderColor(group.getColor(), false);
-        RenderSystem.setShaderTexture(0, MicrochipGroupListView.TEXTURE);
         context.drawTexture(MicrochipGroupListView.TEXTURE, x + 5, y + 6, group.getColor().ordinal() * 16, 214, 16, 16);
     }
 
@@ -90,10 +86,6 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     }
 
     private void drawButtons(DrawContext context, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
-
         // Swap selection buttons depending on number selected
         boolean isListEmpty = this.listItems.isEmpty();
         this.selectAllButton.setDisabled(isListEmpty || isReordering);
@@ -120,6 +112,7 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
             this.deleteGroupButton.render(context, mouseX, mouseY, 0);
         }
 
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         // Render tooltips
         if (!screen.isWindowOpen()) {
             if (isAllSelected) this.unselectAllButton.renderTooltip(context, mouseX, mouseY, 0);

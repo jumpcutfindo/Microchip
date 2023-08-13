@@ -104,17 +104,11 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     }
 
     public void renderBackground(DrawContext context, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderTexture(0, this.texture);
         context.drawTexture(this.texture, x, y, this.textureU, this.textureV, this.textureWidth, this.textureHeight);
         this.renderScrollbar(context, mouseX, mouseY);
     }
 
     public void renderItems(DrawContext context, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, this.texture);
-
         if (this.listItems.size() == 0) return;
 
         this.step = (int) (this.scrollPosition * this.maxSteps);
@@ -132,7 +126,6 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     private void renderScrollbar(DrawContext context, int mouseX, int mouseY) {
         if (!this.hasScrollbar()) return;
 
-        RenderSystem.setShaderTexture(0, this.texture);
         context.drawTexture(this.texture, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15);
     }
 

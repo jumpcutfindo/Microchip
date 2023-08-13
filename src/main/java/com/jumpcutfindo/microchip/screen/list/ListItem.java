@@ -60,9 +60,6 @@ public abstract class ListItem<T> {
     }
 
     public void renderBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderTexture(0, this.texture);
-
         if (isSelected) {
             // Selected
             renderSelectedBackground(context, x, y, mouseX, mouseY);

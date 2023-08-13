@@ -43,10 +43,7 @@ public class IconButton implements Interactable {
     }
 
     public void render(DrawContext context, int mouseX, int mouseY, int delta) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, MicrochipsMenuScreen.BUTTONS_TEXTURE);
-
         if (isDisabled()) {
             // Disabled
             context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 48, v, width, height);
@@ -68,6 +65,7 @@ public class IconButton implements Interactable {
     }
 
     public boolean renderTooltip(DrawContext context, int mouseX, int mouseY, int delta) {
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         if (isMouseWithin(mouseX, mouseY)) {
             context.drawTooltip(this.screen.getTextRenderer(), tooltip, mouseX, mouseY);
             return true;

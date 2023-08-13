@@ -75,7 +75,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
         // Draw baby status
         if (this.entity != null && this.entity.isBaby()) {
-            RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
             context.drawTexture(MicrochipsListView.TEXTURE, x + 22, y + 22, 180, 202, 9, 9);
         }
 
@@ -85,7 +84,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
         context.drawText(this.screen.getTextRenderer(), healthString, x + 178 - offset, y + 21, 0xFFFFFF, true);
         int healthIconOffset = offset + 1;
 
-        RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
         if (this.entity != null) {
             if (this.entity.getHealth() > this.entity.getMaxHealth() / 2) {
                 context.drawTexture(MicrochipsListView.TEXTURE, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
@@ -111,7 +109,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
             this.drawEntity(x + xOffset, y + yOffset);
         }
         else {
-            RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
             ScreenUtils.setShaderColor(this.group.getColor(), false);
             context.drawTexture(MicrochipsListView.TEXTURE, x + 4, y + 4, 0, 214, 28, 28);
         }
@@ -174,7 +171,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
     private void drawButtons(DrawContext context, int x, int y, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
 
         if (this.isReordering) {
             int arrowWidth = 5, arrowHeight = 5;
@@ -203,6 +199,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
     private void drawEntity(int x, int y) {
         // Don't render if there is a window active and in front of it
         if (screen.isBlockedByWindow(x, y) || screen.isBlockedByWindow(x + 15, y + 15)) return;
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         EntityPose pose = this.entity.getPose();
 
