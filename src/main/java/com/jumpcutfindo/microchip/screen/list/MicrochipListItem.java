@@ -70,18 +70,17 @@ public class MicrochipListItem extends ListItem<Microchip> {
             context.drawText(this.screen.getTextRenderer(), this.item.getEntityData().getTypeName(), entityNameX, entityNameY, 0x404040, false);
         }
 
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        String entityHealthString = this.entity == null ? "?" : Integer.toString((int) this.entity.getHealth());
-
         // Draw baby status
         if (this.entity != null && this.entity.isBaby()) {
             context.drawTexture(MicrochipsListView.TEXTURE, x + 22, y + 22, 180, 202, 9, 9);
         }
 
         // Draw entity health
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        String entityHealthString = this.entity == null ? "?" : Integer.toString((int) this.entity.getHealth());
         String healthString = String.format("%s/%d", entityHealthString, (int) this.item.getEntityData().getMaxHealth());
         int offset = healthString.length() * 6 + 1;
-        context.drawText(this.screen.getTextRenderer(), healthString, x + 178 - offset, y + 21, 0xFFFFFF, true);
+        context.drawText(this.screen.getTextRenderer(), healthString, x + 178 - offset, y + 21, 0xFFFFFF, !this.screen.isWindowOpen());
         int healthIconOffset = offset + 1;
 
         if (this.entity != null) {
