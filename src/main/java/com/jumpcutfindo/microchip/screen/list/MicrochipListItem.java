@@ -103,10 +103,8 @@ public class MicrochipListItem extends ListItem<Microchip> {
             int xOffset = EntityModelScaler.getInterfaceOffset(entity).getListX();
             int yOffset = EntityModelScaler.getInterfaceOffset(entity).getListY();
             this.drawEntity(x + xOffset, y + yOffset);
-        }
-        else {
+        } else {
             RenderSystem.setShaderTexture(0, MicrochipsListView.TEXTURE);
-            ScreenUtils.setShaderColor(this.group.getColor(), false);
             screen.drawTexture(matrices, x + 4, y + 4, 0, 214, 28, 28);
         }
 
