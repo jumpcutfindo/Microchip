@@ -22,7 +22,7 @@ public class ScreenUtils {
         float g = (float) color.getGreen() / 204.0f;
         float b = (float) color.getBlue() / 204.0f;
 
-        RenderSystem.setShaderColor(r, g, b, 0.0f);
+        RenderSystem.setShaderColor(r, g, b, 1.0f);
     }
 
     public static void setShaderColor(int colorValue) {

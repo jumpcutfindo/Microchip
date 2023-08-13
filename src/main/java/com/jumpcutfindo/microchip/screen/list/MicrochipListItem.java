@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.client.ClientTagger;
+import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.SoundUtils;
@@ -58,15 +59,18 @@ public class MicrochipListItem extends ListItem<Microchip> {
         if (this.item.getEntityData() == null) return;
 
         if (!this.screen.isBlockedByWindow(displayNameX, displayNameY)) {
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             context.drawText(this.screen.getTextRenderer(), StringUtils.truncatedName(this.item.getEntityData().getDisplayName(), 20), displayNameX, displayNameY, 0xFFFFFF, true);
         }
 
         int entityNameX = x + 38;
         int entityNameY = y + 21;
         if (!this.screen.isBlockedByWindow(entityNameX, entityNameY)) {
+            ScreenUtils.setShaderColor(this.group.getColor(), false);
             context.drawText(this.screen.getTextRenderer(), this.item.getEntityData().getTypeName(), entityNameX, entityNameY, 0x404040, false);
         }
 
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         String entityHealthString = this.entity == null ? "?" : Integer.toString((int) this.entity.getHealth());
 
         // Draw baby status
@@ -118,7 +122,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     @Override
     public boolean mouseClicked(int x, int y, double mouseX, double mouseY) {
-
         if (isReordering) {
             int arrowWidth = 5, arrowHeight = 5;
             int upX = x + 164, upY = y + 3;
