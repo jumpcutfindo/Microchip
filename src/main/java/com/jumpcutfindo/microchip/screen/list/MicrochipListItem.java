@@ -12,6 +12,7 @@ import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
@@ -52,6 +53,9 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     @Override
     public void renderContent(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        drawTooltips(context, x, y, mouseX, mouseY);
+        drawButtons(context, x, y, mouseX, mouseY);
+
         // Draw entity information
         int displayNameX = x + 38;
         int displayNameY = y + 8;
@@ -72,6 +76,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
         // Draw baby status
         if (this.entity != null && this.entity.isBaby()) {
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             context.drawTexture(MicrochipsListView.TEXTURE, x + 22, y + 22, 180, 202, 9, 9);
         }
 
@@ -94,9 +99,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
         } else {
             context.drawTexture(MicrochipsListView.TEXTURE, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9);
         }
-
-        drawButtons(context, x, y, mouseX, mouseY);
-        drawTooltips(context, x, y, mouseX, mouseY);
     }
 
     @Override
