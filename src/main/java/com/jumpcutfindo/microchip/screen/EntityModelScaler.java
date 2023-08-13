@@ -23,6 +23,7 @@ public class EntityModelScaler {
             .put(ChickenEntity.class, 0.7f)
             .put(CaveSpiderEntity.class, 0.55f)
             .put(CatEntity.class, 0.85f)
+            .put(CamelEntity.class, 0.85f)
             .put(CodEntity.class, 0.9f)
             .put(CowEntity.class, 0.95f)
             .put(DolphinEntity.class, 0.6f)
@@ -50,6 +51,7 @@ public class EntityModelScaler {
             .put(SilverfishEntity.class, 0.5f)
             .put(SkeletonHorseEntity.class, 0.75f)
             .put(SlimeEntity.class, 0.75f)
+            .put(SnifferEntity.class, 0.6f)
             .put(TurtleEntity.class, 0.75f)
             .put(TadpoleEntity.class, 0.7f)
             .put(WolfEntity.class, 0.85f)
@@ -57,6 +59,7 @@ public class EntityModelScaler {
             .build();
 
     private static final Map<Class<? extends LivingEntity>, Float> BABY_ENTITY_SCALES = ImmutableMap.<Class<? extends LivingEntity>, Float>builder()
+            .put(CamelEntity.class, 0.75f)
             .put(VillagerEntity.class, 0.75f)
             .put(TurtleEntity.class, 0.75f)
             .build();
