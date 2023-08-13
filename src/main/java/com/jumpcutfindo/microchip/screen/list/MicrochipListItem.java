@@ -102,6 +102,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
     @Override
     public void renderBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
         // Draw entity
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         if (this.entity != null) {
             int xOffset = EntityModelScaler.getInterfaceOffset(entity).getListX();
             int yOffset = EntityModelScaler.getInterfaceOffset(entity).getListY();
@@ -166,7 +167,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
     }
 
     private void drawButtons(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         if (this.isReordering) {
@@ -186,7 +186,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
             } else {
                 context.drawTexture(MicrochipsListView.TEXTURE, downX, downY, 180, 188, arrowWidth, arrowHeight);
             }
-
         } else {
             if (this.isSelected()) context.drawTexture(MicrochipsListView.TEXTURE, x + 172, y + 3, 185, 178, 5, 5);
             else context.drawTexture(MicrochipsListView.TEXTURE, x + 172, y + 3, 180, 178, 5, 5);

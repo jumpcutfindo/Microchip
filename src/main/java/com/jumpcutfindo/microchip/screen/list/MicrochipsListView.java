@@ -81,6 +81,7 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
 
     @Override
     public void renderItems(DrawContext context, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         super.renderItems(context, mouseX, mouseY);
         this.drawButtons(context, mouseX, mouseY);
     }
