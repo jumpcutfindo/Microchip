@@ -84,7 +84,6 @@ public abstract class Window implements Interactable {
     public abstract List<ClickableWidget> getWidgets();
 
     private void renderBackgroundGradient(DrawContext context) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         screen.drawBackgroundGradient(context);
     }

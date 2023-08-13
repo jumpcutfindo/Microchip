@@ -10,6 +10,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -185,27 +187,17 @@ public class InventoryInfoTab extends InfoTab {
     }
 
     private void drawItem(DrawContext context, ItemStack stack, int x, int y, String amountText) {
-        context.drawItemInSlot(this.screen.getTextRenderer(), stack, x, y, amountText);
+        context.drawItem(screen.getPlayer(), stack, x, y, 0);
+        context.drawItemInSlot(screen.getTextRenderer(), stack, x, y);
     }
 
     private void drawSlotHighlight(DrawContext context, int x, int y, int z) {
-        RenderSystem.disableDepthTest();
-        RenderSystem.colorMask(true, true, true, false);
-        screen.drawGradient(context, x + 1, y + 1, x + 17, y + 17, -2130706433, -2130706433, z);
-        RenderSystem.colorMask(true, true, true, true);
-        RenderSystem.enableDepthTest();
+        context.fillGradient(RenderLayer.getGuiOverlay(), x + 1, y + 1, x + 17, y + 17, -2130706433, -2130706433, z);
     }
 
     protected void drawItemTooltip(DrawContext context, ItemStack stack, int x, int y) {
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.translate(0.0, 0.0, 32.0);
-        RenderSystem.applyModelViewMatrix();
         context.drawTooltip(this.screen.getTextRenderer(), Screen.getTooltipFromItem(MinecraftClient.getInstance(), stack), stack.getTooltipData(), x, y);
-
-        matrixStack.translate(0.0, 0.0, -32.0);
-        RenderSystem.applyModelViewMatrix();
     }
-
 
     private static class ItemSlot {
         private final int x, y;

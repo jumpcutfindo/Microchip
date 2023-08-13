@@ -109,7 +109,6 @@ public class MicrochipScreen extends Screen {
     }
 
     public void drawBackgroundGradient(DrawContext context) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         context.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
     }
