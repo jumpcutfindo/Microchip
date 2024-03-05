@@ -164,11 +164,10 @@ public class MicrochipModifyGroupWindow extends Window {
 
     @Override
     public void tick() {
-        this.groupNameField.tick();
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         return false;
     }
 

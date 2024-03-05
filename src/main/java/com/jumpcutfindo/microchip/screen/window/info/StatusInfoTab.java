@@ -98,7 +98,7 @@ public class StatusInfoTab extends InfoTab {
 
         if (hasBreeding()) {
             context.drawTexture(TEXTURE, window.getX() + statOffset + 7 , statY, 204, 128, 9, 9);
-            String breedString = breedingAge < 0 ? "0:00" : StringHelper.formatTicks(breedingAge);
+            String breedString = breedingAge < 0 ? "0:00" : StringHelper.formatTicks(breedingAge, this.screen.getPlayer().getWorld().getTickManager().getTickRate());
 
             breedStatX = window.getX() + statOffset + 19;
             context.drawText(this.screen.getTextRenderer(), breedString, window.getX() + statOffset + 19, statY + 1, 0xFFFFFF, true);
@@ -162,7 +162,7 @@ public class StatusInfoTab extends InfoTab {
                 if (displayedStatuses < statusDisplayCount) {
                     // Draw the status tooltip
                     if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 9 + effectsOffset, window.getY() + 172, 18, 18)) {
-                        Text timeLeftText = Text.literal(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved))));
+                        Text timeLeftText = Text.literal(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved), this.screen.getPlayer().getWorld().getTickManager().getTickRate())));
                         Text text = Text.translatable(statusEffect.getTranslationKey()).append(timeLeftText);
                         context.drawTooltip(this.screen.getTextRenderer(), text, mouseX, mouseY);
                     }
@@ -170,7 +170,7 @@ public class StatusInfoTab extends InfoTab {
                     displayedStatuses++;
                 } else {
                     MutableText statusName = Text.translatable(instance.getTranslationKey());
-                    statusName.append(Text.literal(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved)))));
+                    statusName.append(Text.literal(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved), this.screen.getPlayer().getWorld().getTickManager().getTickRate()))));
                     undisplayedStatuses.add(statusName);
                 }
             }
@@ -200,7 +200,7 @@ public class StatusInfoTab extends InfoTab {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         return false;
     }
 

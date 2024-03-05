@@ -97,15 +97,15 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if (isWindowOpen()) return super.mouseScrolled(mouseX, mouseY, amount);
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (isWindowOpen()) return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 
         if (isMouseInGroupList(mouseX, mouseY)) {
-            return this.microchipGroupList.mouseScrolled(mouseX, mouseY, amount);
+            return this.microchipGroupList.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
         }
 
         if (isMouseInMicrochipList(mouseX, mouseY)) {
-            return this.microchipsList.mouseScrolled(mouseX, mouseY, amount);
+            return this.microchipsList.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
         }
         return false;
     }

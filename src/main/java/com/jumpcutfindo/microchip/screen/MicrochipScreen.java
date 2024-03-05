@@ -65,12 +65,12 @@ public class MicrochipScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if (this.activeWindow != null) {
-            return this.activeWindow.mouseScrolled(mouseX, mouseY, amount);
+            return this.activeWindow.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
         }
 
-        return super.mouseScrolled(mouseX, mouseY, amount);
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
     @Override

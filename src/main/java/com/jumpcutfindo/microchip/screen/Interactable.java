@@ -1,7 +1,7 @@
 package com.jumpcutfindo.microchip.screen;
 
 public interface Interactable {
-    boolean mouseScrolled(double mouseX, double mouseY, double amount);
+    boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount);
 
     boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY);
 

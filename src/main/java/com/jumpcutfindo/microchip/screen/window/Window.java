@@ -64,7 +64,7 @@ public abstract class Window implements Interactable {
 
     public abstract void tick();
 
-    public abstract boolean mouseScrolled(double mouseX, double mouseY, double amount);
+    public abstract boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount);
 
     public abstract boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY);
 

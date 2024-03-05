@@ -168,13 +168,13 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         }
     }
 
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if (!this.hasScrollbar()) {
             return false;
         } else {
-            this.scrollPosition += (1.0f / (float) this.maxSteps) * -amount;
+            this.scrollPosition += (1.0f / (float) this.maxSteps) * -verticalAmount;
             this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0f, 1.0f);
-            this.step += (int) -amount;
+            this.step += (int) -verticalAmount;
             this.step = MathHelper.clamp(this.step, 0, this.maxSteps);
             return true;
         }
