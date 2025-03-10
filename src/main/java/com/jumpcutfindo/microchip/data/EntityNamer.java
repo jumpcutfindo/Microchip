@@ -46,7 +46,7 @@ public class EntityNamer {
     }
 
     private static String getCatType(LivingEntity entity) {{
-        CatVariant catType = ((CatEntity) entity).getVariant();
+        CatVariant catType = ((CatEntity) entity).getVariant().value();
 
         if (catType == Registries.CAT_VARIANT.get(CatVariant.TABBY)) return "Tabby";
         else if (catType == Registries.CAT_VARIANT.get(CatVariant.BLACK)) return "Black";

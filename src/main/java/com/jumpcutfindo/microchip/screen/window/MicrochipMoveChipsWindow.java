@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class MicrochipMoveChipsWindow extends Window {
-    protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_move_chips.png");
+    protected static final Identifier TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_move_chips.png");
     public static final int WIDTH = 160, HEIGHT = 200;
     private final MicrochipGroupListView listView;
     private final MicrochipGroup fromGroup;

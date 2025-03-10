@@ -85,7 +85,7 @@ public class StatusInfoTab extends InfoTab {
 
         if (hasJump()) {
             context.drawTexture(TEXTURE, window.getX() + statOffset + 7 , statY, 195, 128, 9, 9);
-            String jumpString = String.format("%.2fm", StatUtils.calculateMaxJumpHeightWithJumpStrength((float) ((HorseEntity) entity).getJumpStrength()));
+            String jumpString = String.format("%.2fm", StatUtils.calculateMaxJumpHeightWithJumpStrength((float) ((HorseEntity) entity).getAttributeValue(EntityAttributes.GENERIC_JUMP_STRENGTH)));
 
             jumpStatX = window.getX() + statOffset + 19;
             context.drawText(this.screen.getTextRenderer(), jumpString, window.getX() + statOffset + 19, statY + 1, 0xFFFFFF, true);
@@ -131,8 +131,7 @@ public class StatusInfoTab extends InfoTab {
                 activeStatusCount++;
                 if (displayedStatuses < statusDisplayCount) {
                     // Draw the status
-                    StatusEffect statusEffect = instance.getEffectType();
-                    Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
+                    Sprite sprite = statusEffectSpriteManager.getSprite(instance.statusEffectInstance.getEffectType());
                     context.drawSprite(window.getX() + 9 + effectsOffset, window.getY() + 172, 0, 18, 18, sprite);
 
                     effectsOffset += 24;
@@ -226,7 +225,7 @@ public class StatusInfoTab extends InfoTab {
 
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {
         entityStatuses.forEach(statusEffectInstance -> {
-            this.entityStatuses.put(statusEffectInstance.getEffectType(), new StatusEffectWrapper(statusEffectInstance));
+            this.entityStatuses.put(statusEffectInstance.getEffectType().value(), new StatusEffectWrapper(statusEffectInstance));
         });
 
         timeSinceStatusRetrieved = 0;
@@ -259,7 +258,7 @@ public class StatusInfoTab extends InfoTab {
         }
 
         public StatusEffect getEffectType() {
-            return statusEffectInstance.getEffectType();
+            return statusEffectInstance.getEffectType().value();
         }
 
         public int getRemainingTime(int timeSince) {

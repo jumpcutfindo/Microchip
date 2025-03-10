@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public class MicrochipsMenuScreen extends MicrochipScreen {
-    public static final Identifier BUTTONS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
+    public static final Identifier BUTTONS_TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
 
     private final int titleX, titleY;
     private int x, y;

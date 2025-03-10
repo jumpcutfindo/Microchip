@@ -25,6 +25,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import org.joml.Matrix4fStack;
 import org.joml.Quaternionf;
 import org.apache.logging.log4j.util.TriConsumer;
 
@@ -205,9 +206,9 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
         float f = (float)Math.atan(1.0f);
         float g = (float)Math.atan(0.0f);
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        matrixStack.translate(x + 18, y + 30, 1050.0);
+        Matrix4fStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.pushMatrix();
+        matrixStack.translate(x + 18, y + 30, 1050.0f);
         matrixStack.scale(1.0f, 1.0f, -1.0f);
         RenderSystem.applyModelViewMatrix();
         MatrixStack matrixStack2 = new MatrixStack();
@@ -241,7 +242,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
         entity.setPitch(j);
         entity.prevHeadYaw = k;
         entity.headYaw = l;
-        matrixStack.pop();
+        matrixStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
         DiffuseLighting.enableGuiDepthLighting();
 

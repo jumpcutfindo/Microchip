@@ -39,8 +39,8 @@ public class ScreenUtils {
 
         float entityMultiplier = EntityModelScaler.getScaleModifier(entity);
 
-        float height = dimensions.height;
-        float width = dimensions.width;
+        float height = dimensions.height();
+        float width = dimensions.width();
 
         return 1 / Math.max(height, width) * baseMultiplier * entityMultiplier;
     }

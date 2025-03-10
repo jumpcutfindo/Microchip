@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
-    protected static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
+    protected static final Identifier TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
     private MutableText title;
     private final int titleX, titleY;
 

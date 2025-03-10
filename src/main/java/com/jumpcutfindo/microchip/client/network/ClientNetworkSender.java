@@ -5,14 +5,17 @@ import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
+import com.jumpcutfindo.microchip.packets.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class ClientNetworkSender {
     public static final class MicrochipsActions {
@@ -21,7 +24,7 @@ public class ClientNetworkSender {
             buffer.writeUuid(groupId);
             buffer.writeUuid(entityId);
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_ADD_ENTITY_TO_GROUP_ID, buffer);
+            ClientPlayNetworking.send(new AddEntityToGroupPacket(buffer));
         }
 
         public static void moveEntitiesBetweenGroups(UUID fromGroup, UUID toGroup, List<UUID> microchipIds) {
@@ -33,7 +36,7 @@ public class ClientNetworkSender {
             buffer.writeUuid(toGroup);
             buffer.writeString(microchipIdsSerialized);
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_MOVE_ENTITIES_ID, buffer);
+            ClientPlayNetworking.send(new MoveEntitiesBetweenGroupsPacket(buffer));
         }
 
         public static void removeEntitiesFromGroup(UUID groupId, List<UUID> microchipIds) {
@@ -44,7 +47,7 @@ public class ClientNetworkSender {
             buffer.writeUuid(groupId);
             buffer.writeString(microchipIdsSerialized);
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_REMOVE_ENTITY_FROM_GROUP_ID, buffer);
+            ClientPlayNetworking.send(new RemoveEntitiesFromGroupPacket(buffer));
         }
 
         public static void createGroup(String groupName, GroupColor color) {
@@ -52,7 +55,7 @@ public class ClientNetworkSender {
             buffer.writeString(groupName);
             buffer.writeInt(color.ordinal());
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_CREATE_GROUP_ID, buffer);
+            ClientPlayNetworking.send(new CreateGroupPacket(buffer));
         }
 
         public static void updateGroup(MicrochipGroup group, String groupName, GroupColor color) {
@@ -61,14 +64,14 @@ public class ClientNetworkSender {
             buffer.writeString(groupName);
             buffer.writeInt(color.ordinal());
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_GROUP_ID, buffer);
+            ClientPlayNetworking.send(new UpdateGroupPacket(buffer));
         }
 
         public static void deleteGroup(UUID groupId) {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeUuid(groupId);
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_DELETE_GROUP_ID, buffer);
+            ClientPlayNetworking.send(new DeleteGroupPacket(buffer));
         }
 
         public static void reorderGroup(int from, int to) {
@@ -76,7 +79,7 @@ public class ClientNetworkSender {
             buffer.writeInt(from);
             buffer.writeInt(to);
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_REORDER_GROUP_ID, buffer);
+            ClientPlayNetworking.send(new ReorderGroupsPacket(buffer));
         }
 
         public static void reorderMicrochips(UUID groupId, int from, int to) {
@@ -85,11 +88,11 @@ public class ClientNetworkSender {
             buffer.writeInt(from);
             buffer.writeInt(to);
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_REORDER_MICROCHIPS_ID, buffer);
+            ClientPlayNetworking.send(new ReorderMicrochipsPacket(buffer));
         }
 
         public static void updateMicrochips() {
-            ClientPlayNetworking.send(NetworkConstants.PACKET_UPDATE_ALL_MICROCHIPS_ID, PacketByteBufs.create());
+            ClientPlayNetworking.send(new UpdateMicrochipsPacket(PacketByteBufs.create()));
         }
     }
 
@@ -97,43 +100,43 @@ public class ClientNetworkSender {
         public static void glowEntity(LivingEntity entity) {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeUuid(entity.getUuid());
-            ClientPlayNetworking.send(NetworkConstants.PACKET_GLOW_ENTITY_ID, buffer);
+            ClientPlayNetworking.send(new GlowEntityPacket(buffer));
         }
 
         public static void glowEntity(Microchip microchip) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_GLOW_ENTITY_ID, microchip.getEntityId());
+            sendSimpleEntityPacket(GlowEntityPacket::new, microchip.getEntityId());
         }
 
         public static void locateEntity(Microchip microchip) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_LOCATE_ENTITY_ID, microchip.getEntityId());
+            sendSimpleEntityPacket(LocateEntityPacket::new, microchip.getEntityId());
         }
 
         public static void teleportToEntity(Microchip microchip) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_TELEPORT_TO_ENTITY_ID, microchip.getEntityId());
+            sendSimpleEntityPacket(TeleportPlayerToEntityPacket::new, microchip.getEntityId());
         }
 
         public static void healEntity(Microchip microchip) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_HEAL_ENTITY_ID, microchip.getEntityId());
+            sendSimpleEntityPacket(HealEntityPacket::new, microchip.getEntityId());
         }
 
         public static void killEntity(Microchip microchip) {
-            sendSimpleEntityPacket(NetworkConstants.PACKET_KILL_ENTITY_ID, microchip.getEntityId());
+            sendSimpleEntityPacket(KillEntityPacket::new, microchip.getEntityId());
         }
 
-        private static void sendSimpleEntityPacket(Identifier packetId, UUID entityId) {
+        private static void sendSimpleEntityPacket(Function<PacketByteBuf, CustomPayload> packetCreator, UUID entityId) {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeUuid(entityId);
-            ClientPlayNetworking.send(packetId, buffer);
+
+            ClientPlayNetworking.send(packetCreator.apply(buffer));
         }
     }
 
     public static final class RequestActions {
-
         public static void requestEntityData(UUID entityId) {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeUuid(entityId);
 
-            ClientPlayNetworking.send(NetworkConstants.PACKET_REQUEST_ENTITY_DATA_ID, buffer);
+            ClientPlayNetworking.send(new RequestEntityDataPacket(buffer));
         }
     }
 

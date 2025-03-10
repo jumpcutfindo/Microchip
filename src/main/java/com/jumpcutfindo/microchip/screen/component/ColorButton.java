@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ColorButton implements Interactable {
-    public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
+    public static final Identifier TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
     private final MicrochipsMenuScreen screen;
     private final int width, height;
 

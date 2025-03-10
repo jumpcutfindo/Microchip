@@ -10,12 +10,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import org.joml.Matrix4fStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -116,8 +116,8 @@ public class InventoryInfoTab extends InfoTab {
         }
 
         RenderSystem.disableDepthTest();
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
+        Matrix4fStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.pushMatrix();
         matrixStack.translate(0.0f, 0.0f, 200.0f);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -131,7 +131,7 @@ public class InventoryInfoTab extends InfoTab {
             if (itemSlot.isHovered(windowX, windowY, mouseX, mouseY)) drawSlotHighlight(context, slotX, slotY, 0);
         }
 
-        matrixStack.pop();
+        matrixStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
         RenderSystem.enableDepthTest();
     }

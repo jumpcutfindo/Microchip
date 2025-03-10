@@ -2,8 +2,8 @@ package com.jumpcutfindo.microchip.data;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.nbt.NbtCompound;
+import org.ladysnake.cca.api.v3.component.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -205,20 +205,6 @@ public abstract class Microchips implements Component {
     }
 
     public abstract void sync();
-
-    @Override
-    public void readFromNbt(NbtCompound tag) {
-        Gson gson = new Gson();
-
-        NbtCompound cpd = tag.getCompound("microchips");
-        Microchips.fromNbt(cpd, this);
-    }
-
-    @Override
-    public void writeToNbt(NbtCompound tag) {
-        NbtCompound cpd = Microchips.toNbt(this);
-        tag.put("microchips", cpd);
-    }
 
     public static void fromNbt(NbtCompound cpd, Microchips microchips) {
         Gson gson = new Gson();

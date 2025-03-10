@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MicrochipModifyGroupWindow extends Window {
-    public static final Identifier TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
+    public static final Identifier TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
     public static final int WIDTH = 138, HEIGHT = 121;
 
     private final MicrochipGroup group;

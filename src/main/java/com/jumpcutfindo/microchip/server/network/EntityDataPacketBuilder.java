@@ -1,6 +1,5 @@
 package com.jumpcutfindo.microchip.server.network;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -9,26 +8,23 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Collection;
 
 public class EntityDataPacketBuilder {
-    private final ServerPlayerEntity player;
     private final LivingEntity entity;
     private final PacketByteBuf buffer;
-    public EntityDataPacketBuilder(ServerPlayerEntity player, LivingEntity entity) {
-        this.player = player;
-        this.entity = entity;
 
-        this.buffer = PacketByteBufs.create();
+    public EntityDataPacketBuilder(PacketByteBuf buf, LivingEntity entity) {
+        this.entity = entity;
+        this.buffer = buf;
     }
 
     public EntityDataPacketBuilder withStatusEffects() {
         Collection<StatusEffectInstance> effects = entity.getStatusEffects();
         buffer.writeCollection(effects, ((packetByteBuf, statusEffectInstance) -> {
             NbtCompound nbt = new NbtCompound();
-            nbt = statusEffectInstance.writeNbt(nbt);
+            nbt.put("statusEffect", statusEffectInstance.writeNbt());
 
             packetByteBuf.writeNbt(nbt);
         }));

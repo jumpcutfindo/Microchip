@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 import java.util.function.BiConsumer;
 
 public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
-    private static final Identifier GROUP_LIST_ITEMS_TEXTURE = new Identifier(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
+    private static final Identifier GROUP_LIST_ITEMS_TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
 
     private boolean isReorderable = true, isReordering;
     private BiConsumer<Integer, Integer> moveAction;
