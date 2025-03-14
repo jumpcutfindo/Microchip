@@ -4,10 +4,13 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.DyeColor;
 import net.minecraft.village.VillagerProfession;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class EntityNamer {
@@ -21,6 +24,7 @@ public class EntityNamer {
                     .put(LivingEntity.class, EntityNamer::getDefaultType)
                     .put(AxolotlEntity.class, EntityNamer::getAxolotlType)
                     .put(CatEntity.class, EntityNamer::getCatType)
+                    .put(WolfEntity.class, EntityNamer::getWolfType)
                     .put(HorseEntity.class, EntityNamer::getHorseType)
                     .put(SheepEntity.class, EntityNamer::getSheepType)
                     .put(TropicalFishEntity.class, EntityNamer::getTropicalFishType)
@@ -82,6 +86,26 @@ public class EntityNamer {
         VillagerProfession profession = ((VillagerEntity) entity).getVillagerData().getProfession();
         if (profession == VillagerProfession.NONE) return "Villager";
         else return profession.toString().substring(0, 1).toUpperCase() + profession.toString().substring(1);
+    }
+
+    private static String getWolfType(LivingEntity entity) {
+        RegistryEntry<WolfVariant> variant = ((WolfEntity) entity).getVariant();
+        Optional<RegistryKey<WolfVariant>> keyOptional = variant.getKey();
+
+        if (keyOptional.isPresent()) {
+            RegistryKey<WolfVariant> key = keyOptional.get();
+            if (key == WolfVariants.DEFAULT || key == WolfVariants.PALE) return "Pale";
+            else if (key == WolfVariants.SPOTTED) return "Spotted";
+            else if (key == WolfVariants.SNOWY) return "Snowy";
+            else if (key == WolfVariants.BLACK) return "Black";
+            else if (key == WolfVariants.ASHEN) return "Ashen";
+            else if (key == WolfVariants.RUSTY) return "Rusty";
+            else if (key == WolfVariants.WOODS) return "Woods";
+            else if (key == WolfVariants.CHESTNUT) return "Chestnut";
+            else if (key == WolfVariants.STRIPED) return "Striped";
+        }
+
+        return "Wolf";
     }
 
     private static String nameWithVariant(String name, String variant) {
