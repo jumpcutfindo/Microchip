@@ -16,7 +16,7 @@ public class ServerNetworkSender {
         PacketByteBuf buffer = packetBuilder
                 .withStatusEffects()
                 .withBreedingCooldown()
-                .withInventory()
+                // .withInventory()
                 .withInventorySize()
                 .build();
 

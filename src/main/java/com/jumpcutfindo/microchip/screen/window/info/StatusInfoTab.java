@@ -158,10 +158,14 @@ public class StatusInfoTab extends InfoTab {
 
             if (!instance.hasExpired(timeSinceStatusRetrieved)) {
                 activeStatusCount++;
+
+                String remainingTimeFormatted = instance.isInfinite() ? "Infinite" :
+                        StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved), this.screen.getPlayer().getWorld().getTickManager().getTickRate());
+
                 if (displayedStatuses < statusDisplayCount) {
                     // Draw the status tooltip
                     if (ScreenUtils.isWithin(mouseX, mouseY, window.getX() + 9 + effectsOffset, window.getY() + 172, 18, 18)) {
-                        Text timeLeftText = Text.literal(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved), this.screen.getPlayer().getWorld().getTickManager().getTickRate())));
+                        Text timeLeftText = Text.literal(String.format(" (%s)", remainingTimeFormatted));
                         Text text = Text.translatable(statusEffect.getTranslationKey()).append(timeLeftText);
                         context.drawTooltip(this.screen.getTextRenderer(), text, mouseX, mouseY);
                     }
@@ -169,7 +173,7 @@ public class StatusInfoTab extends InfoTab {
                     displayedStatuses++;
                 } else {
                     MutableText statusName = Text.translatable(instance.getTranslationKey());
-                    statusName.append(Text.literal(String.format(" (%s)", StringHelper.formatTicks(instance.getRemainingTime(timeSinceStatusRetrieved), this.screen.getPlayer().getWorld().getTickManager().getTickRate()))));
+                    statusName.append(Text.literal(String.format(" (%s)", remainingTimeFormatted)));
                     undisplayedStatuses.add(statusName);
                 }
             }
@@ -253,7 +257,15 @@ public class StatusInfoTab extends InfoTab {
             this.statusEffectInstance = statusEffectInstance;
         }
 
+        public boolean isInfinite() {
+            return statusEffectInstance.isInfinite();
+        }
+
         public boolean hasExpired(int timeSince) {
+            if (statusEffectInstance.isInfinite()) {
+                return false;
+            }
+
             return timeSince > statusEffectInstance.getDuration();
         }
 

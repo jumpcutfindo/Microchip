@@ -22,12 +22,16 @@ public class EntityDataPacketBuilder {
 
     public EntityDataPacketBuilder withStatusEffects() {
         Collection<StatusEffectInstance> effects = entity.getStatusEffects();
-        buffer.writeCollection(effects, ((packetByteBuf, statusEffectInstance) -> {
-            NbtCompound nbt = new NbtCompound();
-            nbt.put("statusEffect", statusEffectInstance.writeNbt());
 
-            packetByteBuf.writeNbt(nbt);
-        }));
+        NbtList effectListNbt = new NbtList();
+        for (var effect : effects) {
+            effectListNbt.add(effect.writeNbt());
+        }
+
+        NbtCompound effectsCpd = new NbtCompound();
+        effectsCpd.put("effects", effectListNbt);
+
+        buffer.writeNbt(effectsCpd);
 
         return this;
     }
