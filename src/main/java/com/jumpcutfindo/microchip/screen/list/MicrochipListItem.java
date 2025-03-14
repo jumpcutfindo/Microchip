@@ -104,9 +104,9 @@ public class MicrochipListItem extends ListItem<Microchip> {
         } else {
             context.drawTexture(RenderLayer::getGuiTextured, MicrochipsListView.TEXTURE, x + 4, y + 4, 0, 214, 28, 28, MicrochipsListView.TEXTURE_WIDTH, MicrochipsListView.TEXTURE_HEIGHT);
         }
+        super.renderBackground(context, x, y, mouseX, mouseY);
 
         ScreenUtils.setShaderColor(this.group.getColor(), false);
-        super.renderBackground(context, x, y, mouseX, mouseY);
         context.draw();
     }
 
@@ -188,7 +188,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
         // Don't render if there is a window active and in front of it
         if (screen.isBlockedByWindow(x, y) || screen.isBlockedByWindow(x + 15, y + 15)) return;
 
-        ScreenUtils.drawStaticEntity(context, x + 2, y + 4, x + 32, y + 32, (int) (size), 0.0f, (float) screen.width / 2, (float) screen.height / 2 , entity);
+        ScreenUtils.drawStaticEntity(context, x + 3, y + 4, x + 32, y + 32, (int) (size), 0.0f, (float) screen.width / 2, (float) screen.height / 2 , entity);
     }
 
     private void setEntity(LivingEntity entity) {

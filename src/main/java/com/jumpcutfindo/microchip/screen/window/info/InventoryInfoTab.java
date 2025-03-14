@@ -94,7 +94,9 @@ public class InventoryInfoTab extends InfoTab {
     }
     @Override
     public void renderContent(DrawContext context, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         context.drawText(this.screen.getTextRenderer(), Text.translatable("microchip.menu.microchipInfo.inventoryTab"), (window.getX() + 7), (window.getY() + 105), 0xFFFFFF, true);
+        context.draw();
 
         // Draw inventory spaces
         List<ItemSlot> slots = getAllSlots();
@@ -102,6 +104,7 @@ public class InventoryInfoTab extends InfoTab {
         int windowX = window.getX();
         int windowY = window.getY();
 
+        ScreenUtils.setShaderColor(this.color, false);
         for (ItemSlot itemSlot : slots) {
             int slotX = itemSlot.getX(windowX);
             int slotY = itemSlot.getY(windowY);
@@ -111,6 +114,7 @@ public class InventoryInfoTab extends InfoTab {
 
             if (itemSlot.isSpecial() && itemSlot.isEmpty()) context.drawTexture(RenderLayer::getGuiTextured, MicrochipInfoWindow.TEXTURE, slotX + 1, slotY + 1, itemSlot.getSpecialU(), itemSlot.getSpecialV(), 16, 16, MicrochipInfoWindow.TEXTURE_WIDTH, MicrochipInfoWindow.TEXTURE_HEIGHT);
         }
+        context.draw();
 
         RenderSystem.disableDepthTest();
         Matrix4fStack matrixStack = RenderSystem.getModelViewStack();
@@ -131,6 +135,7 @@ public class InventoryInfoTab extends InfoTab {
         matrixStack.popMatrix();
 
         RenderSystem.enableDepthTest();
+        context.draw();
     }
 
     @Override
@@ -188,8 +193,12 @@ public class InventoryInfoTab extends InfoTab {
     }
 
     private void drawItem(DrawContext context, ItemStack stack, int x, int y, String amountText) {
+        context.getMatrices().push();
+        context.getMatrices().translate(0.0F, 0.0F, -10.0F);
+        context.drawItem(stack, x, y);
+        context.drawStackOverlay(this.screen.getTextRenderer(), stack, x, y, amountText);
+        context.getMatrices().pop();
         context.drawItem(screen.getPlayer(), stack, x, y, 0);
-        // context.drawItemInSlot(screen.getTextRenderer(), stack, x, y);
     }
 
     private void drawSlotHighlight(DrawContext context, int x, int y, int z) {
