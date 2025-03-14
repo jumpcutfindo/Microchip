@@ -5,11 +5,17 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.BuiltinRegistries;
+import net.minecraft.registry.RegistryWrapper;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public class EntityDataPacketBuilder {
     private final LivingEntity entity;
@@ -29,7 +35,7 @@ public class EntityDataPacketBuilder {
         }
 
         NbtCompound effectsCpd = new NbtCompound();
-        effectsCpd.put("effects", effectListNbt);
+        effectsCpd.put("Effects", effectListNbt);
 
         buffer.writeNbt(effectsCpd);
 
@@ -47,15 +53,16 @@ public class EntityDataPacketBuilder {
     }
 
     public EntityDataPacketBuilder withInventory() {
-        NbtCompound entityNbt = entity.writeNbt(new NbtCompound());
-        NbtCompound inventoryNbt = new NbtCompound();
-        NbtList itemListNbt = new NbtList();
+        NbtCompound entityInventory = new NbtCompound();
+        RegistryWrapper.WrapperLookup wrapperLookup = BuiltinRegistries.createWrapperLookup();
 
-        if (entityNbt.contains("Inventory")) itemListNbt = entityNbt.getList("Inventory", 10);
-        else if (entityNbt.contains("Items")) itemListNbt = entityNbt.getList("Items", 10);
+        // Populate inventory items, if present
+        if (entity instanceof InventoryOwner io) {
+            SimpleInventory inventory = io.getInventory();
+            entityInventory.put("Inventory", inventory.toNbtList(wrapperLookup));
+        }
 
-        inventoryNbt.put("Inventory", itemListNbt);
-        buffer.writeNbt(inventoryNbt);
+        buffer.writeNbt(entityInventory);
 
         return this;
     }

@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTURE;
 
 public class InventoryInfoTab extends InfoTab {
-    private List<ItemStack> inventoryList;
+    private List<ItemStack> handList, armorList, inventoryList;
     private List<ItemSlot> handSlots, armorSlots, inventorySlots;
     private int inventorySize;
 
@@ -178,6 +178,10 @@ public class InventoryInfoTab extends InfoTab {
     private List<ItemSlot> getAllSlots() {
         return Stream.of(handSlots, armorSlots, inventorySlots)
                 .flatMap(Collection::stream).toList();
+    }
+
+    public void setHandList(List<ItemStack> handList) {
+        this.handList = handList;
     }
 
     public void setInventoryList(List<ItemStack> inventoryList, int inventorySize) {

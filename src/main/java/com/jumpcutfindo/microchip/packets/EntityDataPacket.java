@@ -1,6 +1,7 @@
 package com.jumpcutfindo.microchip.packets;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -10,13 +11,9 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.BuiltinRegistries;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,13 +28,14 @@ public class EntityDataPacket implements CustomPayload {
     private final Collection<StatusEffectInstance> entityStatuses;
     private final int breedingAge;
 
-//    private final List<ItemStack> inventoryList;
+    private final List<ItemStack> inventoryList;
+
     private final int inventorySize;
 
     public EntityDataPacket(PacketByteBuf buf) {
         // Get entity statuses
         NbtCompound effectCpd = buf.readNbt();
-        NbtList effectListNbt = effectCpd.getList("effects", NbtElement.COMPOUND_TYPE);
+        NbtList effectListNbt = effectCpd.getList("Effects", NbtElement.COMPOUND_TYPE);
         this.entityStatuses = new ArrayList<>();
 
         effectListNbt.forEach((effectNbt) -> {
@@ -49,16 +47,18 @@ public class EntityDataPacket implements CustomPayload {
         this.breedingAge = buf.readInt();
 
         // Get entity's inventory
-//        RegistryWrapper.WrapperLookup wrapperLookup = BuiltinRegistries.createWrapperLookup();
-//        NbtCompound inventory = buf.readNbt();
-//        this.inventoryList = new ArrayList<>();
-//        if (inventory != null && inventory.contains("Inventory")) {
-//            NbtList inventoryNbtList = inventory.getList("Inventory", 10);
-//            inventoryNbtList.forEach(element -> {
-//                Optional<ItemStack> itemStackOpt =ItemStack.fromNbt(wrapperLookup, (NbtCompound) element);
-//                itemStackOpt.ifPresent(this.inventoryList::add);
-//            });
-//        }
+        RegistryWrapper.WrapperLookup wrapperLookup = BuiltinRegistries.createWrapperLookup();
+        NbtCompound inventoryCpd = buf.readNbt();
+
+        NbtList inventoryItemListNbt = inventoryCpd.getList("Inventory", NbtElement.COMPOUND_TYPE);
+        this.inventoryList = new ArrayList<>();
+
+        if (inventoryItemListNbt != null) {
+            inventoryItemListNbt.forEach(itemStackNbt -> {
+                Optional<ItemStack> itemStack = ItemStack.fromNbt(wrapperLookup, itemStackNbt);
+                itemStack.ifPresent(this.inventoryList::add);
+            });
+        }
 
         // Get entity's inventory size
         this.inventorySize = buf.readInt();
@@ -72,23 +72,24 @@ public class EntityDataPacket implements CustomPayload {
         }
 
         NbtCompound effectsCpd = new NbtCompound();
-        effectsCpd.put("effects", effectListNbt);
+        effectsCpd.put("Effects", effectListNbt);
 
         buf.writeNbt(effectsCpd);
 
         // Write breeding age
         buf.writeInt(this.breedingAge);
 
+        // Write entity's inventory
         NbtCompound inventoryNbt = new NbtCompound();
         RegistryWrapper.WrapperLookup wrapperLookup = BuiltinRegistries.createWrapperLookup();
 
-        // Write entity's inventory
-//        for (ItemStack itemStack : this.inventoryList) {
-//            itemStack.encode(wrapperLookup, inventoryNbt);
-//        }
-//
-//        inventoryNbt.put("Inventory", inventoryNbt);
-//        buf.writeNbt(inventoryNbt);
+        NbtList inventoryItemListNbt = new NbtList();
+        for (ItemStack itemStack : this.inventoryList) {
+            inventoryItemListNbt.add(itemStack.encode(wrapperLookup));
+        }
+        inventoryNbt.put("Inventory", inventoryItemListNbt);
+
+        buf.writeNbt(inventoryNbt);
 
         // Write inventory size
         buf.writeInt(this.inventorySize);
@@ -102,9 +103,9 @@ public class EntityDataPacket implements CustomPayload {
         return breedingAge;
     }
 
-//    public List<ItemStack> inventoryList() {
-//        return inventoryList;
-//    }
+    public List<ItemStack> inventoryList() {
+        return inventoryList;
+    }
 
     public int inventorySize() {
         return inventorySize;
