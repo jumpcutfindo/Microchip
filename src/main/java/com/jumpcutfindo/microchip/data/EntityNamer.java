@@ -21,14 +21,15 @@ public class EntityNamer {
      */
     public static final Map<Class<? extends LivingEntity>, Function<LivingEntity, String>> ENTITY_TYPE_NAMES =
             ImmutableMap.<Class<? extends LivingEntity>, Function<LivingEntity, String>>builder()
-                    .put(LivingEntity.class, EntityNamer::getDefaultType)
                     .put(AxolotlEntity.class, EntityNamer::getAxolotlType)
                     .put(CatEntity.class, EntityNamer::getCatType)
-                    .put(WolfEntity.class, EntityNamer::getWolfType)
+                    .put(FrogEntity.class, EntityNamer::getFrogType)
                     .put(HorseEntity.class, EntityNamer::getHorseType)
+                    .put(LivingEntity.class, EntityNamer::getDefaultType)
                     .put(SheepEntity.class, EntityNamer::getSheepType)
                     .put(TropicalFishEntity.class, EntityNamer::getTropicalFishType)
                     .put(VillagerEntity.class, EntityNamer::getVillagerType)
+                    .put(WolfEntity.class, EntityNamer::getWolfType)
                     .build();
 
     public static String getDisplayName(LivingEntity entity) {
@@ -49,7 +50,7 @@ public class EntityNamer {
         return nameWithVariant("Axolotl", variant.getName());
     }
 
-    private static String getCatType(LivingEntity entity) {{
+    private static String getCatType(LivingEntity entity) {
         CatVariant catType = ((CatEntity) entity).getVariant().value();
 
         if (catType == Registries.CAT_VARIANT.get(CatVariant.TABBY)) return "Tabby";
@@ -64,7 +65,16 @@ public class EntityNamer {
         else if (catType == Registries.CAT_VARIANT.get(CatVariant.JELLIE)) return "Jellie";
         else if (catType == Registries.CAT_VARIANT.get(CatVariant.ALL_BLACK)) return "All Black";
         else return "Cat";
-    }}
+    }
+
+    private static String getFrogType(LivingEntity entity) {
+        FrogVariant frogType = ((FrogEntity) entity).getVariant().value();
+
+        if (frogType == Registries.FROG_VARIANT.get(FrogVariant.COLD)) return "Cold";
+        else if (frogType == Registries.FROG_VARIANT.get(FrogVariant.WARM)) return "Warm";
+        else if (frogType == Registries.FROG_VARIANT.get(FrogVariant.TEMPERATE)) return "Temperate";
+        else return "Frog";
+    }
 
     private static String getHorseType(LivingEntity entity) {
         HorseColor color = ((HorseEntity) entity).getVariant();
