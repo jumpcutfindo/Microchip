@@ -106,7 +106,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
         }
         super.renderBackground(context, x, y, mouseX, mouseY);
 
-        ScreenUtils.setShaderColor(this.group.getColor(), false);
+        ScreenUtils.setShaderColor(this.group.getColor(), true);
         context.draw();
     }
 
