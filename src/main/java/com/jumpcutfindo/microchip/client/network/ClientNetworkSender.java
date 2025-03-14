@@ -1,23 +1,27 @@
 package com.jumpcutfindo.microchip.client.network;
 
 import com.google.gson.Gson;
-import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.packets.*;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class ClientNetworkSender {
+public class ClientNetworkSender implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+
+    }
+
     public static final class MicrochipsActions {
         public static void addEntityToGroup(UUID groupId, UUID entityId) {
             PacketByteBuf buffer = PacketByteBufs.create();

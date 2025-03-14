@@ -22,10 +22,13 @@
     "main": [
       "com.jumpcutfindo.microchip.MicrochipMod",
       "com.jumpcutfindo.microchip.server.network.ServerNetworkReceiver"
+      "com.jumpcutfindo.microchip.server.network.ServerNetworkReceiver",
+      "com.jumpcutfindo.microchip.server.network.ServerNetworkSender"
     ],
     "client": [
       "com.jumpcutfindo.microchip.client.InputListener",
-      "com.jumpcutfindo.microchip.client.network.ClientNetworkReceiver"
+      "com.jumpcutfindo.microchip.client.network.ClientNetworkReceiver",
+      "com.jumpcutfindo.microchip.client.network.ClientNetworkSender"
     ],
     "cardinal-components": [
       "com.jumpcutfindo.microchip.data.MicrochipComponents"

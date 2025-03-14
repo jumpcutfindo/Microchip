@@ -23,7 +23,6 @@ public class ClientNetworkReceiver implements ClientModInitializer {
     }
 
     public static void onEntityDataResponse() {
-        PayloadTypeRegistry.playS2C().register(EntityDataPacket.PACKET_ID, EntityDataPacket.PACKET_CODEC);
         ClientPlayNetworking.registerGlobalReceiver(EntityDataPacket.PACKET_ID, (entityDataPacket, context) -> {
             if (context.client().currentScreen instanceof MicrochipScreen screen && screen.getActiveWindow() instanceof MicrochipInfoWindow infoWindow) {
                 infoWindow.setEntityStatuses(entityDataPacket.entityStatuses());
