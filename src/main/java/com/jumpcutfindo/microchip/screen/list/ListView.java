@@ -124,7 +124,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     private void renderScrollbar(DrawContext context, int mouseX, int mouseY) {
         if (!this.hasScrollbar()) return;
 
-        context.drawTexture(RenderLayer::getGuiTextured, this.texture, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15, this.width, this.height);
+        context.drawTexture(RenderLayer::getGuiTextured, this.texture, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15, this.textureWidth, this.textureHeight);
     }
 
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
