@@ -24,7 +24,8 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
 
     // Texture information
     protected Identifier texture;
-    protected int textureU, textureV, textureWidth, textureHeight;
+    protected int textureWidth, textureHeight;
+    protected int textureU, textureV, width, height;
     protected int listX, listY;
     protected int scrollbarWidth, scrollbarHeight, scrollbarU, scrollbarV, scrollbarX, scrollbarY;
     protected int maxItems;
@@ -59,12 +60,14 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         return this;
     }
 
-    protected ListView<T> setTexture(Identifier texture, int u, int v, int width, int height) {
+    protected ListView<T> setTexture(Identifier texture, int textureWidth, int textureHeight, int u, int v, int width, int height) {
         this.texture = texture;
+        this.textureWidth = textureWidth;
+        this.textureHeight = textureHeight;
         this.textureU = u;
         this.textureV = v;
-        this.textureWidth = width;
-        this.textureHeight = height;
+        this.width = width;
+        this.height = height;
         return this;
     }
 
@@ -99,7 +102,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     }
 
     public void renderBackground(DrawContext context, int mouseX, int mouseY) {
-        context.drawTexture(RenderLayer::getGuiTextured, this.texture, x, y, this.textureU, this.textureV, this.textureWidth, this.textureHeight, this.textureWidth, this.textureHeight);
+        context.drawTexture(RenderLayer::getGuiTextured, this.texture, x, y, this.textureU, this.textureV, this.width, this.height, this.textureWidth, this.textureHeight);
         this.renderScrollbar(context, mouseX, mouseY);
     }
 
@@ -121,7 +124,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     private void renderScrollbar(DrawContext context, int mouseX, int mouseY) {
         if (!this.hasScrollbar()) return;
 
-        context.drawTexture(RenderLayer::getGuiTextured, this.texture, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15, this.textureWidth, this.textureHeight);
+        context.drawTexture(RenderLayer::getGuiTextured, this.texture, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15, this.width, this.height);
     }
 
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
@@ -183,12 +186,12 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
         return listItems.size() > maxItems;
     }
 
-    public int getTextureWidth() {
-        return textureWidth;
+    public int getWidth() {
+        return width;
     }
 
-    public int getTextureHeight() {
-        return textureHeight;
+    public int getHeight() {
+        return height;
     }
 
     public void setSelected(int index, boolean selected) {

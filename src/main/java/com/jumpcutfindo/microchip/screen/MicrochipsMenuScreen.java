@@ -159,9 +159,9 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
         }
 
         if (allGroups.size() == 0) {
-            this.microchipsList = new MicrochipsListView(this, null, x + this.microchipGroupList.getTextureWidth(), y);
+            this.microchipsList = new MicrochipsListView(this, null, x + this.microchipGroupList.getWidth(), y);
         } else {
-            this.microchipsList = new MicrochipsListView(this, allGroups.get(index), x + this.microchipGroupList.getTextureWidth(), y);
+            this.microchipsList = new MicrochipsListView(this, allGroups.get(index), x + this.microchipGroupList.getWidth(), y);
             if (settings != null) this.microchipsList.applySettings(settings);
         }
     }
@@ -171,7 +171,7 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
     }
 
     protected int getMicrochipListX() {
-        return this.x + this.microchipGroupList.getTextureWidth();
+        return this.x + this.microchipGroupList.getWidth();
     }
 
     protected int getListY() {
@@ -179,11 +179,11 @@ public class MicrochipsMenuScreen extends MicrochipScreen {
     }
 
     protected boolean isMouseInGroupList(double mouseX, double mouseY) {
-        return ScreenUtils.isWithin(mouseX, mouseY, getGroupListX(), getListY(), this.microchipGroupList.getTextureWidth(), this.microchipGroupList.getTextureHeight());
+        return ScreenUtils.isWithin(mouseX, mouseY, getGroupListX(), getListY(), this.microchipGroupList.getWidth(), this.microchipGroupList.getHeight());
     }
 
     protected boolean isMouseInMicrochipList(double mouseX, double mouseY) {
-        return ScreenUtils.isWithin(mouseX, mouseY, getMicrochipListX(), getListY(), this.microchipsList.getTextureWidth(), this.microchipsList.getTextureHeight());
+        return ScreenUtils.isWithin(mouseX, mouseY, getMicrochipListX(), getListY(), this.microchipsList.getWidth(), this.microchipsList.getHeight());
     }
 
     public enum RefreshType {

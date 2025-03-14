@@ -37,7 +37,7 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         super(screen);
 
         this.setPosition(x, y)
-                .setTexture(TEXTURE, 0, 0, 216, 178)
+                .setTexture(TEXTURE, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0, 216, 178)
                 .setListPosition(8, 26)
                 .setScrollbar(195, 26, 216, 0, 14, 144)
                 .setList(createItems(screen, microchipGroup), 4)

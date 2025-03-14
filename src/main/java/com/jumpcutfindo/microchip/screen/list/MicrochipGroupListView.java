@@ -34,7 +34,7 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
         super(screen);
 
         this.setPosition(x, y)
-                .setTexture(TEXTURE, 0, 0, 160, 178)
+                .setTexture(TEXTURE, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, 0, 160, 178)
                 .setListPosition(8, 26)
                 .setScrollbar(139, 26, 160, 0, 14, 144)
                 .setList(createItems(screen, microchips), 8)
@@ -129,8 +129,8 @@ public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     }
 
     public void setTextureDims(int width, int height) {
-        this.textureWidth = width;
-        this.textureHeight = height;
+        this.width = width;
+        this.height = height;
     }
 
     public MicrochipGroupListItem getSelectedItem() {
