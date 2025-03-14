@@ -43,6 +43,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
 
     @Override
     public void renderContent(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         drawTooltips(context, x, y, mouseX, mouseY);
         drawButtons(context, x, y, mouseX, mouseY);
 
@@ -89,12 +90,13 @@ public class MicrochipListItem extends ListItem<Microchip> {
         } else {
             context.drawTexture(RenderLayer::getGuiTextured, MicrochipsListView.TEXTURE, x + 168 - healthIconOffset, y + 20, 180, 193, 9, 9, MicrochipsListView.TEXTURE_WIDTH, MicrochipsListView.TEXTURE_HEIGHT);
         }
+
+        context.draw();
     }
 
     @Override
     public void renderBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
         // Draw entity
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         if (this.entity != null) {
             int xOffset = EntityModelScaler.getInterfaceOffset(entity).getListX();
             int yOffset = EntityModelScaler.getInterfaceOffset(entity).getListY();
@@ -103,8 +105,9 @@ public class MicrochipListItem extends ListItem<Microchip> {
             context.drawTexture(RenderLayer::getGuiTextured, MicrochipsListView.TEXTURE, x + 4, y + 4, 0, 214, 28, 28, MicrochipsListView.TEXTURE_WIDTH, MicrochipsListView.TEXTURE_HEIGHT);
         }
 
-        ScreenUtils.setShaderColor(this.group.getColor(), true);
+        ScreenUtils.setShaderColor(this.group.getColor(), false);
         super.renderBackground(context, x, y, mouseX, mouseY);
+        context.draw();
     }
 
     @Override
@@ -159,13 +162,10 @@ public class MicrochipListItem extends ListItem<Microchip> {
     }
 
     private void drawButtons(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-
         if (this.isReordering) {
             int arrowWidth = 5, arrowHeight = 5;
             int upX = x + 164, upY = y + 3;
             int downX = x + 172, downY = y + 3;
-            ScreenUtils.setShaderColor(this.group.getColor(), true);
 
             if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
                 context.drawTexture(RenderLayer::getGuiTextured, MicrochipsListView.TEXTURE, upX, upY, 185, 183, arrowWidth, arrowHeight, MicrochipsListView.TEXTURE_WIDTH, MicrochipsListView.TEXTURE_HEIGHT);
@@ -189,57 +189,6 @@ public class MicrochipListItem extends ListItem<Microchip> {
         if (screen.isBlockedByWindow(x, y) || screen.isBlockedByWindow(x + 15, y + 15)) return;
 
         ScreenUtils.drawStaticEntity(context, x + 2, y + 4, x + 32, y + 32, (int) (size), 0.0f, (float) screen.width / 2, (float) screen.height / 2 , entity);
-
-//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-//
-//        EntityPose pose = this.entity.getPose();
-//
-//        this.entity.setPose(EntityPose.STANDING);
-//
-//        float f = (float)Math.atan(1.0f);
-//        float g = (float)Math.atan(0.0f);
-//        Matrix4fStack matrixStack = RenderSystem.getModelViewStack();
-//        matrixStack.pushMatrix();
-//        matrixStack.translate(x + 18, y + 30, 1050.0f);
-//        matrixStack.scale(1.0f, 1.0f, -1.0f);
-//        RenderSystem.applyModelViewMatrix();
-//        MatrixStack matrixStack2 = new MatrixStack();
-//        matrixStack2.translate(0.0, 0.0, 1000.0);
-//        matrixStack2.scale(entityModelSize, entityModelSize, entityModelSize);
-//        Quaternionf quaternionf = new Quaternionf().rotateZ((float)Math.PI);
-//        Quaternionf quaternionf2 = new Quaternionf().rotateX(g * 20.0f * ((float)Math.PI / 180));
-//        quaternionf.mul(quaternionf2);
-//        matrixStack2.multiply(quaternionf);
-//        float h = entity.bodyYaw;
-//        float i = entity.getYaw();
-//        float j = entity.getPitch();
-//        float k = entity.prevHeadYaw;
-//        float l = entity.headYaw;
-//        entity.bodyYaw = 180.0f + f * 20.0f;
-//        entity.setYaw(180.0f + f * 40.0f);
-//        entity.setPitch(-g * 20.0f);
-//        entity.headYaw = entity.getYaw();
-//        entity.prevHeadYaw = entity.getYaw();
-//        DiffuseLighting.method_34742();
-//
-//        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-//        quaternionf2.conjugate();
-//        entityRenderDispatcher.setRotation(quaternionf2);
-//        entityRenderDispatcher.setRenderShadows(false);
-//        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-//        RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f, matrixStack2, immediate, 0xF000F0));
-//        immediate.draw();
-//        entityRenderDispatcher.setRenderShadows(true);
-//        entity.bodyYaw = h;
-//        entity.setYaw(i);
-//        entity.setPitch(j);
-//        entity.prevHeadYaw = k;
-//        entity.headYaw = l;
-//        matrixStack.popMatrix();
-//        RenderSystem.applyModelViewMatrix();
-//        DiffuseLighting.enableGuiDepthLighting();
-//
-//        this.entity.setPose(pose);
     }
 
     private void setEntity(LivingEntity entity) {

@@ -7,9 +7,9 @@ import com.jumpcutfindo.microchip.data.Microchips;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
 import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -58,7 +58,11 @@ public class MicrochipMoveChipsWindow extends Window {
         this.listView.renderItems(context, mouseX, mouseY);
 
         this.submitButton.active = this.listView.getSelectedItems().size() > 0;
+        context.draw();
+
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         this.submitButton.render(context, mouseX, mouseY, 0);
+        context.draw();
     }
 
     @Override

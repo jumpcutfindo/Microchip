@@ -70,13 +70,11 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY) {
         ScreenUtils.setShaderColor(this.group.getColor(), true);
-
         super.renderBackground(context, mouseX, mouseY);
+        context.drawTexture(RenderLayer::getGuiTextured, MicrochipGroupListView.TEXTURE, x + 5, y + 6, group.getColor().ordinal() * 16, 214, 16, 16, MicrochipGroupListView.TEXTURE_WIDTH, MicrochipGroupListView.TEXTURE_HEIGHT);
+        context.draw();
 
         context.drawText(this.screen.getTextRenderer(), this.title, (x + this.titleX), (y + this.titleY), this.group.getColor().getShadowColor(), false);
-
-        ScreenUtils.setShaderColor(group.getColor(), false);
-        context.drawTexture(RenderLayer::getGuiTextured, MicrochipGroupListView.TEXTURE, x + 5, y + 6, group.getColor().ordinal() * 16, 214, 16, 16, MicrochipGroupListView.TEXTURE_WIDTH, MicrochipGroupListView.TEXTURE_HEIGHT);
     }
 
     @Override

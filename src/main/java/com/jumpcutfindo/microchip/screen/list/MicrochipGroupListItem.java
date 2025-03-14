@@ -65,10 +65,11 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
 
     @Override
     public void renderBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
         super.renderBackground(context, x, y, mouseX, mouseY);
-
         context.drawTexture(RenderLayer::getGuiTextured, GROUP_LIST_ITEMS_TEXTURE, x + 1, y + 1, this.item.getColor().ordinal() * 16, 214, 16, 16, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
+
+        ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
+        context.draw();
     }
 
     @Override
@@ -104,6 +105,7 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
                 context.drawTexture(RenderLayer::getGuiTextured, GROUP_LIST_ITEMS_TEXTURE, downX, downY, 160, 24, arrowWidth, arrowHeight, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
             }
 
+            context.draw();
         }
     }
 

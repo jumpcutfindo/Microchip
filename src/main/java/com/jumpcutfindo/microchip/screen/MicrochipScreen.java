@@ -7,9 +7,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -111,6 +108,7 @@ public class MicrochipScreen extends Screen {
     public void drawBackgroundGradient(DrawContext context) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         context.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
+        context.draw();
     }
 
     public void drawGradient(DrawContext context, int x, int y, int endX, int endY, int colorStart, int colorEnd, int z) {

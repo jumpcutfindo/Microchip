@@ -138,6 +138,7 @@ public class StatusInfoTab extends InfoTab {
         }
 
         context.drawText(this.screen.getTextRenderer(), Text.literal(String.format("+%d", Math.max(activeStatusCount - displayedStatuses, 0))), (window.getX() + 132), (window.getY() + 177), 0xFFFFFF, true);
+        context.draw();
     }
 
     @Override

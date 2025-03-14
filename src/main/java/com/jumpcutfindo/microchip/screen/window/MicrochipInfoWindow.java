@@ -86,10 +86,8 @@ public class MicrochipInfoWindow extends Window {
     }
 
     private void drawIdentityCard(DrawContext context, int mouseX, int mouseY) {
-        ScreenUtils.setShaderColor(this.color, false);
         context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 8, y + 23, 168, 0, 46, 62, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         // Draw entity background, then entity, then the main UI
         if (this.entity != null) {
             int xOffset = 8 + EntityModelScaler.getInterfaceOffset(entity).getWindowX();
@@ -98,11 +96,14 @@ public class MicrochipInfoWindow extends Window {
             drawLookingEntity(context, entity, x + xOffset, y + yOffset, (float) mouseX, (float) mouseY, entityModelSize);
         }
         else {
+            ScreenUtils.setShaderColor(this.color, false);
             context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 18, y + 40, 214, 0, 28, 28, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            context.draw();
         }
 
         ScreenUtils.setShaderColor(this.color, false);
         context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x, y, 0, 0, this.width, this.height, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        context.draw();
 
         // Draw the title and the entity information
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -111,6 +112,7 @@ public class MicrochipInfoWindow extends Window {
         context.drawText(this.screen.getTextRenderer(), microchip.getEntityData().getTypeName(), x + 59, y + 50, 0xFFFFFF, true);
 
         context.drawText(this.screen.getTextRenderer(), StringUtils.truncatedName(getCoordinates(), 18), x + 59, y + 70, 0xFFFFFF, true);
+        context.draw();
     }
 
     private void drawTabs(DrawContext context, int mouseX, int mouseY) {
@@ -124,9 +126,11 @@ public class MicrochipInfoWindow extends Window {
             } else {
                 context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 164, y + 96 + tabVerticalOffset, 200, 62 + (i == 0 ? 0 : 28), 32, 28, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             }
+            context.draw();
 
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 171, y + 100 + tabVerticalOffset, i * 18, 215, 18, 18, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            context.draw();
 
             tabVerticalOffset += 30;
         }
@@ -225,57 +229,6 @@ public class MicrochipInfoWindow extends Window {
 
     public static void drawLookingEntity(DrawContext context, LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
         ScreenUtils.drawLookingEntity(context, x, y, x + 46, y + 62, (int) size, 0.0625F, (float) mouseX, (float) mouseY, entity);
-
-//        InventoryScreen.drawEntity(context, x, y, x + 49, x + 70, 2, 0.25f, (float) mouseX, (float) mouseY, entity);
-
-        //        EntityPose pose = entity.getPose();
-//        entity.setPose(EntityPose.STANDING);
-//
-//        float f = (float)Math.atan(mouseX / 40.0F);
-//        float g = (float)Math.atan(mouseY / 40.0F);
-//        Matrix4fStack matrixStack = RenderSystem.getModelViewStack();
-//        matrixStack.pushMatrix();
-//        matrixStack.translate(x, y, 1050.0f);
-//        matrixStack.scale(1.0F, 1.0F, -1.0F);
-//        // RenderSystem.applyModelViewMatrix();
-//        MatrixStack matrixStack2 = new MatrixStack();
-//        matrixStack2.translate(0.0, 0.0, 1000.0);
-//        matrixStack2.scale(size, size, size);
-//        Quaternionf quaternionf = new Quaternionf().rotateZ((float)Math.PI);
-//        Quaternionf quaternionf2 = new Quaternionf().rotateX(g * 20.0f * ((float)Math.PI / 180));
-//        quaternionf.mul(quaternionf2);
-//        matrixStack2.multiply(quaternionf);
-//        float h = entity.bodyYaw;
-//        float i = entity.getYaw();
-//        float j = entity.getPitch();
-//        float k = entity.prevHeadYaw;
-//        float l = entity.headYaw;
-//        entity.bodyYaw = 180.0F + f * 20.0F;
-//        entity.setYaw(180.0F + f * 40.0F);
-//        entity.setPitch(-g * 20.0F);
-//        entity.headYaw = entity.getYaw();
-//        entity.prevHeadYaw = entity.getYaw();
-//        DiffuseLighting.method_34742();
-//        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-//        quaternionf2.conjugate();
-//        entityRenderDispatcher.setRotation(quaternionf2);
-//        entityRenderDispatcher.setRenderShadows(false);
-//        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-//        RenderSystem.runAsFancy(() -> {
-//            entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F, matrixStack2, immediate, 15728880);
-//        });
-//        immediate.draw();
-//        entityRenderDispatcher.setRenderShadows(true);
-//        entity.bodyYaw = h;
-//        entity.setYaw(i);
-//        entity.setPitch(j);
-//        entity.prevHeadYaw = k;
-//        entity.headYaw = l;
-//        matrixStack.popMatrix();
-//        RenderSystem.applyModelViewMatrix();
-//        DiffuseLighting.enableGuiDepthLighting();
-//
-//        entity.setPose(pose);
     }
 
     public void setEntityStatuses(Collection<StatusEffectInstance> entityStatuses) {

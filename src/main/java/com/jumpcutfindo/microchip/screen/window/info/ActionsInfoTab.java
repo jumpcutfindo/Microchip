@@ -8,7 +8,6 @@ import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 
@@ -66,6 +65,8 @@ public class ActionsInfoTab extends InfoTab {
             entityActionButton.setY(window.getY() + 118 + (i / 2) * yOffset);
             entityActionButton.render(context, mouseX, mouseY, 0);
         }
+
+        context.draw();
     }
 
     @Override
