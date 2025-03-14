@@ -2,7 +2,6 @@ package com.jumpcutfindo.microchip.server.network;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.jumpcutfindo.microchip.constants.NetworkConstants;
 import com.jumpcutfindo.microchip.data.GroupColor;
 import com.jumpcutfindo.microchip.data.Microchip;
 import com.jumpcutfindo.microchip.data.MicrochipEntityData;
@@ -147,7 +146,7 @@ public class ServerNetworkReceiver implements ModInitializer {
                 if (entity == null) return;
 
                 // Kill entity
-                entity.kill();
+                entity.kill(context.player().getServerWorld());
                 context.player().sendMessage(Text.translatable("microchip.menu.microchipInfo.actionTab.kill.applied", entity.getDisplayName()), false);
             }
         );

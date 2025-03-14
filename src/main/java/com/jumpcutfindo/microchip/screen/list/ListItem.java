@@ -2,10 +2,8 @@ package com.jumpcutfindo.microchip.screen.list;
 
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 
 /**
@@ -17,6 +15,7 @@ public abstract class ListItem<T> {
     protected T item;
     protected int index;
     private Identifier texture;
+    private int textureWidth, textureHeight;
     protected int u, v, width, height;
     protected boolean isSelected;
 
@@ -26,12 +25,14 @@ public abstract class ListItem<T> {
         this.index = index;
     }
 
-    protected void setBackground(Identifier texture, int u, int v, int width, int height) {
+    protected void setBackground(Identifier texture, int u, int v, int width, int height, int textureWidth, int textureHeight) {
         this.texture = texture;
         this.u = u;
         this.v = v;
         this.width = width;
         this.height = height;
+        this.textureWidth = textureWidth;
+        this.textureHeight = textureHeight;
     }
 
     public T getItem() {
@@ -71,16 +72,16 @@ public abstract class ListItem<T> {
             renderHoveredBackground(context, x, y, mouseX, mouseY);
         } else {
             // Normal
-            context.drawTexture(this.texture, x, y, this.u, this.v, this.width, this.height);
+            context.drawTexture(RenderLayer::getGuiTextured, texture, x, y, this.u, this.v, this.width, this.height, this.textureWidth, this.textureHeight);
         }
     }
 
     public void renderSelectedBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        context.drawTexture(this.texture, x, y, this.u, this.v, this.width, this.height);
+        context.drawTexture(RenderLayer::getGuiTextured, texture, x, y, this.u, this.v, this.width, this.height, this.textureWidth, this.textureHeight);
     }
 
     public void renderHoveredBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        context.drawTexture(this.texture, x, y, this.u, this.v, this.width, this.height);
+        context.drawTexture(RenderLayer::getGuiTextured, texture, x, y, this.u, this.v, this.width, this.height, this.textureWidth, this.textureHeight);
     }
 
     public abstract void renderContent(DrawContext context, int x, int y, int mouseX, int mouseY);

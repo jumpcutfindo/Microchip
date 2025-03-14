@@ -6,19 +6,15 @@ import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ColorButton implements Interactable {
     public static final Identifier TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
+    public static int TEXTURE_WIDTH = 256, TEXTURE_HEIGHT = 256;
     private final MicrochipsMenuScreen screen;
     private final int width, height;
 
@@ -57,8 +53,8 @@ public class ColorButton implements Interactable {
     }
 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTexture(TEXTURE, x, y, u, v, this.width, this.height);
-        if (this.isSelected) context.drawTexture(TEXTURE, x, y + 12, u, v + 10, this.width, this.height);
+        context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x, y, u, v, this.width, this.height, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        if (this.isSelected) context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x, y + 12, u, v + 10, this.width, this.height, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     public boolean renderTooltip(DrawContext context, int mouseX, int mouseY, int delta) {

@@ -8,23 +8,21 @@ import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.IconButton;
 import com.jumpcutfindo.microchip.screen.window.MicrochipModifyGroupWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MicrochipGroupListView extends ListView<MicrochipGroupListItem> {
     protected static final Identifier TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
+    protected static final int TEXTURE_WIDTH = 256;
+    protected static final int TEXTURE_HEIGHT = 256;
+
     private MutableText title;
     private final int titleX, titleY;
 

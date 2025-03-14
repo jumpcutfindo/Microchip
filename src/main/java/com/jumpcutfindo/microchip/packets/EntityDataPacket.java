@@ -1,7 +1,6 @@
 package com.jumpcutfindo.microchip.packets;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -85,7 +84,7 @@ public class EntityDataPacket implements CustomPayload {
 
         NbtList inventoryItemListNbt = new NbtList();
         for (ItemStack itemStack : this.inventoryList) {
-            inventoryItemListNbt.add(itemStack.encode(wrapperLookup));
+            inventoryItemListNbt.add(itemStack.toNbt(wrapperLookup));
         }
         inventoryNbt.put("Inventory", inventoryItemListNbt);
 

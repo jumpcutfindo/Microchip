@@ -7,10 +7,7 @@ import com.jumpcutfindo.microchip.screen.ScreenUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 
 public class IconButton implements Interactable {
@@ -46,21 +43,21 @@ public class IconButton implements Interactable {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         if (isDisabled()) {
             // Disabled
-            context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 48, v, width, height);
+            context.drawTexture(RenderLayer::getGuiTextured, MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 48, v, width, height, MicrochipsMenuScreen.BUTTONS_TEXTURE_WIDTH, MicrochipsMenuScreen.BUTTONS_TEXTURE_HEIGHT);
             return;
         }
 
         if (isActive()) {
-            context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 32, v, width, height);
+            context.drawTexture(RenderLayer::getGuiTextured, MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 32, v, width, height, MicrochipsMenuScreen.BUTTONS_TEXTURE_WIDTH, MicrochipsMenuScreen.BUTTONS_TEXTURE_HEIGHT);
             return;
         }
 
         if (isMouseWithin(mouseX, mouseY) && !screen.isWindowOpen()) {
             // Hovered
-            context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 16, v, width, height);
+            context.drawTexture(RenderLayer::getGuiTextured, MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u + 16, v, width, height, MicrochipsMenuScreen.BUTTONS_TEXTURE_WIDTH, MicrochipsMenuScreen.BUTTONS_TEXTURE_HEIGHT);
         } else {
             // Default
-            context.drawTexture(MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u, v, width, height);
+            context.drawTexture(RenderLayer::getGuiTextured, MicrochipsMenuScreen.BUTTONS_TEXTURE, x, y, u, v, width, height, MicrochipsMenuScreen.BUTTONS_TEXTURE_WIDTH, MicrochipsMenuScreen.BUTTONS_TEXTURE_HEIGHT);
         }
     }
 

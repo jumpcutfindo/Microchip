@@ -5,13 +5,10 @@ import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.helper.StringUtils;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
-
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -19,6 +16,8 @@ import java.util.function.BiConsumer;
 
 public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
     private static final Identifier GROUP_LIST_ITEMS_TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_group_list.png");
+    private static final int GROUP_LIST_ITEMS_TEXTURE_WIDTH = 256;
+    private static final int GROUP_LIST_ITEMS_TEXTURE_HEIGHT = 256;
 
     private boolean isReorderable = true, isReordering;
     private BiConsumer<Integer, Integer> moveAction;
@@ -26,7 +25,7 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
     public MicrochipGroupListItem(MicrochipsMenuScreen screen, MicrochipGroup microchipGroup, int index) {
         super(screen, microchipGroup, index);
 
-        this.setBackground(GROUP_LIST_ITEMS_TEXTURE, 0, 178, 124, 18);
+        this.setBackground(GROUP_LIST_ITEMS_TEXTURE, 0, 178, 124, 18, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
 
         this.item = microchipGroup;
         this.index = index;
@@ -69,12 +68,12 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
         ScreenUtils.setShaderColor(this.getGroup().getColor(), false);
         super.renderBackground(context, x, y, mouseX, mouseY);
 
-        context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, x + 1, y + 1, this.item.getColor().ordinal() * 16, 214, 16, 16);
+        context.drawTexture(RenderLayer::getGuiTextured, GROUP_LIST_ITEMS_TEXTURE, x + 1, y + 1, this.item.getColor().ordinal() * 16, 214, 16, 16, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
     }
 
     @Override
     public void renderSelectedBackground(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, x, y, u, v + height, this.width, this.height);
+        context.drawTexture(RenderLayer::getGuiTextured, GROUP_LIST_ITEMS_TEXTURE, x, y, u, v + height, this.width, this.height, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
     }
 
     @Override
@@ -94,15 +93,15 @@ public class MicrochipGroupListItem extends ListItem<MicrochipGroup> {
             int downX = x + 110, downY = y + 4;
 
             if (ScreenUtils.isWithin(mouseX, mouseY, upX, upY, arrowWidth, arrowHeight)) {
-                context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, upX, upY, 169, 15, arrowWidth, arrowHeight);
+                context.drawTexture(RenderLayer::getGuiTextured, GROUP_LIST_ITEMS_TEXTURE, upX, upY, 169, 15, arrowWidth, arrowHeight, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
             } else {
-                context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, upX, upY, 160, 15, arrowWidth, arrowHeight);
+                context.drawTexture(RenderLayer::getGuiTextured, GROUP_LIST_ITEMS_TEXTURE, upX, upY, 160, 15, arrowWidth, arrowHeight, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
             }
 
             if (ScreenUtils.isWithin(mouseX, mouseY, downX, downY, arrowWidth, arrowHeight)) {
-                context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, downX, downY, 169, 24, arrowWidth, arrowHeight);
+                context.drawTexture(RenderLayer::getGuiTextured, GROUP_LIST_ITEMS_TEXTURE, downX, downY, 169, 24, arrowWidth, arrowHeight, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
             } else {
-                context.drawTexture(GROUP_LIST_ITEMS_TEXTURE, downX, downY, 160, 24, arrowWidth, arrowHeight);
+                context.drawTexture(RenderLayer::getGuiTextured, GROUP_LIST_ITEMS_TEXTURE, downX, downY, 160, 24, arrowWidth, arrowHeight, GROUP_LIST_ITEMS_TEXTURE_WIDTH, GROUP_LIST_ITEMS_TEXTURE_HEIGHT);
             }
 
         }

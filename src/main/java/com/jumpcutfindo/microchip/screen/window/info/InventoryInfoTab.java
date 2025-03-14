@@ -11,7 +11,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -21,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow.TEXTURE;
 
 public class InventoryInfoTab extends InfoTab {
     private List<ItemStack> handList, armorList, inventoryList;
@@ -109,10 +106,10 @@ public class InventoryInfoTab extends InfoTab {
             int slotX = itemSlot.getX(windowX);
             int slotY = itemSlot.getY(windowY);
 
-            if (itemSlot.isDisabled()) context.drawTexture(TEXTURE, slotX, slotY, 186, 159, 18, 18);
-            else context.drawTexture(TEXTURE, slotX, slotY, 168, 159, 18, 18);
+            if (itemSlot.isDisabled()) context.drawTexture(RenderLayer::getGuiTextured, MicrochipInfoWindow.TEXTURE, slotX, slotY, 186, 159, 18, 18, MicrochipInfoWindow.TEXTURE_WIDTH, MicrochipInfoWindow.TEXTURE_HEIGHT);
+            else context.drawTexture(RenderLayer::getGuiTextured, MicrochipInfoWindow.TEXTURE, slotX, slotY, 168, 159, 18, 18, MicrochipInfoWindow.TEXTURE_WIDTH, MicrochipInfoWindow.TEXTURE_HEIGHT);
 
-            if (itemSlot.isSpecial() && itemSlot.isEmpty()) context.drawTexture(TEXTURE, slotX + 1, slotY + 1, itemSlot.getSpecialU(), itemSlot.getSpecialV(), 16, 16);
+            if (itemSlot.isSpecial() && itemSlot.isEmpty()) context.drawTexture(RenderLayer::getGuiTextured, MicrochipInfoWindow.TEXTURE, slotX + 1, slotY + 1, itemSlot.getSpecialU(), itemSlot.getSpecialV(), 16, 16, MicrochipInfoWindow.TEXTURE_WIDTH, MicrochipInfoWindow.TEXTURE_HEIGHT);
         }
 
         RenderSystem.disableDepthTest();
@@ -132,7 +129,7 @@ public class InventoryInfoTab extends InfoTab {
         }
 
         matrixStack.popMatrix();
-        RenderSystem.applyModelViewMatrix();
+
         RenderSystem.enableDepthTest();
     }
 
@@ -192,7 +189,7 @@ public class InventoryInfoTab extends InfoTab {
 
     private void drawItem(DrawContext context, ItemStack stack, int x, int y, String amountText) {
         context.drawItem(screen.getPlayer(), stack, x, y, 0);
-        context.drawItemInSlot(screen.getTextRenderer(), stack, x, y);
+        // context.drawItemInSlot(screen.getTextRenderer(), stack, x, y);
     }
 
     private void drawSlotHighlight(DrawContext context, int x, int y, int z) {

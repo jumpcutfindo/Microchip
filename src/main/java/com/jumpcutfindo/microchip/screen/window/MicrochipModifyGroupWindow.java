@@ -7,12 +7,10 @@ import com.jumpcutfindo.microchip.data.MicrochipGroup;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.component.ColorButton;
 import com.jumpcutfindo.microchip.screen.component.MicrochipButton;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -22,6 +20,8 @@ import java.util.List;
 
 public class MicrochipModifyGroupWindow extends Window {
     public static final Identifier TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_create_group.png");
+    public static final int TEXTURE_WIDTH = 256, TEXTURE_HEIGHT = 256;
+
     public static final int WIDTH = 138, HEIGHT = 121;
 
     private final MicrochipGroup group;
@@ -91,7 +91,7 @@ public class MicrochipModifyGroupWindow extends Window {
 
     @Override
     public void renderBackground(DrawContext context) {
-        context.drawTexture(TEXTURE, x, y, 0, 0, this.width, this.height);
+        context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x, y, 0, 0, this.width, this.height, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     @Override

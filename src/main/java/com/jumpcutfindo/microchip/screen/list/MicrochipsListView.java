@@ -12,8 +12,7 @@ import com.jumpcutfindo.microchip.screen.window.MicrochipMoveChipsWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -21,10 +20,11 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class MicrochipsListView extends ListView<MicrochipListItem> {
     protected static final Identifier TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_list.png");
+    protected static final int TEXTURE_WIDTH = 256, TEXTURE_HEIGHT = 256;
+
     private final MicrochipGroup group;
 
     private final int titleX, titleY;
@@ -76,7 +76,7 @@ public class MicrochipsListView extends ListView<MicrochipListItem> {
         context.drawText(this.screen.getTextRenderer(), this.title, (x + this.titleX), (y + this.titleY), this.group.getColor().getShadowColor(), false);
 
         ScreenUtils.setShaderColor(group.getColor(), false);
-        context.drawTexture(MicrochipGroupListView.TEXTURE, x + 5, y + 6, group.getColor().ordinal() * 16, 214, 16, 16);
+        context.drawTexture(RenderLayer::getGuiTextured, MicrochipGroupListView.TEXTURE, x + 5, y + 6, group.getColor().ordinal() * 16, 214, 16, 16, MicrochipGroupListView.TEXTURE_WIDTH, MicrochipGroupListView.TEXTURE_HEIGHT);
     }
 
     @Override

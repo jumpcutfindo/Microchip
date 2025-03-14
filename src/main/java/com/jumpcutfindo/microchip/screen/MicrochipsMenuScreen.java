@@ -7,16 +7,17 @@ import com.jumpcutfindo.microchip.helper.Tagger;
 import com.jumpcutfindo.microchip.screen.list.MicrochipGroupListView;
 import com.jumpcutfindo.microchip.screen.list.MicrochipsListView;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
 
 public class MicrochipsMenuScreen extends MicrochipScreen {
     public static final Identifier BUTTONS_TEXTURE = Identifier.of(MicrochipMod.MOD_ID, "textures/gui/microchip_screen_buttons.png");
+    public static final int BUTTONS_TEXTURE_WIDTH = 256;
+    public static final int BUTTONS_TEXTURE_HEIGHT = 256;
 
     private final int titleX, titleY;
     private int x, y;

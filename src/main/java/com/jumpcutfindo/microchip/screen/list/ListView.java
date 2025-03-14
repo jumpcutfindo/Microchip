@@ -4,14 +4,9 @@ import com.jumpcutfindo.microchip.helper.SoundUtils;
 import com.jumpcutfindo.microchip.screen.Interactable;
 import com.jumpcutfindo.microchip.screen.MicrochipsMenuScreen;
 import com.jumpcutfindo.microchip.screen.ScreenUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -104,7 +99,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     }
 
     public void renderBackground(DrawContext context, int mouseX, int mouseY) {
-        context.drawTexture(this.texture, x, y, this.textureU, this.textureV, this.textureWidth, this.textureHeight);
+        context.drawTexture(RenderLayer::getGuiTextured, this.texture, x, y, this.textureU, this.textureV, this.textureWidth, this.textureHeight, this.textureWidth, this.textureHeight);
         this.renderScrollbar(context, mouseX, mouseY);
     }
 
@@ -126,7 +121,7 @@ public abstract class ListView<T extends ListItem<?>> implements Interactable {
     private void renderScrollbar(DrawContext context, int mouseX, int mouseY) {
         if (!this.hasScrollbar()) return;
 
-        context.drawTexture(this.texture, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15);
+        context.drawTexture(RenderLayer::getGuiTextured, this.texture, x + scrollbarX, y + scrollbarY + (int) (this.scrollPosition * (scrollbarHeight - 15)), scrollbarU, scrollbarV, 13, 15, this.textureWidth, this.textureHeight);
     }
 
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
