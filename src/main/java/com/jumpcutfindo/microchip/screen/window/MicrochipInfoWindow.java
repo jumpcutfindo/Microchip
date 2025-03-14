@@ -16,7 +16,6 @@ import com.jumpcutfindo.microchip.screen.window.info.StatusInfoTab;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
@@ -93,10 +92,10 @@ public class MicrochipInfoWindow extends Window {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         // Draw entity background, then entity, then the main UI
         if (this.entity != null) {
-            int xOffset = 32 + EntityModelScaler.getInterfaceOffset(entity).getWindowX();
-            int yOffset = 80 + EntityModelScaler.getInterfaceOffset(entity).getWindowY();
+            int xOffset = 8 + EntityModelScaler.getInterfaceOffset(entity).getWindowX();
+            int yOffset = 23 + EntityModelScaler.getInterfaceOffset(entity).getWindowY();
 
-            drawLookingEntity(context, entity, x + xOffset, y + yOffset, (float) (x + 38) - mouseX, (float) (y + 80) - mouseY, entityModelSize);
+            drawLookingEntity(context, entity, x + xOffset, y + yOffset, (float) mouseX, (float) mouseY, entityModelSize);
         }
         else {
             context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 18, y + 40, 214, 0, 28, 28, TEXTURE_WIDTH, TEXTURE_HEIGHT);
@@ -225,7 +224,9 @@ public class MicrochipInfoWindow extends Window {
     }
 
     public static void drawLookingEntity(DrawContext context, LivingEntity entity, int x, int y, double mouseX, double mouseY, float size) {
-        InventoryScreen.drawEntity(context, x, y, x + 49, x + 70, 1, 0.25f, (float) mouseX, (float) mouseY, entity);
+        ScreenUtils.drawLookingEntity(context, x, y, x + 46, y + 62, (int) size, 0.0625F, (float) mouseX, (float) mouseY, entity);
+
+//        InventoryScreen.drawEntity(context, x, y, x + 49, x + 70, 2, 0.25f, (float) mouseX, (float) mouseY, entity);
 
         //        EntityPose pose = entity.getPose();
 //        entity.setPose(EntityPose.STANDING);

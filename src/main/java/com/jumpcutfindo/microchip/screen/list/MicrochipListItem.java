@@ -12,7 +12,6 @@ import com.jumpcutfindo.microchip.screen.window.MicrochipInfoWindow;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -99,7 +98,7 @@ public class MicrochipListItem extends ListItem<Microchip> {
         if (this.entity != null) {
             int xOffset = EntityModelScaler.getInterfaceOffset(entity).getListX();
             int yOffset = EntityModelScaler.getInterfaceOffset(entity).getListY();
-            this.drawEntity(context, x + xOffset, y + yOffset);
+            this.drawEntity(context, x + xOffset, y + yOffset, entityModelSize);
         } else {
             context.drawTexture(RenderLayer::getGuiTextured, MicrochipsListView.TEXTURE, x + 4, y + 4, 0, 214, 28, 28, MicrochipsListView.TEXTURE_WIDTH, MicrochipsListView.TEXTURE_HEIGHT);
         }
@@ -185,11 +184,11 @@ public class MicrochipListItem extends ListItem<Microchip> {
         }
     }
 
-    private void drawEntity(DrawContext context, int x, int y) {
+    private void drawEntity(DrawContext context, int x, int y, float size) {
         // Don't render if there is a window active and in front of it
         if (screen.isBlockedByWindow(x, y) || screen.isBlockedByWindow(x + 15, y + 15)) return;
 
-        InventoryScreen.drawEntity(context, x, y, x + 49, x + 70, 1, 0.25f, 0.0f, 0.0f, entity);
+        ScreenUtils.drawStaticEntity(context, x + 2, y + 4, x + 32, y + 32, (int) (size), 0.0f, (float) screen.width / 2, (float) screen.height / 2 , entity);
 
 //        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 //
