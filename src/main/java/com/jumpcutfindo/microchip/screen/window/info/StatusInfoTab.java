@@ -22,6 +22,7 @@ import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.StringHelper;
+import net.minecraft.util.math.ColorHelper;
 
 import java.util.*;
 
@@ -129,7 +130,7 @@ public class StatusInfoTab extends InfoTab {
                 if (displayedStatuses < statusDisplayCount) {
                     // Draw the status
                     Sprite sprite = statusEffectSpriteManager.getSprite(instance.statusEffectInstance.getEffectType());
-                    context.drawSpriteStretched(RenderLayer::getGuiTextured, sprite,window.getX() + 9 + effectsOffset, window.getY() + 172, 0, 18, 18);
+                    context.drawSpriteStretched(RenderLayer::getGuiTextured, sprite,window.getX() + 9 + effectsOffset, window.getY() + 172, 18, 18, ColorHelper.getWhite(1.0f));
 
                     effectsOffset += 24;
                     displayedStatuses++;
